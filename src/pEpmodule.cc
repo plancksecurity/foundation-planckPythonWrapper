@@ -1,11 +1,16 @@
 #include "pEpmodule.hh"
 #include <pEp/pEpEngine.h>
+#include <string>
 
 namespace pEp {
     namespace PythonAdapter {
+        using namespace std;
+
         PyObject *about(PyObject *self, PyObject *args)
         {
-            return PyUnicode_FromString(version_string);
+            string version = string(version_string) + "\np≡p version "
+                + PEP_VERSION + "\n";
+            return PyUnicode_FromString(version.c_str());
         }
     }
 }
