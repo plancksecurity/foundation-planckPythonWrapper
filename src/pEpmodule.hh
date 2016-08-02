@@ -10,10 +10,6 @@ namespace pEp {
 
     void module_free(void *);
 
-    struct module_state {
-        PEP_SESSION session;
-    };
-
     struct PyMethodDef pEpMethods[] = {
         {"about", pEp::PythonAdapter::about, METH_VARARGS, "about p≡p"},
         {NULL, NULL, 0, NULL}
