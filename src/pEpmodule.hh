@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <pEp/pEpEngine.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -6,20 +7,32 @@ namespace pEp {
 
         PyObject *about(PyObject *self, PyObject *args);
     }
+
+    void module_free(void *);
+
+    struct module_state {
+        PEP_SESSION session;
+    };
+
+    struct PyMethodDef pEpMethods[] = {
+        {"about", pEp::PythonAdapter::about, METH_VARARGS, "about p≡p"},
+        {NULL, NULL, 0, NULL}
+    };
+
+    struct PyModuleDef pEpmodule = {
+       PyModuleDef_HEAD_INIT,
+       "pEp",
+       "p≡p Python adapter",
+       -1,
+       pEpMethods,
+       NULL,
+       NULL,
+       NULL,
+       pEp::module_free
+    };
+
+    PEP_SESSION session;
 }
-
-static PyMethodDef pEpMethods[] = {
-    {"about", pEp::PythonAdapter::about, METH_VARARGS, "about p≡p"},
-    {NULL, NULL, 0, NULL}
-};
-
-static struct PyModuleDef pEpmodule = {
-   PyModuleDef_HEAD_INIT,
-   "pEp",
-   NULL,
-   -1,
-   pEpMethods
-};
 
 PyMODINIT_FUNC PyInit_pEp(void);
 

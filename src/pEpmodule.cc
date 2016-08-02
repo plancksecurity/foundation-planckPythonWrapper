@@ -1,5 +1,4 @@
 #include "pEpmodule.hh"
-#include <pEp/pEpEngine.h>
 #include <string>
 
 namespace pEp {
@@ -13,14 +12,21 @@ namespace pEp {
             return PyUnicode_FromString(version.c_str());
         }
     }
+
+    void module_free(void *)
+    {
+        release(session);
+    }
 }
+
+using namespace pEp;
 
 PyMODINIT_FUNC PyInit_pEp(void)
 {
-    PEP_SESSION session;
     PEP_STATUS status = init(&session);
     if (status != PEP_STATUS_OK)
         return NULL;
 
     return PyModule_Create(&pEpmodule);
 }
+
