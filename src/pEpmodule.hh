@@ -27,7 +27,7 @@ namespace pEp {
         pEp::module_free
     };
 
-    PEP_SESSION session;
+    extern PEP_SESSION session;
 }
 
 PyMODINIT_FUNC PyInit_pEp(void);

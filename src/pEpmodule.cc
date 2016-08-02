@@ -13,6 +13,8 @@ namespace pEp {
         }
     }
 
+    PEP_SESSION session;
+
     void module_free(void *)
     {
         release(session);
