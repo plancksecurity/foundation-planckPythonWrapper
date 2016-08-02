@@ -20,15 +20,15 @@ namespace pEp {
     };
 
     struct PyModuleDef pEpmodule = {
-       PyModuleDef_HEAD_INIT,
-       "pEp",
-       "p≡p Python adapter",
-       -1,
-       pEpMethods,
-       NULL,
-       NULL,
-       NULL,
-       pEp::module_free
+        PyModuleDef_HEAD_INIT,
+        "pEp",
+        "p≡p Python adapter",
+        -1,
+        pEpMethods,
+        NULL,
+        NULL,
+        NULL,
+        pEp::module_free
     };
 
     PEP_SESSION session;

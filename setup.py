@@ -1,7 +1,7 @@
 from distutils.core import setup, Extension
 
 module_pEp = Extension('pEp',
-        sources = ['src/pEpmodule.cc',],
+        sources = ['src/pEpmodule.cc','src/converting.cc',],
         include_dirs = ['/Users/vb/include',],
         library_dirs = ['/Users/vb/lib',],
         libraries = ['pEpEngine',],
