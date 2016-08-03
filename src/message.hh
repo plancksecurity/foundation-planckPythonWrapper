@@ -19,6 +19,7 @@ namespace pEp {
             public:
                 Blob(char *value = NULL, size_t size = 0, string mime_type = "",
                         string filename = "");
+                Blob(bloblist_t *bl);
                 Blob(const Blob& second, bool copy = false);
                 ~Blob();
                 void attach(bloblist_t *blob);

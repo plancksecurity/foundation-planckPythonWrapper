@@ -28,6 +28,12 @@ namespace pEp {
             _filename = second._filename;
         }
 
+        Message::Blob::Blob(bloblist_t *bl)
+        {
+            _value = NULL;
+            attach(bl);
+        }
+
         Message::Blob::~Blob()
         {
             free(_value);
