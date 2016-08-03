@@ -31,7 +31,7 @@ namespace pEp {
             return _ident;
         }
 
-        void Identity::set_lang(string value)
+        void Identity::lang(string value)
         {
             if (value == "")
                 memset(_ident->lang, 0, 3);
@@ -41,7 +41,7 @@ namespace pEp {
                 memcpy(_ident->lang, value.data(), 2);
         }
 
-        string Identity::get_lang()
+        string Identity::lang()
         {
             return _ident->lang;
         }
