@@ -16,8 +16,11 @@ namespace pEp {
         public:
             Identity();
             Identity(const Identity& second);
+            Identity(pEp_identity *ident);
             ~Identity();
             operator pEp_identity *();
+            void attach(pEp_identity *ident);
+            pEp_identity *detach();
 
             void address(string value) { str_attr(_ident->address, value); }
             string address() { return str_attr(_ident->address); }
