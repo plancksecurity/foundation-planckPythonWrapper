@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/python.hpp>
 #include <pEp/pEpEngine.h>
 #include <string>
 #include "str_attr.hh"
@@ -8,7 +7,6 @@
 namespace pEp {
     namespace PythonAdapter {
         using namespace utility;
-        using namespace boost::python;
 
         class Identity {
             pEp_identity *_ident;
