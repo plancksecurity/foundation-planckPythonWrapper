@@ -12,13 +12,18 @@ namespace pEp {
 
         }
 
-        Message::Blob::Blob(const Blob& second)
+        Message::Blob::Blob(const Blob& second, bool copy)
         {
             _size = second._size;
-            _value = (char *) malloc(_size);
-            if (!_value)
-                throw bad_alloc();
-            memcpy(_value, second._value, _size);
+            if (copy) {
+                _value = (char *) malloc(_size);
+                if (!_value)
+                    throw bad_alloc();
+                memcpy(_value, second._value, _size);
+            }
+            else {
+                _value = second._value;
+            }
             _mime_type = second._mime_type;
             _filename = second._filename;
         }
