@@ -20,29 +20,29 @@ namespace pEp {
             void attach(pEp_identity *ident);
             pEp_identity *detach();
 
-            void address(string value) { str_attr(_ident->address, value); }
             string address() { return str_attr(_ident->address); }
+            void address(string value) { str_attr(_ident->address, value); }
 
-            void fpr(string value) { str_attr(_ident->fpr, value); }
             string fpr() { return str_attr(_ident->fpr); }
+            void fpr(string value) { str_attr(_ident->fpr, value); }
 
-            void user_id(string value) { str_attr(_ident->user_id, value); }
             string user_id() { return str_attr(_ident->user_id); }
+            void user_id(string value) { str_attr(_ident->user_id, value); }
 
-            void username(string value) { str_attr(_ident->username, value); }
             string username() { return str_attr(_ident->username); }
+            void username(string value) { str_attr(_ident->username, value); }
 
-            void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
             PEP_comm_type comm_type() { return _ident->comm_type; }
+            void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
 
-            void lang(std::string value);
             std::string lang();
+            void lang(std::string value);
 
-            void me(bool value) { _ident->me = value; }
             bool me() { return _ident->me; }
+            void me(bool value) { _ident->me = value; }
 
-            void flags(identity_flags_t flags) { _ident->flags = flags; }
             identity_flags_t flags() { return _ident->flags; }
+            void flags(identity_flags_t flags) { _ident->flags = flags; }
         };
     }
 }

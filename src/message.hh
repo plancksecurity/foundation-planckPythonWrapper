@@ -2,6 +2,7 @@
 
 #include <pEp/message.h>
 #include <string>
+#include <list>
 #include "str_attr.hh"
 
 namespace pEp {
@@ -9,10 +10,23 @@ namespace pEp {
         using namespace utility;
 
         class Message {
+            class Blob {
+                char *_value;
+                size_t _size;
+                string _mime_type;
+                string _filename;
+
+            public:
+                Blob(char *value = NULL, size_t size = 0, string mime_type = "",
+                        string filename = "");
+                Blob(const Blob& second);
+                ~Blob();
+            };
+
             message *_msg;
 
         public:
-            Message();
+            Message(PEP_msg_direction dir = PEP_dir_outgoing);
             Message(const Message& second);
             Message(message *ident);
             ~Message();
@@ -20,12 +34,20 @@ namespace pEp {
             void attach(message *ident);
             message *detach();
 
-            PEP_msg_direction dir;
-            char *id;
-            char *shortmsg;
-            char *longmsg;
+            PEP_msg_direction dir() { return _msg->dir; }
+            void dir(PEP_msg_direction value) { _msg->dir = value; }
 
-            char *longmsg_formatted;
+            string id() { return str_attr(_msg->id); }
+            void id(string value) { str_attr(_msg->id, value); }
+
+            string shortmsg() { return str_attr(_msg->shortmsg); }
+            void shortmsg(string value) { str_attr(_msg->shortmsg, value); }
+
+            string longmsg() { return str_attr(_msg->longmsg); }
+            void longmsg(string value) { str_attr(_msg->longmsg, value); }
+
+            string longmsg_formatted() { return str_attr(_msg->longmsg_formatted); }
+            void longmsg_formatted(string value) { str_attr(_msg->longmsg_formatted, value); }
 
             bloblist_t *attachments;
             char *rawmsg_ref;
