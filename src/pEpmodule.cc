@@ -1,34 +1,24 @@
 #include "pEpmodule.hh"
 #include <string>
+#include <pEp/pEpEngine.h>
 
 namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        PyObject *about(PyObject *self, PyObject *args)
+        string about(void)
         {
             string version = string(version_string) + "\np≡p version "
                 + PEP_VERSION + "\n";
-            return PyUnicode_FromString(version.c_str());
+            return version;
         }
-    }
-
-    PEP_SESSION session;
-
-    void module_free(void *)
-    {
-        release(session);
     }
 }
 
-using namespace pEp;
-
-PyMODINIT_FUNC PyInit_pEp(void)
+BOOST_PYTHON_MODULE(pEp)
 {
-    PEP_STATUS status = init(&session);
-    if (status != PEP_STATUS_OK)
-        return NULL;
-
-    return PyModule_Create(&pEpmodule);
+    using namespace boost::python;
+    using namespace pEp::PythonAdapter;
+    def("about", about);
 }
 

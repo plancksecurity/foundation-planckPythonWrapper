@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from distutils.core import setup, Extension
+from glob import glob
+
+prefix = '/Users/vb'
+boost = '/opt/local'
 
 module_pEp = Extension('pEp',
-        sources = ['src/pEpmodule.cc',],
-        include_dirs = ['/Users/vb/include',],
-        library_dirs = ['/Users/vb/lib',],
-        libraries = ['pEpEngine',],
+        sources = glob('src/*.cc'),
+        include_dirs = [prefix+'/include', boost+'/include',],
+        library_dirs = [prefix+'/lib', boost+'/lib',],
+        libraries = ['pEpEngine', 'boost_python-mt',],
     )
 
 setup(
