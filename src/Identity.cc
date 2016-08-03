@@ -12,7 +12,7 @@ namespace pEp {
                 throw bad_alloc();
         }
 
-        Identity::Identity(Identity& second)
+        Identity::Identity(const Identity& second)
             : _ident(identity_dup(second._ident))
         {
             if (!_ident)
@@ -31,7 +31,7 @@ namespace pEp {
             return _ident;
         }
 
-        void Identity::lang(string value)
+        void Identity::set_lang(string value)
         {
             if (value == "")
                 memset(_ident->lang, 0, 3);
@@ -41,7 +41,7 @@ namespace pEp {
                 memcpy(_ident->lang, value.data(), 2);
         }
 
-        string Identity::lang()
+        string Identity::get_lang()
         {
             return _ident->lang;
         }
