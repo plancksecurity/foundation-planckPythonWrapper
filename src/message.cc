@@ -28,6 +28,38 @@ namespace pEp {
             free(_value);
         }
 
+        void Message::Blob::attach(bloblist_t *blob)
+        {
+            free(_value);
+            _size = blob->size;
+            _value = blob->value;
+            blob->size = 0;
+            blob->value = NULL;
+            if (blob->mime_type) {
+                _mime_type = blob->mime_type;
+                free(blob->mime_type);
+                blob->mime_type = NULL;
+            }
+            if (blob->filename) {
+                _filename = blob->filename;
+                free(blob->filename);
+                blob->filename = NULL;
+            }
+        }
+
+        bloblist_t * Message::Blob::detach()
+        {
+            bloblist_t *bl = new_bloblist(_value, _size, _mime_type.c_str(),
+                    _filename.c_str());
+            if (!bl)
+                throw bad_alloc();
+            _size = 0;
+            _value = NULL;
+            _mime_type = "";
+            _filename = "";
+            return bl;
+        }
+
         Message::Message(PEP_msg_direction dir)
             : _msg(new_message(dir))
         {

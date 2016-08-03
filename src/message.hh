@@ -21,6 +21,8 @@ namespace pEp {
                         string filename = "");
                 Blob(const Blob& second);
                 ~Blob();
+                void attach(bloblist_t *blob);
+                bloblist_t *detach();
             };
 
             message *_msg;
