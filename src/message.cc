@@ -5,6 +5,15 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
+        Message::Blob::Blob(bloblist_t *bl)
+            : data(bl->value, bl->value+bl->size)
+        {
+            if (bl->mime_type)
+                mime_type = bl->mime_type;
+            if (bl->filename)
+                filename = bl->filename;
+        }
+
         Message::Message(PEP_msg_direction dir)
             : _msg(new_message(dir))
         {

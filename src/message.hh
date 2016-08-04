@@ -12,9 +12,12 @@ namespace pEp {
 
         class Message {
             struct Blob {
-                vector<char> _value;
-                string _mime_type;
-                string _filename;
+                vector<char> data;
+                string mime_type;
+                string filename;
+                Blob() { }
+                Blob(bloblist_t *bl);
+                operator bloblist_t *();
             };
 
             message *_msg;
