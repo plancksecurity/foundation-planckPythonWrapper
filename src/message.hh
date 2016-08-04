@@ -3,6 +3,7 @@
 #include <pEp/message.h>
 #include <string>
 #include <list>
+#include <vector>
 #include "str_attr.hh"
 
 namespace pEp {
@@ -10,20 +11,10 @@ namespace pEp {
         using namespace utility;
 
         class Message {
-            class Blob {
-                char *_value;
-                size_t _size;
+            struct Blob {
+                vector<char> _value;
                 string _mime_type;
                 string _filename;
-
-            public:
-                Blob(char *value = NULL, size_t size = 0, string mime_type = "",
-                        string filename = "");
-                Blob(bloblist_t *bl);
-                Blob(const Blob& second, bool copy = false);
-                ~Blob();
-                void attach(bloblist_t *blob);
-                bloblist_t *detach();
             };
 
             message *_msg;
