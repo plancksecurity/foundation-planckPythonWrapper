@@ -121,6 +121,9 @@ BOOST_PYTHON_MODULE(pEp)
                 "list of identities where message will be replied to")
         .add_property("in_reply_to", (list(Message::*)()) &Message::in_reply_to,
                 (void(Message::*)(list)) &Message::in_reply_to,
-                "in_reply_to list");
+                "in_reply_to list")
+        .add_property("references", (list(Message::*)()) &Message::references,
+                (void(Message::*)(list)) &Message::references,
+                "message references");
 }
 

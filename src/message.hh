@@ -100,9 +100,8 @@ namespace pEp {
             list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
             void in_reply_to(list value) { strlist_attr(_msg->in_reply_to, value); }
 
-            struct _message *refering_msg_ref;
-            stringlist_t *references;
-            struct _message_ref_list *refered_by;
+            list references() { return strlist_attr(_msg->references); }
+            void references(list value) { strlist_attr(_msg->references, value); }
 
             stringlist_t *keywords;
             char *comments;
