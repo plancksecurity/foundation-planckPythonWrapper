@@ -133,6 +133,11 @@ BOOST_PYTHON_MODULE(pEp)
                 "comments added to message")
         .add_property("opt_fields", (dict(Message::*)()) &Message::opt_fields,
                 (void(Message::*)(dict)) &Message::opt_fields,
-                "opt_fields of message");
+                "opt_fields of message")
+        .add_property("enc_format", (int(Message::*)())
+                (PEP_enc_format(Message::*)()) &Message::enc_format,
+                (void(Message::*)(int))
+                (void(Message::*)(PEP_enc_format)) &Message::enc_format,
+                "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format");
 }
 

@@ -112,7 +112,8 @@ namespace pEp {
             dict opt_fields() { return strdict_attr(_msg->opt_fields); }
             void opt_fields(dict value) { return strdict_attr(_msg->opt_fields, value); }
 
-            PEP_enc_format enc_format;
+            PEP_enc_format enc_format() { return _msg->enc_format; }
+            void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
         };
     }
 }
