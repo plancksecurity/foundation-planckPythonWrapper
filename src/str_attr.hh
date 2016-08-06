@@ -3,6 +3,7 @@
 #include <string>
 #include <pEp/pEpEngine.h>
 #include <pEp/timestamp.h>
+#include <pEp/stringlist.h>
 
 namespace pEp {
     namespace utility {
@@ -14,6 +15,9 @@ namespace pEp {
 
         time_t timestamp_attr(timestamp *&ts);
         void timestamp_attr(timestamp *&ts, time_t value);
+
+        list strlist(stringlist_t *&sl);
+        void strlist(stringlist_t *&sl, list value);
     }
 }
 
