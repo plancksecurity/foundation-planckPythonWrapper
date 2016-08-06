@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/python.hpp>
 #include <pEp/pEpEngine.h>
 #include <string>
 #include "str_attr.hh"
@@ -18,7 +19,6 @@ namespace pEp {
             Identity(const Identity& second);
             Identity(pEp_identity *ident);
             ~Identity();
-            operator pEp_identity *();
             void attach(pEp_identity *ident);
             pEp_identity *detach();
 
@@ -46,6 +46,12 @@ namespace pEp {
             identity_flags_t flags() { return _ident->flags; }
             void flags(identity_flags_t flags) { _ident->flags = flags; }
         };
+
+        object identity_attr(pEp_identity *&ident);
+        void identity_attr(pEp_identity *&ident, object value);
+
+        list identitylist_attr(identity_list *&il);
+        void identitylist_attr(identity_list *&il, list value);
     }
 }
 

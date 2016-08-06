@@ -3,9 +3,7 @@
 #include <boost/python.hpp>
 #include <pEp/message.h>
 #include <string>
-#include <list>
-#include <vector>
-#include <iterator>
+#include "Identity.hh"
 #include "str_attr.hh"
 
 namespace pEp {
@@ -19,15 +17,17 @@ namespace pEp {
             message *_msg;
 
         public:
-            // Blob is owning a bloblist_t struct
+            // Blob is owning a bloblist_t struct - or not and just managing
+            // one depending on part_of_chain
 
             class Blob {
                 bloblist_t *_bl;
                 bool part_of_chain;
 
             public:
-                Blob(bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL));
-                Blob(object data);
+                Blob(bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL),
+                        bool chained = false);
+                Blob(object data, string mime_type, string filename);
                 Blob(const Blob& second);
                 ~Blob();
 
@@ -40,6 +40,8 @@ namespace pEp {
                 size_t size() { return _bl->size; }
 
                 static PyBufferProcs bp;
+
+                friend class Message;
 
             protected:
                 static int getbuffer(PyObject *self, Py_buffer *view, int flags);
@@ -68,18 +70,33 @@ namespace pEp {
             string longmsg_formatted() { return str_attr(_msg->longmsg_formatted); }
             void longmsg_formatted(string value) { str_attr(_msg->longmsg_formatted, value); }
 
-            bloblist_t *attachments;
-            char *rawmsg_ref;
-            size_t rawmsg_size;
-            timestamp *sent;
-            timestamp *recv;
-            pEp_identity *from;
-            identity_list *to;
-            pEp_identity *recv_by;
+            tuple attachments();
+            void attachments(list value);
 
-            identity_list *cc;
-            identity_list *bcc;
-            identity_list *reply_to;
+            time_t sent() { return timestamp_attr(_msg->sent); }
+            void sent(time_t value) { timestamp_attr(_msg->sent, value); }
+
+            time_t recv() { return timestamp_attr(_msg->recv); }
+            void recv(time_t value) { timestamp_attr(_msg->recv, value); }
+
+            object from() { return identity_attr(_msg->from); }
+            void from(object value) { identity_attr(_msg->from, value); }
+
+            list to() { return identitylist_attr(_msg->to); }
+            void to(list value) { identitylist_attr(_msg->to, value); }
+
+            object recv_by() { return identity_attr(_msg->recv_by); }
+            void recv_by(object value) { identity_attr(_msg->recv_by, value); }
+
+            list cc() { return identitylist_attr(_msg->cc); }
+            void cc(list value) { identitylist_attr(_msg->cc, value); }
+
+            list bcc() { return identitylist_attr(_msg->bcc); }
+            void bcc(list value) { identitylist_attr(_msg->bcc, value); }
+
+            list reply_to() { return identitylist_attr(_msg->reply_to); }
+            void reply_to(list value) { identitylist_attr(_msg->reply_to, value); }
+
             stringlist_t *in_reply_to;
 
             struct _message *refering_msg_ref;

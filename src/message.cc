@@ -8,13 +8,14 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        Message::Blob::Blob(bloblist_t *bl) : _bl(bl), part_of_chain(false)
+        Message::Blob::Blob(bloblist_t *bl, bool chained) :
+            _bl(bl), part_of_chain(chained)
         {
             if (!_bl)
                 throw bad_alloc();
         }
 
-        Message::Blob::Blob(object data) :
+        Message::Blob::Blob(object data, string mime_type, string filename) :
             _bl(new_bloblist(NULL, 0, NULL, NULL)), part_of_chain(false)
         {
             if (!_bl)
@@ -37,6 +38,9 @@ namespace pEp {
             _bl->value = mem;
             
             PyBuffer_Release(&src);
+
+            this->mime_type(mime_type);
+            this->filename(filename);
         }
 
         Message::Blob::Blob(const Message::Blob& second) :
@@ -126,6 +130,55 @@ namespace pEp {
             if (!_msg)
                 throw bad_cast();
             return _msg;
+        }
+
+        tuple Message::attachments()
+        {
+            list l;
+
+            for (bloblist_t *bl = _msg->attachments; bl && bl->value; bl =
+                    bl->next) {
+                l.append(Blob(bl, true));
+            }
+
+            return tuple(l);
+        }
+
+        void Message::attachments(list value)
+        {
+            bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL);
+            if (!bl)
+                throw bad_alloc();
+
+            bloblist_t *_l = bl;
+            for (int i=0; i<len(value); i++) {
+                Message::Blob& blob = extract< Message::Blob& >(value[i]);
+                _l = bloblist_add(_l, blob._bl->value, blob._bl->size,
+                        blob._bl->mime_type, blob._bl->filename);
+                if (!_l) {
+                    for (_l = bl; _l && _l->value; ) {
+                        free(_l->mime_type);
+                        free(_l->filename);
+                        bloblist_t *_ll = _l;
+                        _l = _l->next;
+                        free(_ll);
+                    }
+                    throw bad_alloc();
+                }
+            }
+
+            for (int i=0; i<len(value); i++) {
+                Message::Blob& blob = extract< Message::Blob& >(value[i]);
+                blob._bl->value = NULL;
+                blob._bl->size = 0;
+                free(blob._bl->mime_type);
+                blob._bl->mime_type = NULL;
+                free(blob._bl->filename);
+                blob._bl->filename = NULL;
+            }
+
+            free_bloblist(_msg->attachments);
+            _msg->attachments = bl;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        string about()
+        static string about()
         {
             string version = string(version_string) + "\np≡p version "
                 + PEP_VERSION + "\n";
@@ -29,21 +29,21 @@ BOOST_PYTHON_MODULE(pEp)
     generator gen;
     std::locale::global(gen(""));
 
-    def("about", about, "delivers the p≡p about string");
+    scope().attr("about") = about();
 
-    class_<Identity>("Identity", "p≡p identity")
+    auto identity_class = class_<Identity>("Identity", "p≡p identity")
         .add_property("address", (string(Identity::*)()) &Identity::address,
                 (void(Identity::*)(string)) &Identity::address,
                 "email address or URI")
         .add_property("fpr", (string(Identity::*)()) &Identity::fpr,
                 (void(Identity::*)(string)) &Identity::fpr,
-                "key ID (fingerprint)")
+                "key ID (full fingerprint, hex encoded)")
         .add_property("user_id", (string(Identity::*)()) &Identity::user_id,
                 (void(Identity::*)(string)) &Identity::user_id,
-                "ID of person associated")
+                "ID of person associated or 'pEp_own_userId' if own identity")
         .add_property("username", (string(Identity::*)()) &Identity::username,
                 (void(Identity::*)(string)) &Identity::username,
-                "name of person associated")
+                "name in full of person associated")
         .add_property("comm_type", (int(Identity::*)())
                 (PEP_comm_type(Identity::*)()) &Identity::comm_type,
                 (void(Identity::*)(int))
@@ -56,10 +56,14 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Identity::*)(bool)) &Identity::me,
                  "true if own identity, false otherwise")
         .add_property("flags", (identity_flags_t(Identity::*)()) &Identity::flags,
-                (void(Identity::*)(identity_flags_t)) &Identity::flags);
+                (void(Identity::*)(identity_flags_t)) &Identity::flags,
+                "flags (p≡p internal)");
+    
+    identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";
 
-    auto blob = class_<Message::Blob>("Blob", "Binary large object",
-            init< object >(args("data"), "init buffer with binary data") )
+    auto blob_class = class_<Message::Blob>("Blob", "Binary large object",
+            init< object, char const*, char const* >(args("data", "mime_type", "filename"),
+                "init buffer with binary data") )
         .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
                 (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
                 "MIME type of object in Blob")
@@ -68,6 +72,52 @@ BOOST_PYTHON_MODULE(pEp)
                 "filename of object in Blob")
         .add_property("size", &Message::Blob::size, "size of Blob in bytes");
 
-    ((PyTypeObject *)(void *)blob.ptr())->tp_as_buffer = &Message::Blob::bp;
+    ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
+
+    auto message_class = class_<Message>("Message", "p≡p message")
+        .add_property("dir", (int(Message::*)())
+                (PEP_msg_direction(Message::*)()) &Message::dir,
+                (void(Message::*)(int))
+                (void(Message::*)(PEP_msg_direction)) &Message::dir,
+                "0: incoming, 1: outgoing message")
+        .add_property("id", (string(Message::*)()) &Message::id,
+                (void(Message::*)(string)) &Message::id,
+                "message ID")
+        .add_property("shortmsg", (string(Message::*)()) &Message::shortmsg,
+                (void(Message::*)(string)) &Message::shortmsg,
+                "subject or short message")
+        .add_property("longmsg", (string(Message::*)()) &Message::longmsg,
+                (void(Message::*)(string)) &Message::longmsg,
+                "body or long version of message")
+        .add_property("longmsg_formatted", (string(Message::*)()) &Message::longmsg_formatted,
+                (void(Message::*)(string)) &Message::longmsg_formatted,
+                "HTML body or fromatted long version of message")
+        .add_property("attachments", (tuple(Message::*)()) &Message::attachments,
+                (void(Message::*)(list)) &Message::attachments,
+                "tuple of Blobs with attachments; setting moves Blobs to attachment tuple")
+        .add_property("sent", (time_t(Message::*)()) &Message::sent,
+                (void(Message::*)(time_t)) &Message::sent,
+                "time when message was sent in UTC seconds since epoch")
+        .add_property("recv", (time_t(Message::*)()) &Message::recv,
+                (void(Message::*)(time_t)) &Message::recv,
+                "time when message was received in UTC seconds since epoch")
+        .add_property("from_", (object(Message::*)()) &Message::from,
+                (void(Message::*)(object)) &Message::from,
+                "identity where message is from")
+        .add_property("to", (list(Message::*)()) &Message::to,
+                (void(Message::*)(list)) &Message::to,
+                "list of identities message is going to")
+        .add_property("recv_by", (object(Message::*)()) &Message::recv_by,
+                (void(Message::*)(object)) &Message::recv_by,
+                "identity where message was received by")
+        .add_property("cc", (list(Message::*)()) &Message::cc,
+                (void(Message::*)(list)) &Message::cc,
+                "list of identities message is going cc")
+        .add_property("bcc", (list(Message::*)()) &Message::bcc,
+                (void(Message::*)(list)) &Message::bcc,
+                "list of identities message is going bcc")
+        .add_property("reply_to", (list(Message::*)()) &Message::reply_to,
+                (void(Message::*)(list)) &Message::reply_to,
+                "list of identities where message will be replied to");
 }
 
