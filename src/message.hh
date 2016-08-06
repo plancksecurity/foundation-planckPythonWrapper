@@ -103,7 +103,9 @@ namespace pEp {
             list references() { return strlist_attr(_msg->references); }
             void references(list value) { strlist_attr(_msg->references, value); }
 
-            stringlist_t *keywords;
+            list keywords() { return strlist_attr(_msg->keywords); }
+            void keywords(list value) { strlist_attr(_msg->keywords, value); }
+
             char *comments;
             stringpair_list_t *opt_fields;
             PEP_enc_format enc_format;

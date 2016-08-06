@@ -124,6 +124,9 @@ BOOST_PYTHON_MODULE(pEp)
                 "in_reply_to list")
         .add_property("references", (list(Message::*)()) &Message::references,
                 (void(Message::*)(list)) &Message::references,
-                "message references");
+                "message IDs of messages this one is referring to")
+        .add_property("keywords", (list(Message::*)()) &Message::keywords,
+                (void(Message::*)(list)) &Message::keywords,
+                "keywords this message should be stored under");
 }
 
