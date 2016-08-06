@@ -10,7 +10,7 @@ module_pEp = Extension('pEp',
         sources = glob('src/*.cc'),
         include_dirs = [prefix+'/include', boost+'/include',],
         library_dirs = [prefix+'/lib', boost+'/lib',],
-        libraries = ['pEpEngine', 'boost_python-mt',],
+        libraries = ['pEpEngine', 'boost_python-mt', 'boost_locale-mt',],
     )
 
 setup(

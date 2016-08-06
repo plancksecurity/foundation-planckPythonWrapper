@@ -1,28 +1,50 @@
 #pragma once
 
+#include <boost/python.hpp>
 #include <pEp/message.h>
 #include <string>
 #include <list>
 #include <vector>
+#include <iterator>
 #include "str_attr.hh"
 
 namespace pEp {
     namespace PythonAdapter {
         using namespace utility;
+        using namespace boost::python;
+
+        // Message is owning a message struct
 
         class Message {
-            struct Blob {
-                vector<char> data;
-                string mime_type;
-                string filename;
-                Blob() { }
-                Blob(bloblist_t *bl);
-                operator bloblist_t *();
-            };
-
             message *_msg;
 
         public:
+            // Blob is owning a bloblist_t struct
+
+            class Blob {
+                bloblist_t *_bl;
+                bool part_of_chain;
+
+            public:
+                Blob(bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL));
+                Blob(object data);
+                Blob(const Blob& second);
+                ~Blob();
+
+                string mime_type() { return _bl ? str_attr(_bl->mime_type) : ""; }
+                void mime_type(string value) { str_attr(_bl->mime_type, value); }
+
+                string filename() { return str_attr(_bl->filename); }
+                void filename(string value) { str_attr(_bl->filename, value); }
+
+                size_t size() { return _bl->size; }
+
+                static PyBufferProcs bp;
+
+            protected:
+                static int getbuffer(PyObject *self, Py_buffer *view, int flags);
+            };
+
             Message(PEP_msg_direction dir = PEP_dir_outgoing);
             Message(const Message& second);
             Message(message *ident);

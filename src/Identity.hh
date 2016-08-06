@@ -8,6 +8,8 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace utility;
 
+        // Identity is owning a pEp_identity
+
         class Identity {
             pEp_identity *_ident;
 

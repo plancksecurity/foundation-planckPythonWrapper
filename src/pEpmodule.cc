@@ -1,7 +1,9 @@
 #include "pEpmodule.hh"
+#include <boost/locale.hpp>
 #include <string>
 #include <pEp/pEpEngine.h>
 #include "Identity.hh"
+#include "Message.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -19,9 +21,13 @@ namespace pEp {
 BOOST_PYTHON_MODULE(pEp)
 {
     using namespace boost::python;
+    using namespace boost::locale;
     using namespace pEp::PythonAdapter;
 
     docstring_options doc_options(true, true, false);
+
+    generator gen;
+    std::locale::global(gen(""));
 
     def("about", about, "delivers the p≡p about string");
 
@@ -51,5 +57,17 @@ BOOST_PYTHON_MODULE(pEp)
                  "true if own identity, false otherwise")
         .add_property("flags", (identity_flags_t(Identity::*)()) &Identity::flags,
                 (void(Identity::*)(identity_flags_t)) &Identity::flags);
+
+    auto blob = class_<Message::Blob>("Blob", "Binary large object",
+            init< object >(args("data"), "init buffer with binary data") )
+        .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
+                (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
+                "MIME type of object in Blob")
+        .add_property("filename", (string(Message::Blob::*)()) &Message::Blob::filename,
+                (void(Message::Blob::*)(string)) &Message::Blob::filename,
+                "filename of object in Blob")
+        .add_property("size", &Message::Blob::size, "size of Blob in bytes");
+
+    ((PyTypeObject *)(void *)blob.ptr())->tp_as_buffer = &Message::Blob::bp;
 }
 
