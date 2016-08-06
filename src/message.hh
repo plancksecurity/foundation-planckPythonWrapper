@@ -106,7 +106,9 @@ namespace pEp {
             list keywords() { return strlist_attr(_msg->keywords); }
             void keywords(list value) { strlist_attr(_msg->keywords, value); }
 
-            char *comments;
+            string comments() { return str_attr(_msg->comments); }
+            void comments(string value) { str_attr(_msg->comments, value); }
+
             stringpair_list_t *opt_fields;
             PEP_enc_format enc_format;
         };

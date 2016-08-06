@@ -127,6 +127,9 @@ BOOST_PYTHON_MODULE(pEp)
                 "message IDs of messages this one is referring to")
         .add_property("keywords", (list(Message::*)()) &Message::keywords,
                 (void(Message::*)(list)) &Message::keywords,
-                "keywords this message should be stored under");
+                "keywords this message should be stored under")
+        .add_property("comments", (string(Message::*)()) &Message::comments,
+                (void(Message::*)(string)) &Message::comments,
+                "comments added to message");
 }
 
