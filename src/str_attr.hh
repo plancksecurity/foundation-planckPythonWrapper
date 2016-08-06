@@ -4,6 +4,7 @@
 #include <pEp/pEpEngine.h>
 #include <pEp/timestamp.h>
 #include <pEp/stringlist.h>
+#include <pEp/stringpair.h>
 
 namespace pEp {
     namespace utility {
@@ -18,6 +19,9 @@ namespace pEp {
 
         list strlist_attr(stringlist_t *&sl);
         void strlist_attr(stringlist_t *&sl, list value);
+
+        dict strdict_attr(stringpair_list_t *&spl);
+        void strdict_attr(stringpair_list_t *&spl, dict value);
     }
 }
 

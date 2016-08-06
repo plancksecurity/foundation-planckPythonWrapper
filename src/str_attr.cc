@@ -73,6 +73,56 @@ namespace pEp {
             free_stringlist(sl);
             sl = _sl;
         }
+
+        dict strdict_attr(stringpair_list_t *&spl)
+        {
+            dict result;
+
+            for (stringpair_list_t *_spl = spl; _spl && _spl->value; _spl =
+                    _spl->next) {
+                stringpair_t *p = _spl->value;
+                if (p->key && p->value) {
+                    string key(p->key);
+                    string value(p->value);
+
+                    result[key] = value;
+                }
+            }
+
+            return result;
+        }
+
+        void strdict_attr(stringpair_list_t *&spl, dict value)
+        {
+            stringpair_list_t *_spl = new_stringpair_list(NULL);
+            if (!_spl)
+                throw bad_alloc();
+
+            stringpair_list_t *_s = _spl;
+            for (int i=0; i<len(value); i++) {
+                extract< string > extract_key(value.keys()[i]);
+                extract< string > extract_value(value.values()[i]);
+
+                if (!(extract_key.check() && extract_value.check()))
+                    free_stringpair_list(_spl);
+
+                string key = extract_key();
+                string value = extract_value();
+                stringpair_t *pair = new_stringpair(key.c_str(), value.c_str());
+                if (!pair) {
+                    free_stringpair_list(_spl);
+                    throw bad_alloc();
+                }
+                _s = stringpair_list_add(_s, pair);
+                if (!_s) {
+                    free_stringpair_list(_spl);
+                    throw bad_alloc();
+                }
+            }
+
+            free_stringpair_list(spl);
+            spl = _spl;
+        }
     }
 }
 

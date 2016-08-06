@@ -130,6 +130,9 @@ BOOST_PYTHON_MODULE(pEp)
                 "keywords this message should be stored under")
         .add_property("comments", (string(Message::*)()) &Message::comments,
                 (void(Message::*)(string)) &Message::comments,
-                "comments added to message");
+                "comments added to message")
+        .add_property("opt_fields", (dict(Message::*)()) &Message::opt_fields,
+                (void(Message::*)(dict)) &Message::opt_fields,
+                "opt_fields of message");
 }
 

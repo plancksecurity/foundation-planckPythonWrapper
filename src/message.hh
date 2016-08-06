@@ -109,7 +109,9 @@ namespace pEp {
             string comments() { return str_attr(_msg->comments); }
             void comments(string value) { str_attr(_msg->comments, value); }
 
-            stringpair_list_t *opt_fields;
+            dict opt_fields() { return strdict_attr(_msg->opt_fields); }
+            void opt_fields(dict value) { return strdict_attr(_msg->opt_fields, value); }
+
             PEP_enc_format enc_format;
         };
     }
