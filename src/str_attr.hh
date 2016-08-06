@@ -16,8 +16,8 @@ namespace pEp {
         time_t timestamp_attr(timestamp *&ts);
         void timestamp_attr(timestamp *&ts, time_t value);
 
-        list strlist(stringlist_t *&sl);
-        void strlist(stringlist_t *&sl, list value);
+        list strlist_attr(stringlist_t *&sl);
+        void strlist_attr(stringlist_t *&sl, list value);
     }
 }
 

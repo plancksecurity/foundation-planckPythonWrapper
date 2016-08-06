@@ -118,6 +118,9 @@ BOOST_PYTHON_MODULE(pEp)
                 "list of identities message is going bcc")
         .add_property("reply_to", (list(Message::*)()) &Message::reply_to,
                 (void(Message::*)(list)) &Message::reply_to,
-                "list of identities where message will be replied to");
+                "list of identities where message will be replied to")
+        .add_property("in_reply_to", (list(Message::*)()) &Message::in_reply_to,
+                (void(Message::*)(list)) &Message::in_reply_to,
+                "in_reply_to list");
 }
 

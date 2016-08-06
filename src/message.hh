@@ -97,7 +97,8 @@ namespace pEp {
             list reply_to() { return identitylist_attr(_msg->reply_to); }
             void reply_to(list value) { identitylist_attr(_msg->reply_to, value); }
 
-            stringlist_t *in_reply_to;
+            list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
+            void in_reply_to(list value) { strlist_attr(_msg->in_reply_to, value); }
 
             struct _message *refering_msg_ref;
             stringlist_t *references;

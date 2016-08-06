@@ -38,7 +38,7 @@ namespace pEp {
             ts = new_timestamp(value);
         }
 
-        list strlist(stringlist_t *&sl)
+        list strlist_attr(stringlist_t *&sl)
         {
             list result;
 
@@ -50,7 +50,7 @@ namespace pEp {
             return result;
         }
 
-        void strlist(stringlist_t *&sl, list value)
+        void strlist_attr(stringlist_t *&sl, list value)
         {
             stringlist_t *_sl = new_stringlist(NULL);
             if (!_sl)
