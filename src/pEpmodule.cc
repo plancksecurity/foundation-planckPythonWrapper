@@ -1,6 +1,7 @@
 #include "pEpmodule.hh"
 #include <boost/locale.hpp>
 #include <string>
+#include <sstream>
 #include <pEp/pEpEngine.h>
 #include "Identity.hh"
 #include "Message.hh"
@@ -14,6 +15,13 @@ namespace pEp {
             string version = string(version_string) + "\np≡p version "
                 + PEP_VERSION + "\n";
             return version;
+        }
+
+        PEP_SESSION session = NULL;
+
+        static void free_module(void *)
+        {
+            release(session);
         }
     }
 }
@@ -139,5 +147,17 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(int))
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format");
+
+    PyModuleDef * def = PyModule_GetDef(scope().ptr());
+    def->m_free = free_module;
+
+    PEP_STATUS status = ::init(&session);
+    if (status != PEP_STATUS_OK) {
+        stringstream ss;
+        ss << "init session failed with error " << status;
+        string s;
+        ss >> s;
+        throw runtime_error(s);
+    }
 }
 
