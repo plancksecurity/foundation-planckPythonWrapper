@@ -4,8 +4,7 @@
 #include <boost/lexical_cast.hpp>
 #include <pEp/message.h>
 #include <string>
-#include "Identity.hh"
-#include "str_attr.hh"
+#include "pEpmodule.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -121,6 +120,12 @@ namespace pEp {
 
             PEP_enc_format enc_format() { return _msg->enc_format; }
             void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
+
+            Message encrypt(list extra, int enc_format, int flags);
+            Message encrypt(list extra, int enc_format);
+            Message encrypt(list extra);
+            Message encrypt();
+            tuple decrypt();
         };
     }
 }

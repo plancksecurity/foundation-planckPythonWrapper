@@ -1,5 +1,6 @@
 #include <Python.h>
 #include "message.hh"
+#include "message_api.hh"
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
@@ -265,6 +266,26 @@ namespace pEp {
 
             free_bloblist(_msg->attachments);
             _msg->attachments = bl;
+        }
+
+        Message Message::encrypt(list extra, int enc_format, int flags) {
+            return encrypt_message(*this, extra, enc_format, flags);
+        }
+
+        Message Message::encrypt(list extra, int enc_format) {
+            return encrypt_message(*this, extra, enc_format);
+        }
+
+        Message Message::encrypt(list extra) {
+            return encrypt_message(*this, extra);
+        }
+
+        Message Message::encrypt() {
+            return encrypt_message(*this);
+        }
+
+        tuple Message::decrypt() {
+            return decrypt_message(*this);
         }
     }
 }

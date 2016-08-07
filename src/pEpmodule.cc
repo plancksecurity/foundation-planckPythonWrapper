@@ -174,7 +174,12 @@ BOOST_PYTHON_MODULE(pEp)
                 (PEP_enc_format(Message::*)()) &Message::enc_format,
                 (void(Message::*)(int))
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
-                "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format");
+                "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
+        .def("encrypt", (Message(Message::*)())&Message::encrypt, "encrypt message")
+        .def("encrypt", (Message(Message::*)(list))&Message::encrypt, "encrypt message")
+        .def("encrypt", (Message(Message::*)(list,int))&Message::encrypt, "encrypt message")
+        .def("encrypt", (Message(Message::*)(list,int,int))&Message::encrypt, "encrypt message")
+        .def("decrypt", &Message::decrypt, "decrypt message");
 
     // basic API
 
