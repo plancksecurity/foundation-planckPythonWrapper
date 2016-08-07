@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdexcept>
 #include <sstream>
+#include <pEp/mime.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -112,6 +113,34 @@ namespace pEp {
                 throw bad_alloc();
         }
 
+        Message::Message(string mimetext)
+        {
+            _msg = NULL;
+            PEP_STATUS status = mime_decode_message(mimetext.c_str(),
+                    mimetext.size(), &_msg);
+            switch (status) {
+                case PEP_STATUS_OK:
+                    if (_msg)
+                        return;
+                    _msg = new_message(PEP_dir_incoming);
+                    break;
+                    
+                case PEP_BUFFER_TOO_SMALL:
+                    throw runtime_error("mime_decode_message: buffer too small");
+
+                case PEP_CANNOT_CREATE_TEMP_FILE:
+                    throw runtime_error("mime_decode_message: cannot create temp file");
+
+                case PEP_OUT_OF_MEMORY:
+                    throw bad_alloc();
+
+                default:
+                    stringstream build;
+                    build << "mime_decode_message: unknown error (" << (int) status << ")";
+                    throw runtime_error(build.str());
+            }
+        }
+
         Message::Message(const Message& second)
             : _msg(message_dup(second._msg))
         {
@@ -153,6 +182,39 @@ namespace pEp {
             if (!_msg)
                 throw bad_cast();
             return _msg;
+        }
+
+        string Message::_str()
+        {
+            if (!(_msg->from && _msg->from->address && _msg->from->address[0]))
+                return "< incomplete pEp.Message object: from missing >";
+
+            char *mimetext;
+            string result;
+
+            PEP_STATUS status = mime_encode_message(_msg, false, &mimetext);
+            switch (status) {
+                case PEP_STATUS_OK:
+                    result = mimetext;
+                    free(mimetext);
+                    break;
+
+                case PEP_BUFFER_TOO_SMALL:
+                    result = "< Message MIME error: buffer too small >";
+                    break;
+
+                case PEP_CANNOT_CREATE_TEMP_FILE:
+                    result = "< Message MIME error: cannot create temp file >";
+                    break;
+
+                case PEP_OUT_OF_MEMORY:
+                    throw bad_alloc();
+
+                default:
+                    result = "< Message MIME error: unknown >";
+            }
+
+            return result;
         }
 
         tuple Message::attachments()

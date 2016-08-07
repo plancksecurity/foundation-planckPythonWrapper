@@ -93,6 +93,8 @@ BOOST_PYTHON_MODULE(pEp)
     ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
     auto message_class = class_<Message>("Message", "p≡p message")
+        .def(init<string>())
+        .def("__str__", &Message::_str)
         .add_property("dir", (int(Message::*)())
                 (PEP_msg_direction(Message::*)()) &Message::dir,
                 (void(Message::*)(int))

@@ -52,12 +52,15 @@ namespace pEp {
             };
 
             Message(PEP_msg_direction dir = PEP_dir_outgoing);
+            Message(string mimetext);
             Message(const Message& second);
             Message(message *ident);
             ~Message();
             operator message *();
             void attach(message *ident);
             message *detach();
+
+            string _str();
 
             PEP_msg_direction dir() { return _msg->dir; }
             void dir(PEP_msg_direction value) { _msg->dir = value; }
