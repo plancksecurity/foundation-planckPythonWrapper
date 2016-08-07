@@ -187,7 +187,7 @@ namespace pEp {
         string Message::_str()
         {
             if (!(_msg->from && _msg->from->address && _msg->from->address[0]))
-                throw out_of_range("from_ missing");
+                throw out_of_range(".from_.address missing");
 
             char *mimetext;
             string result;
