@@ -36,6 +36,13 @@ namespace pEp {
             free_identity(_ident);
         }
 
+        Identity::operator pEp_identity *()
+        {
+            if (!_ident)
+                throw bad_cast();
+            return _ident;
+        }
+
         void Identity::attach(pEp_identity *ident)
         {
             free_identity(_ident);
@@ -115,8 +122,7 @@ namespace pEp {
             extract< string > extract_string(value);
             if (extract_string.check()) {
                 string str = extract_string();
-                pEp_identity *_ident = new_identity(str.c_str(), NULL, NULL,
-                        NULL);
+                pEp_identity *_ident = new_identity(str.c_str(), NULL, NULL, NULL);
                 if (!_ident)
                     throw bad_alloc();
                 free_identity(ident);

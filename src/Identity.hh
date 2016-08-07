@@ -21,6 +21,7 @@ namespace pEp {
             Identity(const Identity& second);
             Identity(pEp_identity *ident);
             ~Identity();
+            operator pEp_identity *();
             void attach(pEp_identity *ident);
             pEp_identity *detach();
 
