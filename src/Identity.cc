@@ -1,16 +1,21 @@
 #include "Identity.hh"
 #include <typeinfo>
+#include <sstream>
 #include <pEp/identity_list.h>
 
 namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        Identity::Identity()
-            : _ident(new_identity(NULL, NULL, NULL, NULL))
+        Identity::Identity(string address, string fpr, string user_id, string
+                username, int comm_type, string lang)
+            : _ident(new_identity(address.c_str(), fpr.c_str(),
+                        user_id.c_str(), username.c_str()))
         {
             if (!_ident)
                 throw bad_alloc();
+            _ident->comm_type = (PEP_comm_type) comm_type;
+            this->lang(lang);
         }
 
         Identity::Identity(const Identity& second)
@@ -47,6 +52,32 @@ namespace pEp {
             _ident = new_one;
 
             return ident;
+        }
+
+        string Identity::_repr()
+        {
+            stringstream build;
+            build << "Identity(";
+            string address;
+            if (_ident->address)
+                address = string(_ident->address);
+            build << repr(address) << ", ";
+            string fpr;
+            if (_ident->fpr)
+                fpr = string(_ident->fpr);
+            build << repr(fpr) << ", ";
+            string user_id;
+            if (_ident->user_id)
+                user_id = string(_ident->user_id);
+            build << repr(user_id) << ", ";
+            string username;
+            if (_ident->username)
+                username = string(_ident->username);
+            build << repr(username) << ", ";
+            build << (int) _ident->comm_type << ", ";
+            string lang = _ident->lang;
+            build << repr(lang) << ")";
+            return build.str();
         }
 
         void Identity::lang(string value)

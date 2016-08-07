@@ -40,6 +40,13 @@ BOOST_PYTHON_MODULE(pEp)
     scope().attr("about") = about();
 
     auto identity_class = class_<Identity>("Identity", "p≡p identity")
+        .def(init<string>())
+        .def(init<string, string>())
+        .def(init<string, string, string>())
+        .def(init<string, string, string, string>())
+        .def(init<string, string, string, string, int>())
+        .def(init<string, string, string, string, int, string>())
+        .def("__repr__", &Identity::_repr)
         .add_property("address", (string(Identity::*)()) &Identity::address,
                 (void(Identity::*)(string)) &Identity::address,
                 "email address or URI")
@@ -72,6 +79,9 @@ BOOST_PYTHON_MODULE(pEp)
     auto blob_class = class_<Message::Blob>("Blob", "Binary large object",
             init< object, char const*, char const* >(args("data", "mime_type", "filename"),
                 "init buffer with binary data") )
+        .def(init<object, string>())
+        .def(init<object>())
+        .def("__repr__", &Message::Blob::_repr)
         .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
                 (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
                 "MIME type of object in Blob")
@@ -148,8 +158,8 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format");
 
-    PyModuleDef * def = PyModule_GetDef(scope().ptr());
-    def->m_free = free_module;
+    PyModuleDef * _def = PyModule_GetDef(scope().ptr());
+    _def->m_free = free_module;
 
     PEP_STATUS status = ::init(&session);
     if (status != PEP_STATUS_OK) {

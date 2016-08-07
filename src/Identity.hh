@@ -15,12 +15,16 @@ namespace pEp {
             pEp_identity *_ident;
 
         public:
-            Identity();
+            Identity(string address = "", string fpr = "", string user_id = "",
+                    string username = "", int comm_type = 0, string lang = "");
+
             Identity(const Identity& second);
             Identity(pEp_identity *ident);
             ~Identity();
             void attach(pEp_identity *ident);
             pEp_identity *detach();
+
+            string _repr();
 
             string address() { return str_attr(_ident->address); }
             void address(string value) { str_attr(_ident->address, value); }

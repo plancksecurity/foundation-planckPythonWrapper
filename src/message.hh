@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/python.hpp>
+#include <boost/lexical_cast.hpp>
 #include <pEp/message.h>
 #include <string>
 #include "Identity.hh"
@@ -10,6 +11,7 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace utility;
         using namespace boost::python;
+        using boost::lexical_cast;
 
         // Message is owning a message struct
 
@@ -27,9 +29,11 @@ namespace pEp {
             public:
                 Blob(bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL),
                         bool chained = false);
-                Blob(object data, string mime_type, string filename);
+                Blob(object data, string mime_type = "", string filename = "");
                 Blob(const Blob& second);
                 ~Blob();
+
+                string _repr();
 
                 string mime_type() { return _bl ? str_attr(_bl->mime_type) : ""; }
                 void mime_type(string value) { str_attr(_bl->mime_type, value); }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
+#include <sstream>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -56,6 +57,28 @@ namespace pEp {
                 free(_bl->value);
                 free(_bl);
             }
+        }
+
+        string Message::Blob::_repr()
+        {
+            stringstream build;
+            build << "Blob(";
+            if (!_bl) {
+                build << "b'', '', ''";
+            }
+            else {
+                build << "bytes(" << _bl->size << "), ";
+                string mime_type;
+                if (_bl->mime_type)
+                    mime_type = string(_bl->mime_type);
+                string filename;
+                if (_bl->filename)
+                    filename = string(_bl->filename);
+                build << repr(mime_type) << ", ";
+                build << repr(filename);
+            }
+            build << ")";
+            return build.str();
         }
 
         int Message::Blob::getbuffer(PyObject *self, Py_buffer *view, int flags) {

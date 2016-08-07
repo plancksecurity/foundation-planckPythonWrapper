@@ -11,6 +11,9 @@ namespace pEp {
         using namespace std;
         using namespace boost::python;
 
+        object repr(object s);
+        string repr(string s);
+
         string str_attr(char *&str);
         void str_attr(char *&str, string value);
 

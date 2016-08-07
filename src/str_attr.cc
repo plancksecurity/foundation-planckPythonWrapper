@@ -8,6 +8,19 @@ namespace pEp {
         using namespace std;
         using namespace boost::locale;
 
+        object repr(object s)
+        {
+            return s.attr("__repr__")();
+        }
+
+        string repr(string s)
+        {
+            str _s = s.c_str();
+            object _r = _s.attr("__repr__")();
+            string r = extract< string >(_r);
+            return r;
+        }
+
         string str_attr(char *&str)
         {
             if (!str)
