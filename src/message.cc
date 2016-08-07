@@ -187,7 +187,7 @@ namespace pEp {
         string Message::_str()
         {
             if (!(_msg->from && _msg->from->address && _msg->from->address[0]))
-                return "< incomplete pEp.Message object: from missing >";
+                throw out_of_range("from_ missing");
 
             char *mimetext;
             string result;
@@ -200,18 +200,18 @@ namespace pEp {
                     break;
 
                 case PEP_BUFFER_TOO_SMALL:
-                    result = "< Message MIME error: buffer too small >";
-                    break;
+                    throw runtime_error("mime_encode_message: buffer too small");
 
                 case PEP_CANNOT_CREATE_TEMP_FILE:
-                    result = "< Message MIME error: cannot create temp file >";
-                    break;
+                    throw runtime_error("mime_encode_message: cannot create temp file");
 
                 case PEP_OUT_OF_MEMORY:
                     throw bad_alloc();
 
                 default:
-                    result = "< Message MIME error: unknown >";
+                    stringstream build;
+                    build << "mime_encode_message: unknown error (" << (int) status << ")";
+                    throw runtime_error(build.str());
             }
 
             return result;
