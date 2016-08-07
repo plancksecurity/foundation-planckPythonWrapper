@@ -60,6 +60,7 @@ namespace pEp {
             message *detach();
 
             string _str();
+            string _repr();
 
             PEP_msg_direction dir() { return _msg->dir; }
             void dir(PEP_msg_direction value) { _msg->dir = value; }

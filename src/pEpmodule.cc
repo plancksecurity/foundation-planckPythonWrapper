@@ -111,6 +111,7 @@ BOOST_PYTHON_MODULE(pEp)
     auto message_class = class_<Message>("Message", "p≡p message")
         .def(init<string>())
         .def("__str__", &Message::_str)
+        .def("__repr__", &Message::_repr)
         .add_property("dir", (int(Message::*)())
                 (PEP_msg_direction(Message::*)()) &Message::dir,
                 (void(Message::*)(int))

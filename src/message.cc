@@ -219,6 +219,13 @@ namespace pEp {
             return result;
         }
 
+        string Message::_repr()
+        {
+            stringstream build;
+            build << "Message(" << repr(_str()) << ")";
+            return build.str();
+        }
+
         tuple Message::attachments()
         {
             list l;
