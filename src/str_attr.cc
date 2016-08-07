@@ -76,6 +76,7 @@ namespace pEp {
                     free_stringlist(_sl);
                 }
                 string s = extract_string();
+                s = normalize(s, norm_nfc);
                 _s = stringlist_add(_s, s.c_str());
                 if (!_s) {
                     free_stringlist(_sl);
@@ -120,8 +121,10 @@ namespace pEp {
                     free_stringpair_list(_spl);
 
                 string key = extract_key();
-                string value = extract_value();
-                stringpair_t *pair = new_stringpair(key.c_str(), value.c_str());
+                key = normalize(key, norm_nfc);
+                string _value = extract_value();
+                _value = normalize(_value, norm_nfc);
+                stringpair_t *pair = new_stringpair(key.c_str(), _value.c_str());
                 if (!pair) {
                     free_stringpair_list(_spl);
                     throw bad_alloc();
@@ -135,6 +138,38 @@ namespace pEp {
 
             free_stringpair_list(spl);
             spl = _spl;
+        }
+
+        stringlist_t *to_stringlist(list l)
+        {
+            stringlist_t *result = new_stringlist(NULL);
+            if (!result)
+                throw bad_alloc();
+
+            stringlist_t *_s = result;
+            for (int i=0; i<len(l); i++) {
+                extract< string > extract_string(l[i]);
+                if (!extract_string.check())
+                    free_stringlist(result);
+                string s = extract_string();
+                _s = stringlist_add(_s, s.c_str());
+                if (!_s) {
+                    free_stringlist(result);
+                    throw bad_alloc();
+                }
+            }
+
+            return result;
+        }
+
+        list from_stringlist(stringlist_t *sl)
+        {
+            list result;
+            for (stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
+                string s = _sl->value;
+                result.append(s);
+            }
+            return result;
         }
     }
 }
