@@ -46,10 +46,9 @@ namespace pEp {
         }
 
         Message::Blob::Blob(const Message::Blob& second) :
-            _bl(bloblist_dup(second._bl)), part_of_chain(false)
+            _bl(second._bl), part_of_chain(true)
         {
-            if (!_bl)
-                throw bad_alloc();
+
         }
 
         Message::Blob::~Blob()

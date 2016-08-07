@@ -11,6 +11,7 @@ module_pEp = Extension('pEp',
         include_dirs = [prefix+'/include', boost+'/include',],
         library_dirs = [prefix+'/lib', boost+'/lib',],
         libraries = ['pEpEngine', 'boost_python-mt', 'boost_locale-mt',],
+        extra_compile_args = ['-O0', '-g',],
     )
 
 setup(

@@ -17,7 +17,8 @@ namespace pEp {
             PEP_encrypt_flags_t _flags = (PEP_encrypt_flags_t) flags;
             message *_dst = NULL;
 
-            PEP_STATUS status = encrypt_message(session, src, _extra, &_dst,
+            message *_src = src;
+            PEP_STATUS status = encrypt_message(session, _src, _extra, &_dst,
                     _enc_format, _flags);
             free_stringlist(_extra);
             _throw_status(status);
