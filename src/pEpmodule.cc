@@ -184,6 +184,7 @@ BOOST_PYTHON_MODULE(pEp)
     // message API
 
     def("encrypt_message", &encrypt_message, "encrypt message in memory");
+    def("decrypt_message", &decrypt_message, "decrypt message in memory");
 
     // init() and release()
 

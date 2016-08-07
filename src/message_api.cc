@@ -3,7 +3,7 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        Message encrypt_message(Message& src, list extra, int enc_format,
+        Message encrypt_message(Message src, list extra, int enc_format,
                 int flags)
         {
             Identity _from = src.from();
@@ -29,6 +29,30 @@ namespace pEp {
             
             Message dst(_dst);
             return dst;
+        }
+
+        tuple decrypt_message(Message src)
+        {
+            message *_dst = NULL;
+            stringlist_t *_keylist = NULL;
+            PEP_color _color = PEP_rating_undefined;
+            PEP_decrypt_flags_t _flags = 0;
+
+            PEP_STATUS status = decrypt_message(session, src, &_dst, &_keylist,
+                    &_color, &_flags);
+            _throw_status(status);
+
+            list keylist;
+            if (_keylist) {
+                keylist = from_stringlist(_keylist);
+                free_stringlist(_keylist);
+            }
+
+            int color = (int) _color;
+            int flags = (int) _flags;
+
+            Message dst(_dst);
+            return make_tuple(dst, keylist, color, flags);
         }
     }
 }

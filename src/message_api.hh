@@ -4,8 +4,9 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        Message encrypt_message(Message& src, list extra, int enc_format,
+        Message encrypt_message(Message src, list extra, int enc_format,
                 int flags);
+        tuple decrypt_message(Message src);
     }
 }
 
