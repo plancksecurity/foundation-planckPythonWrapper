@@ -4,21 +4,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        void _throw_status(PEP_STATUS status)
-        {
-            if (status == PEP_STATUS_OK)
-                return;
-            if (status >= 0x400 && status <= 0x4ff)
-                return;
- 
-            if (status == PEP_OUT_OF_MEMORY)
-                throw bad_alloc();
-
-            stringstream build;
-            build << "p≡p error: " << status;
-            throw runtime_error(build.str());
-        }
-
         void update_identity(Identity& ident)
         {
             if (ident.me())

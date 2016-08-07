@@ -27,7 +27,7 @@ namespace pEp {
         void strdict_attr(stringpair_list_t *&spl, dict value);
 
         stringlist_t *to_stringlist(list l);
-        list from_stringlist(stringlist_t *sl);
+        list from_stringlist(const stringlist_t *sl);
     }
 }
 

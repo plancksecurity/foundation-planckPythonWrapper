@@ -54,7 +54,7 @@ namespace pEp {
             Message(PEP_msg_direction dir = PEP_dir_outgoing);
             Message(string mimetext);
             Message(const Message& second);
-            Message(message *ident);
+            Message(message *msg);
             ~Message();
             operator message *();
             void attach(message *ident);
@@ -86,13 +86,13 @@ namespace pEp {
             time_t recv() { return timestamp_attr(_msg->recv); }
             void recv(time_t value) { timestamp_attr(_msg->recv, value); }
 
-            object from() { return identity_attr(_msg->from); }
+            Identity from() { return identity_attr(_msg->from); }
             void from(object value) { identity_attr(_msg->from, value); }
 
             list to() { return identitylist_attr(_msg->to); }
             void to(list value) { identitylist_attr(_msg->to, value); }
 
-            object recv_by() { return identity_attr(_msg->recv_by); }
+            Identity recv_by() { return identity_attr(_msg->recv_by); }
             void recv_by(object value) { identity_attr(_msg->recv_by, value); }
 
             list cc() { return identitylist_attr(_msg->cc); }

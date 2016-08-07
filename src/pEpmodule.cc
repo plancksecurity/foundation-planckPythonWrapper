@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include "basic_api.hh"
+#include "message_api.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -21,6 +22,22 @@ namespace pEp {
         static void free_module(void *)
         {
             release(session);
+        }
+
+        void _throw_status(PEP_STATUS status)
+        {
+            if (status == PEP_STATUS_OK)
+                return;
+            if (status >= 0x400 && status <= 0x4ff)
+                return;
+            if (status == PEP_OUT_OF_MEMORY)
+                throw bad_alloc();
+            if (status == PEP_ILLEGAL_VALUE)
+                throw invalid_argument("illegal value");
+
+            stringstream build;
+            build << "p≡p error: " << status;
+            throw runtime_error(build.str());
         }
     }
 }
@@ -120,13 +137,13 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("recv", (time_t(Message::*)()) &Message::recv,
                 (void(Message::*)(time_t)) &Message::recv,
                 "time when message was received in UTC seconds since epoch")
-        .add_property("from_", (object(Message::*)()) &Message::from,
+        .add_property("from_", (Identity(Message::*)()) &Message::from,
                 (void(Message::*)(object)) &Message::from,
                 "identity where message is from")
         .add_property("to", (list(Message::*)()) &Message::to,
                 (void(Message::*)(list)) &Message::to,
                 "list of identities message is going to")
-        .add_property("recv_by", (object(Message::*)()) &Message::recv_by,
+        .add_property("recv_by", (Identity(Message::*)()) &Message::recv_by,
                 (void(Message::*)(object)) &Message::recv_by,
                 "identity where message was received by")
         .add_property("cc", (list(Message::*)()) &Message::cc,
@@ -159,8 +176,16 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format");
 
+    // basic API
+
     def("update_identity", &update_identity, "update identity information");
     def("myself", &myself, "ensures that the own identity is being complete");
+
+    // message API
+
+    def("encrypt_message", &encrypt_message, "encrypt message in memory");
+
+    // init() and release()
 
     PyModuleDef * _def = PyModule_GetDef(scope().ptr());
     _def->m_free = free_module;

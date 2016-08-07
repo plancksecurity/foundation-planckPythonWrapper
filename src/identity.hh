@@ -52,7 +52,7 @@ namespace pEp {
             void flags(identity_flags_t flags) { _ident->flags = flags; }
         };
 
-        object identity_attr(pEp_identity *&ident);
+        Identity identity_attr(pEp_identity *&ident);
         void identity_attr(pEp_identity *&ident, object value);
 
         list identitylist_attr(identity_list *&il);

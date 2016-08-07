@@ -162,10 +162,10 @@ namespace pEp {
             return result;
         }
 
-        list from_stringlist(stringlist_t *sl)
+        list from_stringlist(const stringlist_t *sl)
         {
             list result;
-            for (stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
+            for (const stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s = _sl->value;
                 result.append(s);
             }

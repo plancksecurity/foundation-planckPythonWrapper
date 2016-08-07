@@ -102,7 +102,7 @@ namespace pEp {
             return _ident->lang;
         }
 
-        object identity_attr(pEp_identity *&ident)
+        Identity identity_attr(pEp_identity *&ident)
         {
             pEp_identity *_dup;
 
@@ -113,8 +113,8 @@ namespace pEp {
             if (!_dup)
                 throw bad_alloc();
 
-            Identity *_ident = new Identity(_dup);
-            return object(_ident);
+            Identity _ident(_dup);
+            return _ident;
         }
 
         void identity_attr(pEp_identity *&ident, object value)

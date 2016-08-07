@@ -120,9 +120,11 @@ namespace pEp {
                     mimetext.size(), &_msg);
             switch (status) {
                 case PEP_STATUS_OK:
-                    if (_msg)
+                    if (_msg) {
+                        _msg->dir = PEP_dir_outgoing;
                         return;
-                    _msg = new_message(PEP_dir_incoming);
+                    }
+                    _msg = new_message(PEP_dir_outgoing);
                     break;
                     
                 case PEP_BUFFER_TOO_SMALL:
