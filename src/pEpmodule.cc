@@ -63,6 +63,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def(init<string, string, string, string, int>())
         .def(init<string, string, string, string, int, string>())
         .def("__repr__", &Identity::_repr)
+        .def("__str__", &Identity::_str)
         .add_property("address", (string(Identity::*)()) &Identity::address,
                 (void(Identity::*)(string)) &Identity::address,
                 "email address or URI")

@@ -26,6 +26,7 @@ namespace pEp {
             pEp_identity *detach();
 
             string _repr();
+            string _str();
 
             string address() { return str_attr(_ident->address); }
             void address(string value) { str_attr(_ident->address, value); }

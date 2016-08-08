@@ -87,6 +87,15 @@ namespace pEp {
             return build.str();
         }
 
+        string Identity::_str()
+        {
+            if (!(_ident->address && _ident->address[0]))
+                return "";
+            if (!(_ident->username && _ident->username[0]))
+                return _ident->address;
+            return string(_ident->username) + " <" + _ident->address + ">";
+        }
+
         void Identity::lang(string value)
         {
             if (value == "")
