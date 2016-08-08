@@ -4,11 +4,15 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        void SyncMixIn::register_for_keysync()
+        SyncMixIn::SyncMixIn()
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
                     messageToSend, showHandshake);
             assert(status == PEP_STATUS_OK);
+        }
+
+        SyncMixIn::~SyncMixIn() {
+            unregister_sync_callbacks(session);
         }
 
         PEP_STATUS SyncMixIn::messageToSend(void *obj, const message *msg)

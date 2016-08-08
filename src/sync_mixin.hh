@@ -6,8 +6,8 @@ namespace pEp {
     namespace PythonAdapter {
         class SyncMixIn {
             public:
-                virtual ~SyncMixIn() { }
-                void register_for_keysync();
+                SyncMixIn();
+                virtual ~SyncMixIn();
 
             protected:
                 static PEP_STATUS messageToSend(void *obj, const message *msg);
