@@ -4,6 +4,7 @@
 #include <sstream>
 #include "basic_api.hh"
 #include "message_api.hh"
+#include "sync_mixin.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -192,6 +193,10 @@ BOOST_PYTHON_MODULE(pEp)
 
     def("encrypt_message", &encrypt_message, "encrypt message in memory");
     def("decrypt_message", &decrypt_message, "decrypt message in memory");
+
+    // key sync API
+
+    auto sync_mixin_class = class_<SyncMixIn>("SyncMixIn", "p≡p Sync MixIn");
 
     // init() and release()
 
