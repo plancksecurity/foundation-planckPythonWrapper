@@ -15,17 +15,31 @@ namespace pEp {
             unregister_sync_callbacks(session);
         }
 
-        PEP_STATUS SyncMixIn::messageToSend(void *obj, const message *msg)
+        PEP_STATUS SyncMixIn::messageToSend(void *obj, message *msg)
         {
-            SyncMixIn *that = (SyncMixIn *) obj;
+            if (!obj)
+                return PEP_SEND_FUNCTION_NOT_REGISTERED;
+
+            if (!msg)
+                return PEP_ILLEGAL_VALUE;
+
+            object *that = (object *) obj;
+            that->attr("messageToSend")(Message(msg));
 
             return PEP_STATUS_OK;
         }
 
         PEP_STATUS SyncMixIn::showHandshake(void *obj,
-                const pEp_identity *self, const pEp_identity *partner)
+                pEp_identity *self, pEp_identity *partner)
         {
-            SyncMixIn *that = (SyncMixIn *) obj;
+            if (!obj)
+                return PEP_SEND_FUNCTION_NOT_REGISTERED;
+
+            if (!(self && partner))
+                return PEP_ILLEGAL_VALUE;
+
+            object *that = (object *) obj;
+            that->attr("showHandshake")(Identity(self), Identity(partner));
 
             return PEP_STATUS_OK;
         }
