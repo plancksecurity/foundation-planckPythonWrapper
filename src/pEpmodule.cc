@@ -201,7 +201,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def("messageToSend", &SyncMixIn::messageToSend, "overwrite this method")
         .def("showHandshake", &SyncMixIn::showHandshake, "overwrite this method")
 #ifndef NDEBUG
-        .def("_inject", &SyncMixIn::_inject,
+        .def("inject", &SyncMixIn::_inject,
                 "inject an event into the sync state machine (for debugging purposes only")
 #endif
         .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult,
