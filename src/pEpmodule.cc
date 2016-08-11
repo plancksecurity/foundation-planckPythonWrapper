@@ -198,9 +198,14 @@ BOOST_PYTHON_MODULE(pEp)
 
     auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
             "SyncMixIn", "p≡p Sync MixIn")
-        .def("messageToSend", &SyncMixIn::messageToSend)
-        .def("showHandshake", &SyncMixIn::showHandshake)
-        .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult);
+        .def("messageToSend", &SyncMixIn::messageToSend, "overwrite this method")
+        .def("showHandshake", &SyncMixIn::showHandshake, "overwrite this method")
+#ifndef NDEBUG
+        .def("_inject", &SyncMixIn::_inject,
+                "inject an event into the sync state machine (for debugging purposes only")
+#endif
+        .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult,
+                "call to deliver the handshake result");
 
     // init() and release()
 

@@ -1,5 +1,8 @@
 #include "sync_mixin.hh"
 #include <pEp/sync.h>
+#ifndef NDEBUG
+#include <pEp/sync_fsm.h>
+#endif
 #include <assert.h>
 
 namespace pEp {
@@ -50,6 +53,14 @@ namespace pEp {
         {
             ::deliverHandshakeResult(session, (sync_handshake_result) result);
         }
+
+#ifndef NDEBUG
+        virtual void _inject(int event, Identity *partner, object extra)
+        {
+            PEP_SESSION session = fsm_DeviceState_inject(session,
+                    (DeviceState_event) event, partner->detach(), NULL);
+        }
+#endif
 
         void SyncMixIn_callback::_messageToSend(Message msg)
         {
