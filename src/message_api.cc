@@ -36,11 +36,11 @@ namespace pEp {
         {
             message *_dst = NULL;
             stringlist_t *_keylist = NULL;
-            PEP_color _color = PEP_rating_undefined;
+            PEP_rating _rating = PEP_rating_undefined;
             PEP_decrypt_flags_t _flags = 0;
 
             PEP_STATUS status = decrypt_message(session, src, &_dst, &_keylist,
-                    &_color, &_flags);
+                    &_rating, &_flags);
             _throw_status(status);
 
             list keylist;
@@ -49,11 +49,11 @@ namespace pEp {
                 free_stringlist(_keylist);
             }
 
-            int color = (int) _color;
+            int rating = (int) _rating;
             int flags = (int) _flags;
 
             Message dst(_dst);
-            return make_tuple(dst, keylist, color, flags);
+            return make_tuple(dst, keylist, rating, flags);
         }
     }
 }
