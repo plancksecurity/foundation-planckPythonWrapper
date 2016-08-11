@@ -55,9 +55,9 @@ namespace pEp {
         }
 
 #ifndef NDEBUG
-        virtual void _inject(int event, Identity *partner, object extra)
+        void SyncMixIn::_inject(int event, Identity *partner, object extra)
         {
-            PEP_SESSION session = fsm_DeviceState_inject(session,
+            PEP_STATUS status = fsm_DeviceState_inject(session,
                     (DeviceState_event) event, partner->detach(), NULL);
         }
 #endif
