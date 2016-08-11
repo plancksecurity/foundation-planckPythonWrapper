@@ -196,7 +196,10 @@ BOOST_PYTHON_MODULE(pEp)
 
     // key sync API
 
-    auto sync_mixin_class = class_<SyncMixIn>("SyncMixIn", "p≡p Sync MixIn");
+    auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
+            "SyncMixIn", "p≡p Sync MixIn")
+        .def("messageToSend", &SyncMixIn::messageToSend)
+        .def("showHandshake", &SyncMixIn::showHandshake);
 
     // init() and release()
 

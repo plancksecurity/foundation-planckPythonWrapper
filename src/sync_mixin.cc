@@ -7,7 +7,7 @@ namespace pEp {
         SyncMixIn::SyncMixIn()
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
-                    messageToSend, showHandshake);
+                    _messageToSend, _showHandshake);
             assert(status == PEP_STATUS_OK);
         }
 
@@ -15,7 +15,7 @@ namespace pEp {
             unregister_sync_callbacks(session);
         }
 
-        PEP_STATUS SyncMixIn::messageToSend(void *obj, message *msg)
+        PEP_STATUS SyncMixIn::_messageToSend(void *obj, message *msg)
         {
             if (!obj)
                 return PEP_SEND_FUNCTION_NOT_REGISTERED;
@@ -23,25 +23,37 @@ namespace pEp {
             if (!msg)
                 return PEP_ILLEGAL_VALUE;
 
-            object *that = (object *) obj;
-            that->attr("messageToSend")(Message(msg));
+            auto that = dynamic_cast< SyncMixIn_callback * >(
+                    static_cast< SyncMixIn * > (obj));
+            that->messageToSend(Message(msg));
 
             return PEP_STATUS_OK;
         }
 
-        PEP_STATUS SyncMixIn::showHandshake(void *obj,
-                pEp_identity *self, pEp_identity *partner)
+        PEP_STATUS SyncMixIn::_showHandshake(void *obj,
+                pEp_identity *me, pEp_identity *partner)
         {
             if (!obj)
                 return PEP_SEND_FUNCTION_NOT_REGISTERED;
 
-            if (!(self && partner))
+            if (!(me && partner))
                 return PEP_ILLEGAL_VALUE;
 
-            object *that = (object *) obj;
-            that->attr("showHandshake")(Identity(self), Identity(partner));
+            auto that = dynamic_cast< SyncMixIn_callback * >(
+                    static_cast< SyncMixIn * > (obj));
+            that->showHandshake(Identity(me), Identity(partner));
 
             return PEP_STATUS_OK;
+        }
+
+        void SyncMixIn_callback::_messageToSend(Message msg)
+        {
+            call_method< void >(_self, "messageToSend", msg);
+        }
+
+        void SyncMixIn_callback::_showHandshake(Identity me, Identity partner)
+        {
+            call_method< void >(_self, "showHandshake", me, partner);
         }
     }
 }
