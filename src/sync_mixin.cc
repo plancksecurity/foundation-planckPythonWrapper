@@ -46,6 +46,11 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
+        void SyncMixIn::deliverHandshakeResult(int result)
+        {
+            ::deliverHandshakeResult(session, (sync_handshake_result) result);
+        }
+
         void SyncMixIn_callback::_messageToSend(Message msg)
         {
             call_method< void >(_self, "messageToSend", msg);

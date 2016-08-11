@@ -12,9 +12,12 @@ namespace pEp {
                 virtual void messageToSend(Message msg) {
                     throw runtime_error("override this method");
                 }
+
                 virtual void showHandshake(Identity me, Identity partner) {
                     throw runtime_error("override this method");
                 }
+
+                virtual void deliverHandshakeResult(int result);
 
             protected:
                 static PEP_STATUS _messageToSend(void *obj, message *msg);

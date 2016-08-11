@@ -199,7 +199,8 @@ BOOST_PYTHON_MODULE(pEp)
     auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
             "SyncMixIn", "p≡p Sync MixIn")
         .def("messageToSend", &SyncMixIn::messageToSend)
-        .def("showHandshake", &SyncMixIn::showHandshake);
+        .def("showHandshake", &SyncMixIn::showHandshake)
+        .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult);
 
     // init() and release()
 
