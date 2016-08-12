@@ -56,7 +56,7 @@ namespace pEp {
             return make_tuple(dst, keylist, rating, flags);
         }
 
-        int color_from_rating(int rating)
+        int _color(int rating)
         {
             return (int) ::color_from_rating((PEP_rating) rating);
         }

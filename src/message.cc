@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <pEp/mime.h>
+#include <pEp/message_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -293,6 +294,25 @@ namespace pEp {
 
         tuple Message::decrypt() {
             return decrypt_message(*this);
+        }
+
+        int Message::outgoing_rating()
+        {
+            if (!(_msg && _msg->from))
+                throw invalid_argument("from must be a valid Identity()");
+            if (!(_msg && _msg->dir == PEP_dir_outgoing))
+                throw invalid_argument("Message.dir must be outgoing");
+
+            PEP_rating rating = PEP_rating_undefined;
+            PEP_STATUS status = outgoing_message_rating(session, _msg, &rating);
+            _throw_status(status);
+
+            return (int) rating;
+        }
+        
+        int Message::outgoing_color()
+        {
+            return _color(outgoing_rating());
         }
     }
 }

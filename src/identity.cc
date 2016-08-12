@@ -1,7 +1,10 @@
 #include "Identity.hh"
+#include "pEpmodule.hh"
+#include "message_api.hh"
 #include <typeinfo>
 #include <sstream>
 #include <pEp/identity_list.h>
+#include <pEp/message_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -109,6 +112,23 @@ namespace pEp {
         string Identity::lang()
         {
             return _ident->lang;
+        }
+
+        int Identity::rating()
+        {
+            if (!(_ident->address))
+                throw invalid_argument("address must be given");
+
+            PEP_rating rating = PEP_rating_undefined;
+            PEP_STATUS status = identity_rating(session, _ident, &rating);
+            _throw_status(status);
+
+            return (int) rating;
+        }
+
+        int Identity::color()
+        {
+            return _color(rating());
         }
 
         Identity identity_attr(pEp_identity *&ident)

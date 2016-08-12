@@ -7,7 +7,7 @@ namespace pEp {
         Message encrypt_message(Message src, list extra = list(),
                 int enc_format = 4, int flags = 0);
         tuple decrypt_message(Message src);
-        int color_from_rating(int rating);
+        int _color(int rating);
     }
 }
 

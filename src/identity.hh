@@ -51,6 +51,9 @@ namespace pEp {
 
             identity_flags_t flags() { return _ident->flags; }
             void flags(identity_flags_t flags) { _ident->flags = flags; }
+
+            int rating();
+            int color();
         };
 
         Identity identity_attr(pEp_identity *&ident);

@@ -127,6 +127,8 @@ namespace pEp {
             Message encrypt(list extra);
             Message encrypt();
             tuple decrypt();
+            int outgoing_rating();
+            int outgoing_color();
         };
     }
 }

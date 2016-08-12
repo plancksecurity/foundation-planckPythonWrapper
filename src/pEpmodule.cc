@@ -90,7 +90,9 @@ BOOST_PYTHON_MODULE(pEp)
                  "true if own identity, false otherwise")
         .add_property("flags", (identity_flags_t(Identity::*)()) &Identity::flags,
                 (void(Identity::*)(identity_flags_t)) &Identity::flags,
-                "flags (p≡p internal)");
+                "flags (p≡p internal)")
+        .add_property("rating", &Identity::rating, "rating of Identity")
+        .add_property("color", &Identity::color, "color of Identity");
     
     identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";
 
@@ -182,7 +184,9 @@ BOOST_PYTHON_MODULE(pEp)
         .def("encrypt", (Message(Message::*)(list))&Message::encrypt, "encrypt message")
         .def("encrypt", (Message(Message::*)(list,int))&Message::encrypt, "encrypt message")
         .def("encrypt", (Message(Message::*)(list,int,int))&Message::encrypt, "encrypt message")
-        .def("decrypt", &Message::decrypt, "decrypt message");
+        .def("decrypt", &Message::decrypt, "decrypt message")
+        .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
+        .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have");
 
     // basic API
 
@@ -191,9 +195,7 @@ BOOST_PYTHON_MODULE(pEp)
 
     // message API
 
-    def("encrypt_message", &encrypt_message, "encrypt message in memory");
-    def("decrypt_message", &decrypt_message, "decrypt message in memory");
-    def("color_from_rating", &color_from_rating, "calculate color value");
+    def("color", &_color, "calculate color value out of rating");
 
     // key sync API
 
