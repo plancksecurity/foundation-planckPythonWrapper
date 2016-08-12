@@ -196,6 +196,7 @@ BOOST_PYTHON_MODULE(pEp)
     // message API
 
     def("color", &_color, "calculate color value out of rating");
+    def("trustwords", &_trustwords, "calculate trustwords for two Identities");
 
     // key sync API
 
