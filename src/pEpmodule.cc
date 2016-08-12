@@ -193,6 +193,7 @@ BOOST_PYTHON_MODULE(pEp)
 
     def("encrypt_message", &encrypt_message, "encrypt message in memory");
     def("decrypt_message", &decrypt_message, "decrypt message in memory");
+    def("color_from_rating", &color_from_rating, "calculate color value");
 
     // key sync API
 

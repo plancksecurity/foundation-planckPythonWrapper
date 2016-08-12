@@ -55,6 +55,11 @@ namespace pEp {
             Message dst(_dst);
             return make_tuple(dst, keylist, rating, flags);
         }
+
+        int color_from_rating(int rating)
+        {
+            return (int) ::color_from_rating((PEP_rating) rating);
+        }
     }
 }
 
