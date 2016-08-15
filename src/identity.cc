@@ -57,18 +57,18 @@ namespace pEp {
             if (_ident->address)
                 address = string(_ident->address);
             build << repr(address) << ", ";
-            string fpr;
-            if (_ident->fpr)
-                fpr = string(_ident->fpr);
-            build << repr(fpr) << ", ";
-            string user_id;
-            if (_ident->user_id)
-                user_id = string(_ident->user_id);
-            build << repr(user_id) << ", ";
             string username;
             if (_ident->username)
                 username = string(_ident->username);
             build << repr(username) << ", ";
+            string user_id;
+            if (_ident->user_id)
+                user_id = string(_ident->user_id);
+            build << repr(user_id) << ", ";
+            string fpr;
+            if (_ident->fpr)
+                fpr = string(_ident->fpr);
+            build << repr(fpr) << ", ";
             build << (int) _ident->comm_type << ", ";
             string lang = _ident->lang;
             build << repr(lang) << ")";
