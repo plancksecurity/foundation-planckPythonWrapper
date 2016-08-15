@@ -23,7 +23,7 @@ namespace pEp {
             free_stringlist(_extra);
             _throw_status(status);
 
-            if (!_dst || _dst == src) {
+            if (!_dst || _dst == _src) {
                 Message dst(src);
                 return dst;
             }

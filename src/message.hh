@@ -128,7 +128,7 @@ namespace pEp {
             boost::python::tuple decrypt();
             int outgoing_rating();
             int outgoing_color();
-
+            Message copy();
         };
 
         Message outgoing_message(Identity me);

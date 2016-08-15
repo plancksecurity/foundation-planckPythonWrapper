@@ -186,7 +186,8 @@ BOOST_PYTHON_MODULE(pEp)
         .def("encrypt", (Message(Message::*)(list,int,int))&Message::encrypt, "encrypt message")
         .def("decrypt", &Message::decrypt, "decrypt message")
         .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
-        .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have");
+        .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have")
+        .def("copy", &Message::copy, "deep copy of message");
 
     // basic API
 

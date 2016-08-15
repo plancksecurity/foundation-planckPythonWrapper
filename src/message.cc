@@ -117,6 +117,7 @@ namespace pEp {
                 _msg->from = ::identity_dup(*from);
                 if (!_msg->from)
                     throw bad_alloc();
+                _msg->dir = dir;
             }
         }
 
@@ -309,6 +310,11 @@ namespace pEp {
         int Message::outgoing_color()
         {
             return _color(outgoing_rating());
+        }
+
+        Message Message::copy()
+        {
+            return Message(_str());
         }
 
         Message outgoing_message(Identity me)
