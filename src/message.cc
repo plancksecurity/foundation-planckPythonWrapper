@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <pEp/mime.h>
+#include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
 
 namespace pEp {
@@ -107,25 +108,35 @@ namespace pEp {
 
         PyBufferProcs Message::Blob::bp = { getbuffer, NULL };
 
-        Message::Message(PEP_msg_direction dir)
-            : _msg(new_message(dir))
+        Message::Message(PEP_msg_direction dir, Identity *from)
+            : _msg(new_message(dir), &free_message)
         {
             if (!_msg)
                 throw bad_alloc();
+            if (from) {
+                _msg->from = ::identity_dup(*from);
+                if (!_msg->from)
+                    throw bad_alloc();
+            }
         }
 
         Message::Message(string mimetext)
+            : _msg(NULL, &free_message)
         {
-            _msg = NULL;
+            message *_cpy;
             PEP_STATUS status = mime_decode_message(mimetext.c_str(),
-                    mimetext.size(), &_msg);
+                    mimetext.size(), &_cpy);
             switch (status) {
                 case PEP_STATUS_OK:
-                    if (_msg) {
-                        _msg->dir = PEP_dir_outgoing;
+                    if (_cpy) {
+                        _cpy->dir = PEP_dir_outgoing;
+                        _msg = shared_ptr< message >(_cpy);
                         return;
                     }
-                    _msg = new_message(PEP_dir_outgoing);
+                    _cpy = new_message(PEP_dir_outgoing);
+                    if (!_cpy)
+                        throw bad_alloc();
+                    _msg = shared_ptr< message >(_cpy);
                     break;
                     
                 case PEP_BUFFER_TOO_SMALL:
@@ -145,9 +156,9 @@ namespace pEp {
         }
 
         Message::Message(const Message& second)
-            : _msg(message_dup(second._msg))
+            : _msg(second._msg)
         {
-            if (!_msg)
+            if (!_msg.get())
                 throw bad_alloc();
         }
 
@@ -159,32 +170,17 @@ namespace pEp {
 
         Message::~Message()
         {
-            free_message(_msg);
-        }
 
-        void Message::attach(message *msg)
-        {
-            free_message(_msg);
-            _msg = msg;
-        }
-
-        message *Message::detach()
-        {
-            message *new_one = new_message(_msg->dir);
-            if (!new_one)
-                throw bad_alloc();
-
-            message *msg = _msg;
-            _msg = new_one;
-
-            return msg;
         }
 
         Message::operator message *()
         {
-            if (!_msg)
-                throw bad_cast();
-            return _msg;
+            return _msg.get();
+        }
+
+        Message::operator const message *() const
+        {
+            return _msg.get();
         }
 
         string Message::_str()
@@ -195,7 +191,7 @@ namespace pEp {
             char *mimetext;
             string result;
 
-            PEP_STATUS status = mime_encode_message(_msg, false, &mimetext);
+            PEP_STATUS status = mime_encode_message(*this, false, &mimetext);
             switch (status) {
                 case PEP_STATUS_OK:
                     result = mimetext;
@@ -227,7 +223,7 @@ namespace pEp {
             return build.str();
         }
 
-        tuple Message::attachments()
+        boost::python::tuple Message::attachments()
         {
             list l;
 
@@ -236,7 +232,7 @@ namespace pEp {
                 l.append(Blob(bl, true));
             }
 
-            return tuple(l);
+            return boost::python::tuple(l);
         }
 
         void Message::attachments(list value)
@@ -292,7 +288,7 @@ namespace pEp {
             return encrypt_message(*this);
         }
 
-        tuple Message::decrypt() {
+        boost::python::tuple Message::decrypt() {
             return decrypt_message(*this);
         }
 
@@ -304,7 +300,7 @@ namespace pEp {
                 throw invalid_argument("Message.dir must be outgoing");
 
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = outgoing_message_rating(session, _msg, &rating);
+            PEP_STATUS status = outgoing_message_rating(session, *this, &rating);
             _throw_status(status);
 
             return (int) rating;
@@ -313,6 +309,20 @@ namespace pEp {
         int Message::outgoing_color()
         {
             return _color(outgoing_rating());
+        }
+
+        Message outgoing_message(Identity me)
+        {
+            ::myself(session, me);
+            auto m = Message(PEP_dir_outgoing, &me);
+            return m;
+        }
+
+        Message incoming_message(string mime_text)
+        {
+            auto m = Message(mime_text);
+            m.dir(PEP_dir_incoming);
+            return m;
         }
     }
 }

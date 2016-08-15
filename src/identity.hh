@@ -3,6 +3,8 @@
 #include <boost/python.hpp>
 #include <pEp/pEpEngine.h>
 #include <string>
+#include <memory>
+#include <cstddef>
 #include "str_attr.hh"
 
 namespace pEp {
@@ -12,7 +14,7 @@ namespace pEp {
         // Identity is owning a pEp_identity
 
         class Identity {
-            pEp_identity *_ident;
+            shared_ptr< pEp_identity > _ident;
 
         public:
             Identity(string address = "", string fpr = "", string user_id = "",
@@ -22,8 +24,7 @@ namespace pEp {
             Identity(pEp_identity *ident);
             ~Identity();
             operator pEp_identity *();
-            void attach(pEp_identity *ident);
-            pEp_identity *detach();
+            operator const pEp_identity *() const;
 
             string _repr();
             string _str();

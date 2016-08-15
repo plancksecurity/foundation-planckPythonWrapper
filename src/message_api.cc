@@ -32,7 +32,7 @@ namespace pEp {
             return dst;
         }
 
-        tuple decrypt_message(Message src)
+        boost::python::tuple decrypt_message(Message src)
         {
             message *_dst = NULL;
             stringlist_t *_keylist = NULL;
@@ -53,7 +53,7 @@ namespace pEp {
             int flags = (int) _flags;
 
             Message dst(_dst);
-            return make_tuple(dst, keylist, rating, flags);
+            return boost::python::make_tuple(dst, keylist, rating, flags);
         }
 
         int _color(int rating)

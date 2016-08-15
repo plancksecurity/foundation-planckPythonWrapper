@@ -55,10 +55,10 @@ namespace pEp {
         }
 
 #ifndef NDEBUG
-        void SyncMixIn::_inject(int event, Identity *partner, object extra)
+        void SyncMixIn::_inject(int event, Identity partner, object extra)
         {
             PEP_STATUS status = fsm_DeviceState_inject(session,
-                    (DeviceState_event) event, partner->detach(), NULL);
+                    (DeviceState_event) event, partner, NULL);
         }
 #endif
 

@@ -19,7 +19,7 @@ namespace pEp {
 
                 virtual void deliverHandshakeResult(int result);
 #ifndef NDEBUG
-                virtual void _inject(int event, Identity *partner, object extra);
+                virtual void _inject(int event, Identity partner, object extra);
 #endif
 
             protected:

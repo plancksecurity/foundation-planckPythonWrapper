@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <sstream>
 #include <pEp/identity_list.h>
+#include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
 
 namespace pEp {
@@ -13,7 +14,7 @@ namespace pEp {
         Identity::Identity(string address, string fpr, string user_id, string
                 username, int comm_type, string lang)
             : _ident(new_identity(address.c_str(), fpr.c_str(),
-                        user_id.c_str(), username.c_str()))
+                        user_id.c_str(), username.c_str()), &::free_identity)
         {
             if (!_ident)
                 throw bad_alloc();
@@ -22,46 +23,30 @@ namespace pEp {
         }
 
         Identity::Identity(const Identity& second)
-            : _ident(identity_dup(second._ident))
+            : _ident(second._ident)
         {
-            if (!_ident)
-                throw bad_alloc();
+
         }
 
         Identity::Identity(pEp_identity *ident)
-            : _ident(ident)
+            : _ident(ident, &::free_identity)
         {
 
         }
 
         Identity::~Identity()
         {
-            free_identity(_ident);
+
         }
 
         Identity::operator pEp_identity *()
         {
-            if (!_ident)
-                throw bad_cast();
-            return _ident;
+            return _ident.get();
         }
 
-        void Identity::attach(pEp_identity *ident)
+        Identity::operator const pEp_identity *() const
         {
-            free_identity(_ident);
-            _ident = ident;
-        }
-
-        pEp_identity *Identity::detach()
-        {
-            pEp_identity *new_one = new_identity(NULL, NULL, NULL, NULL);
-            if (!new_one)
-                throw bad_alloc();
-
-            pEp_identity *ident = _ident;
-            _ident = new_one;
-
-            return ident;
+            return _ident.get();
         }
 
         string Identity::_repr()
@@ -120,7 +105,7 @@ namespace pEp {
                 throw invalid_argument("address must be given");
 
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = identity_rating(session, _ident, &rating);
+            PEP_STATUS status = ::identity_rating(session, _ident.get(), &rating);
             _throw_status(status);
 
             return (int) rating;
@@ -133,8 +118,7 @@ namespace pEp {
 
         Identity identity_attr(pEp_identity *&ident)
         {
-            pEp_identity *_dup;
-
+            pEp_identity *_dup = NULL;
             if (!ident)
                 _dup = new_identity(NULL, NULL, NULL, NULL);
             else
@@ -148,20 +132,14 @@ namespace pEp {
 
         void identity_attr(pEp_identity *&ident, object value)
         {
-            extract< string > extract_string(value);
-            if (extract_string.check()) {
-                string str = extract_string();
-                pEp_identity *_ident = new_identity(str.c_str(), NULL, NULL, NULL);
-                if (!_ident)
-                    throw bad_alloc();
-                free_identity(ident);
-                ident = _ident;
-                return;
-            }
-
             Identity& _ident = extract< Identity& >(value);
             free_identity(ident);
-            ident = _ident.detach();
+            pEp_identity *_dup = ::identity_dup(_ident);
+            if (!_dup)
+                throw bad_alloc();
+            PEP_STATUS status = update_identity(session, _dup);
+            _throw_status(status);
+            ident = _dup;
         }
 
         list identitylist_attr(identity_list *&il)
@@ -169,7 +147,7 @@ namespace pEp {
             list result;
 
             for (identity_list *_il = il; _il && _il->ident; _il = _il->next) {
-                pEp_identity *ident = identity_dup(_il->ident);
+                pEp_identity *ident = ::identity_dup(_il->ident);
                 if (!ident)
                     throw bad_alloc();
                 result.append(object(Identity(ident)));
@@ -190,8 +168,18 @@ namespace pEp {
                 if (!extract_identity.check()) {
                     free_identity_list(_il);
                 }
-                pEp_identity *_ident = extract_identity().detach();
-                _i = identity_list_add(_i, _ident);
+                pEp_identity *_ident = extract_identity();
+                pEp_identity *_dup = ::identity_dup(_ident);
+                if (!_dup) {
+                    free_identity_list(_il);
+                    throw bad_alloc();
+                }
+                PEP_STATUS status = update_identity(session, _dup);
+                if (status != PEP_STATUS_OK) {
+                    free_identity_list(_il);
+                    _throw_status(status);
+                }
+                _i = identity_list_add(_i, _dup);
                 if (!_i) {
                     free_identity_list(_il);
                     throw bad_alloc();

@@ -133,7 +133,7 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("longmsg_formatted", (string(Message::*)()) &Message::longmsg_formatted,
                 (void(Message::*)(string)) &Message::longmsg_formatted,
                 "HTML body or fromatted long version of message")
-        .add_property("attachments", (tuple(Message::*)()) &Message::attachments,
+        .add_property("attachments", (boost::python::tuple(Message::*)()) &Message::attachments,
                 (void(Message::*)(list)) &Message::attachments,
                 "tuple of Blobs with attachments; setting moves Blobs to attachment tuple")
         .add_property("sent", (time_t(Message::*)()) &Message::sent,
@@ -195,6 +195,8 @@ BOOST_PYTHON_MODULE(pEp)
 
     // message API
 
+    def("incoming_message", &incoming_message, "create an incoming message from a MIME text");
+    def("outgoing_message", &outgoing_message, "create an outgoing message using an own identity");
     def("color", &_color, "calculate color value out of rating");
     def("trustwords", &_trustwords, "calculate trustwords for two Identities");
 

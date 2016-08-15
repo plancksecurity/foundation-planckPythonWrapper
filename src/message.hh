@@ -15,7 +15,7 @@ namespace pEp {
         // Message is owning a message struct
 
         class Message {
-            message *_msg;
+            shared_ptr< ::message > _msg;
 
         public:
             // Blob is owning a bloblist_t struct - or not and just managing
@@ -50,14 +50,13 @@ namespace pEp {
                 static int getbuffer(PyObject *self, Py_buffer *view, int flags);
             };
 
-            Message(PEP_msg_direction dir = PEP_dir_outgoing);
+            Message(PEP_msg_direction dir = PEP_dir_outgoing, Identity *from = NULL);
             Message(string mimetext);
             Message(const Message& second);
             Message(message *msg);
             ~Message();
             operator message *();
-            void attach(message *ident);
-            message *detach();
+            operator const message *() const;
 
             string _str();
             string _repr();
@@ -77,7 +76,7 @@ namespace pEp {
             string longmsg_formatted() { return str_attr(_msg->longmsg_formatted); }
             void longmsg_formatted(string value) { str_attr(_msg->longmsg_formatted, value); }
 
-            tuple attachments();
+            boost::python::tuple attachments();
             void attachments(list value);
 
             time_t sent() { return timestamp_attr(_msg->sent); }
@@ -126,10 +125,14 @@ namespace pEp {
             Message encrypt(list extra, int enc_format);
             Message encrypt(list extra);
             Message encrypt();
-            tuple decrypt();
+            boost::python::tuple decrypt();
             int outgoing_rating();
             int outgoing_color();
+
         };
+
+        Message outgoing_message(Identity me);
+        Message incoming_message(string mime_text);
     }
 }
 
