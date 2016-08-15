@@ -17,8 +17,9 @@ namespace pEp {
             shared_ptr< pEp_identity > _ident;
 
         public:
-            Identity(string address = "", string fpr = "", string user_id = "",
-                    string username = "", int comm_type = 0, string lang = "");
+            Identity(string address = "", string username = "",
+                    string user_id = "", string fpr = "", int comm_type = 0,
+                    string lang = "");
 
             Identity(const Identity& second);
             Identity(pEp_identity *ident);

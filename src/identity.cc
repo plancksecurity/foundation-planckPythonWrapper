@@ -11,8 +11,8 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        Identity::Identity(string address, string fpr, string user_id, string
-                username, int comm_type, string lang)
+        Identity::Identity(string address, string username, string user_id,
+                string fpr, int comm_type, string lang)
             : _ident(new_identity(address.c_str(), fpr.c_str(),
                         user_id.c_str(), username.c_str()), &::free_identity)
         {
