@@ -49,7 +49,7 @@ BOOST_PYTHON_MODULE(pEp)
     using namespace boost::locale;
     using namespace pEp::PythonAdapter;
 
-    docstring_options doc_options(true, true, false);
+    docstring_options doc_options(true);
 
     generator gen;
     std::locale::global(gen(""));
@@ -180,14 +180,15 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(int))
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
-        .def("encrypt", (Message(Message::*)())&Message::encrypt, "encrypt message")
-        .def("encrypt", (Message(Message::*)(list))&Message::encrypt, "encrypt message")
-        .def("encrypt", (Message(Message::*)(list,int))&Message::encrypt, "encrypt message")
-        .def("encrypt", (Message(Message::*)(list,int,int))&Message::encrypt, "encrypt message")
-        .def("decrypt", &Message::decrypt, "decrypt message")
+        .def("encrypt", (Message(Message::*)())&Message::encrypt, "msg = encrypt message()")
+        .def("encrypt", (Message(Message::*)(list))&Message::encrypt, "msg = encrypt message(extra_keys)")
+        .def("encrypt", (Message(Message::*)(list,int))&Message::encrypt, "msg = encrypt message(extra_keys, enc_format)")
+        .def("encrypt", (Message(Message::*)(list,int,int))&Message::encrypt, "msg = encrypt message(extra_keys, enc_format, flags)")
+        .def("decrypt", &Message::decrypt, "msg, keys, rating, flags = decrypt message()")
         .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
         .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have")
-        .def("copy", &Message::copy, "deep copy of message");
+        .def("__deepcopy__", &Message::deepcopy)
+        .def("__copy__", &Message::copy);
 
     // basic API
 

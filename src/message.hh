@@ -128,7 +128,8 @@ namespace pEp {
             boost::python::tuple decrypt();
             int outgoing_rating();
             int outgoing_color();
-            Message copy();
+            Message deepcopy(dict& memo);
+            Message copy() { return *this; }
         };
 
         Message outgoing_message(Identity me);

@@ -312,7 +312,7 @@ namespace pEp {
             return _color(outgoing_rating());
         }
 
-        Message Message::copy()
+        Message Message::deepcopy(dict& memo)
         {
             return Message(_str());
         }
