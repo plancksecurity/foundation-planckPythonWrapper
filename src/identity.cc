@@ -118,11 +118,10 @@ namespace pEp {
 
         Identity identity_attr(pEp_identity *&ident)
         {
-            pEp_identity *_dup = NULL;
             if (!ident)
-                _dup = new_identity(NULL, NULL, NULL, NULL);
-            else
-                _dup = identity_dup(ident);
+                throw out_of_range("no identity assigned");
+
+            pEp_identity *_dup = identity_dup(ident);
             if (!_dup)
                 throw bad_alloc();
 
@@ -133,12 +132,12 @@ namespace pEp {
         void identity_attr(pEp_identity *&ident, object value)
         {
             Identity& _ident = extract< Identity& >(value);
-            free_identity(ident);
             pEp_identity *_dup = ::identity_dup(_ident);
             if (!_dup)
                 throw bad_alloc();
             PEP_STATUS status = update_identity(session, _dup);
             _throw_status(status);
+            free_identity(ident);
             ident = _dup;
         }
 

@@ -318,10 +318,40 @@ namespace pEp {
             return m;
         }
 
+        static object update(Identity ident)
+        {
+            update_identity(session, ident);
+            return object(ident);
+        }
+
+        static list update(list il)
+        {
+            for (int i=0; i<len(il); i++) {
+                update(extract< Identity >(il[i]));
+            }
+
+            return il;
+        }
+
         Message incoming_message(string mime_text)
         {
             auto m = Message(mime_text);
             m.dir(PEP_dir_incoming);
+
+            try {
+                m.from(update(m.from()));
+            }
+            catch (out_of_range&) { }
+
+            try {
+                m.recv_by(update(m.recv_by()));
+            }
+            catch (out_of_range&) { }
+
+            m.to(update(m.to()));
+            m.cc(update(m.cc()));
+            m.reply_to(update(m.reply_to()));
+
             return m;
         }
     }
