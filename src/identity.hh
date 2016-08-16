@@ -56,6 +56,9 @@ namespace pEp {
 
             int rating();
             int color();
+
+            Identity copy();
+            Identity deepcopy(dict& memo);
         };
 
         Identity identity_attr(pEp_identity *&ident);

@@ -129,7 +129,7 @@ namespace pEp {
             int outgoing_rating();
             int outgoing_color();
             Message deepcopy(dict& memo);
-            Message copy() { return *this; }
+            Message copy();
         };
 
         Message outgoing_message(Identity me);

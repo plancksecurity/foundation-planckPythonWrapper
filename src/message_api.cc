@@ -23,13 +23,10 @@ namespace pEp {
             free_stringlist(_extra);
             _throw_status(status);
 
-            if (!_dst || _dst == _src) {
-                Message dst(src);
-                return dst;
-            }
+            if (!_dst || _dst == _src)
+                return Message(_src);
             
-            Message dst(_dst);
-            return dst;
+            return Message(_dst);
         }
 
         boost::python::tuple decrypt_message(Message src)

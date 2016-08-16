@@ -116,6 +116,20 @@ namespace pEp {
             return _color(rating());
         }
 
+        Identity Identity::copy()
+        {
+            pEp_identity *dup = ::identity_dup(*this);
+            if (!dup)
+                throw bad_alloc();
+
+            return Identity(dup);
+        }
+
+        Identity Identity::deepcopy(dict&)
+        {
+            return copy();
+        }
+
         Identity identity_attr(pEp_identity *&ident)
         {
             if (!ident)

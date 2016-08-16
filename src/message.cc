@@ -164,7 +164,7 @@ namespace pEp {
         }
 
         Message::Message(message *msg)
-            : _msg(msg)
+            : _msg(msg, &free_message)
         {
 
         }
@@ -312,9 +312,17 @@ namespace pEp {
             return _color(outgoing_rating());
         }
 
-        Message Message::deepcopy(dict& memo)
+        Message Message::copy()
         {
-            return Message(_str());
+            message *dup = message_dup(*this);
+            if (!dup)
+                throw bad_alloc();
+            return Message(dup);
+        }
+
+        Message Message::deepcopy(dict&)
+        {
+            return copy();
         }
 
         Message outgoing_message(Identity me)
