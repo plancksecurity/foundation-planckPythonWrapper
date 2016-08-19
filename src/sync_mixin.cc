@@ -10,7 +10,7 @@ namespace pEp {
         SyncMixIn::SyncMixIn()
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
-                    _messageToSend, _showHandshake);
+                    _messageToSend, _showHandshake, NULL, NULL);
             assert(status == PEP_STATUS_OK);
         }
 
@@ -61,6 +61,29 @@ namespace pEp {
                     (DeviceState_event) event, partner, NULL);
         }
 #endif
+
+
+        int SyncMixIn::inject_sync_msg(void *msg, void *management)
+        {
+            SyncMixIn *that = (SyncMixIn *) management;
+            val = 0;
+            that->_msg = msg;
+            setjmp(that->env);
+            if (!that->val)
+                do_sync_protocol(session, management);
+            return 0;
+        }
+
+        void *SyncMixIn::retrieve_next_sync_msg(void *management)
+        {
+            static int twice = 1;
+            twice = !twice;
+            SyncMixIn *that = (SyncMixIn *) management;
+            if (!twice)
+                return (void *) that->_msg;
+            longjmp(that->env, 1);
+            return (void *) 23;
+        }
 
         void SyncMixIn_callback::_messageToSend(Message msg)
         {
