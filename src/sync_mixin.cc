@@ -10,7 +10,8 @@ namespace pEp {
         SyncMixIn::SyncMixIn()
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
-                    _messageToSend, _showHandshake, NULL, NULL);
+                    _messageToSend, _showHandshake, inject_sync_msg,
+                    retrieve_next_sync_msg);
             assert(status == PEP_STATUS_OK);
         }
 
@@ -51,7 +52,9 @@ namespace pEp {
 
         void SyncMixIn::deliverHandshakeResult(int result)
         {
-            ::deliverHandshakeResult(session, (sync_handshake_result) result);
+            PEP_STATUS status = ::deliverHandshakeResult(session,
+                    (sync_handshake_result) result);
+            _throw_status(status);
         }
 
 #ifndef NDEBUG
@@ -59,17 +62,21 @@ namespace pEp {
         {
             PEP_STATUS status = fsm_DeviceState_inject(session,
                     (DeviceState_event) event, partner, NULL);
+            _throw_status(status);
         }
 #endif
 
+        jmp_buf SyncMixIn::env;
+        int SyncMixIn::val;
+        void *SyncMixIn::_msg;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
-            SyncMixIn *that = (SyncMixIn *) management;
+            // SyncMixIn *that = (SyncMixIn *) management;
             val = 0;
-            that->_msg = msg;
-            setjmp(that->env);
-            if (!that->val)
+            _msg = msg;
+            setjmp(env);
+            if (!val)
                 do_sync_protocol(session, management);
             return 0;
         }
@@ -78,10 +85,10 @@ namespace pEp {
         {
             static int twice = 1;
             twice = !twice;
-            SyncMixIn *that = (SyncMixIn *) management;
+            // SyncMixIn *that = (SyncMixIn *) management;
             if (!twice)
-                return (void *) that->_msg;
-            longjmp(that->env, 1);
+                return (void *) _msg;
+            longjmp(env, 1);
             return (void *) 23;
         }
 

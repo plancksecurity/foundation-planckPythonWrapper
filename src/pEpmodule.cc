@@ -2,6 +2,7 @@
 #include <boost/locale.hpp>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include "basic_api.hh"
 #include "message_api.hh"
 #include "sync_mixin.hh"
@@ -37,7 +38,7 @@ namespace pEp {
                 throw invalid_argument("illegal value");
 
             stringstream build;
-            build << "p≡p error: " << status;
+            build << setfill('0') << "p≡p 0x" << setw(4) << hex << status;
             throw runtime_error(build.str());
         }
     }
