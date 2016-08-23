@@ -7,8 +7,8 @@ namespace pEp {
     namespace PythonAdapter {
         class SyncMixIn {
             public:
-                SyncMixIn();
-                virtual ~SyncMixIn();
+                SyncMixIn() { }
+                virtual ~SyncMixIn() { }
 
                 virtual void messageToSend(Message msg) {
                     throw runtime_error("override this method");
@@ -39,10 +39,11 @@ namespace pEp {
             PyObject* const _self;
 
             public:
-                SyncMixIn_callback(PyObject *self) : _self(self) { }
+                SyncMixIn_callback(PyObject *self);
+                ~SyncMixIn_callback();
 
-                void _messageToSend(Message msg);
-                void _showHandshake(Identity me, Identity partner);
+                void messageToSend(Message msg);
+                void showHandshake(Identity me, Identity partner);
         };
     }
 }

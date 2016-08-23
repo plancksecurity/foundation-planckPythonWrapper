@@ -7,7 +7,7 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        SyncMixIn::SyncMixIn()
+        SyncMixIn_callback::SyncMixIn_callback(PyObject *self) : _self(self)
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
                     _messageToSend, _showHandshake, inject_sync_msg,
@@ -15,7 +15,8 @@ namespace pEp {
             assert(status == PEP_STATUS_OK);
         }
 
-        SyncMixIn::~SyncMixIn() {
+        SyncMixIn_callback::~SyncMixIn_callback()
+        {
             unregister_sync_callbacks(session);
         }
 
@@ -92,12 +93,12 @@ namespace pEp {
             return (void *) 23;
         }
 
-        void SyncMixIn_callback::_messageToSend(Message msg)
+        void SyncMixIn_callback::messageToSend(Message msg)
         {
             call_method< void >(_self, "messageToSend", msg);
         }
 
-        void SyncMixIn_callback::_showHandshake(Identity me, Identity partner)
+        void SyncMixIn_callback::showHandshake(Identity me, Identity partner)
         {
             call_method< void >(_self, "showHandshake", me, partner);
         }
