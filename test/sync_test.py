@@ -19,3 +19,5 @@ class Handler(SyncMixIn):
 
 handler = Handler()
 
+# this is an interactive test, so start it with python -i
+
