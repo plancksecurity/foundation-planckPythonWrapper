@@ -35,8 +35,9 @@ namespace pEp {
             stringlist_t *_keylist = NULL;
             PEP_rating _rating = PEP_rating_undefined;
             PEP_decrypt_flags_t _flags = 0;
+            message *_src = src;
 
-            PEP_STATUS status = decrypt_message(session, src, &_dst, &_keylist,
+            PEP_STATUS status = decrypt_message(session, _src, &_dst, &_keylist,
                     &_rating, &_flags);
             _throw_status(status);
 

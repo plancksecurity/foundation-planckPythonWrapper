@@ -91,7 +91,7 @@ namespace pEp {
             else if (value.length() != 2)
                 throw length_error("length of lang must be 2");
             else
-                memcpy(_ident->lang, value.data(), 2);
+                memcpy(_ident->lang, value.c_str(), 3);
         }
 
         string Identity::lang()

@@ -73,7 +73,6 @@ namespace pEp {
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
-            // SyncMixIn *that = (SyncMixIn *) management;
             val = 0;
             _msg = msg;
             setjmp(env);
@@ -86,7 +85,6 @@ namespace pEp {
         {
             static int twice = 1;
             twice = !twice;
-            // SyncMixIn *that = (SyncMixIn *) management;
             if (!twice)
                 return (void *) _msg;
             longjmp(env, 1);
