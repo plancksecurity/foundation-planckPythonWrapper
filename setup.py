@@ -3,7 +3,7 @@
 from distutils.core import setup, Extension
 from glob import glob
 
-prefix = '/Users/vb'
+prefix = '/Users/ed'
 boost = '/opt/local'
 
 module_pEp = Extension('pEp',
