@@ -68,14 +68,12 @@ namespace pEp {
 #endif
 
         jmp_buf SyncMixIn::env;
-        int SyncMixIn::val;
         void *SyncMixIn::_msg;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
-            val = 0;
             _msg = msg;
-            setjmp(env);
+            int val = setjmp(env);
             if (!val)
                 do_sync_protocol(session, management);
             return 0;

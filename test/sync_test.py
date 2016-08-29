@@ -19,5 +19,12 @@ class Handler(SyncMixIn):
 
 handler = Handler()
 
+
+def process(path):
+    with open(path, 'r') as f:
+        text = f.read()
+    return Message(text)
+
+
 # this is an interactive test, so start it with python -i
 
