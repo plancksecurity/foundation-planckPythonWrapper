@@ -50,6 +50,11 @@ namespace pEp {
             int rating = (int) _rating;
             int flags = (int) _flags;
 
+            if (!_dst)
+                _dst = ::message_dup(_src);
+            if (!_dst)
+                throw bad_alloc();
+
             Message dst(_dst);
             return boost::python::make_tuple(dst, keylist, rating, flags);
         }
