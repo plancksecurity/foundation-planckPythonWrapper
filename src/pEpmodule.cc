@@ -204,6 +204,9 @@ BOOST_PYTHON_MODULE(pEp)
     def("outgoing_message", &outgoing_message, "create an outgoing message using an own identity");
     def("color", &_color, "calculate color value out of rating");
     def("trustwords", &_trustwords, "calculate trustwords for two Identities");
+#ifndef NDEBUG
+    def("config_keep_sync_msg", &_config_keep_sync_msg, "configure if sync messages are being kept or not");
+#endif
 
     // key sync API
 
