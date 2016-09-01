@@ -1,6 +1,7 @@
 #include "message_api.hh"
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
+#include <pEp/sync.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -64,6 +65,23 @@ namespace pEp {
         void _config_keep_sync_msg(bool enabled)
         {
             ::config_keep_sync_msg(session, enabled);
+        }
+
+        string sync_decode(object buffer)
+        {
+            Py_buffer src;
+            int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
+            if (result)
+                throw invalid_argument("need a contiguous buffer to read");
+
+            char *dst = NULL;
+            PEP_STATUS status = decode_sync_msg((char *) src.buf, src.len, &dst);
+            PyBuffer_Release(&src);
+            _throw_status(status);
+
+            string _dst(dst);
+            free(dst);
+            return _dst;
         }
 #endif
     }

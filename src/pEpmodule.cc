@@ -206,6 +206,7 @@ BOOST_PYTHON_MODULE(pEp)
     def("trustwords", &_trustwords, "calculate trustwords for two Identities");
 #ifndef NDEBUG
     def("config_keep_sync_msg", &_config_keep_sync_msg, "configure if sync messages are being kept or not");
+    def("sync_decode", &sync_decode, "decode sync message to XER/XML");
 #endif
 
     // key sync API

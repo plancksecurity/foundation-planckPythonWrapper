@@ -10,6 +10,7 @@ namespace pEp {
         int _color(int rating);
 #ifndef NDEBUG
         void _config_keep_sync_msg(bool enabled);
+        string sync_decode(object buffer);
 #endif
     }
 }
