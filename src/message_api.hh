@@ -11,6 +11,7 @@ namespace pEp {
 #ifndef NDEBUG
         void _config_keep_sync_msg(bool enabled);
         string sync_decode(object buffer);
+        object sync_encode(string text);
 #endif
     }
 }

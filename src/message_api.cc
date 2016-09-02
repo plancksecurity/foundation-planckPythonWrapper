@@ -83,6 +83,21 @@ namespace pEp {
             free(dst);
             return _dst;
         }
+
+        object sync_encode(string text)
+        {
+            char *data = NULL;
+            size_t size = 0;
+            PEP_STATUS status = encode_sync_msg(text.c_str(), &data, &size);
+            _throw_status(status);
+
+            PyObject *ba = PyBytes_FromStringAndSize(data, size);
+            free(data);
+            if (!ba)
+                throw bad_alloc();
+
+            return object(handle<>(ba));
+        }
 #endif
     }
 }
