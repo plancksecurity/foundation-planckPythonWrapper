@@ -109,7 +109,8 @@ namespace pEp {
         string Message::Blob::decode(string encoding)
         {
             if (encoding == "") {
-                if (string(_bl->mime_type) == "application/pEp")
+                string _mime_type = _bl->mime_type ? _bl->mime_type : "";
+                if (_mime_type == "application/pEp")
                     encoding = "pep-sync";
                 else
                     encoding = "ascii";
