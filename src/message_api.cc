@@ -61,7 +61,6 @@ namespace pEp {
             return (int) ::color_from_rating((PEP_rating) rating);
         }
 
-#ifndef NDEBUG
         void _config_keep_sync_msg(bool enabled)
         {
             ::config_keep_sync_msg(session, enabled);
@@ -98,7 +97,6 @@ namespace pEp {
 
             return object(handle<>(ba));
         }
-#endif
     }
 }
 
