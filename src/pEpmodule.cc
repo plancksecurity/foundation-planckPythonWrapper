@@ -207,8 +207,6 @@ BOOST_PYTHON_MODULE(pEp)
     def("color", &_color, "calculate color value out of rating");
     def("trustwords", &_trustwords, "calculate trustwords for two Identities");
     def("config_keep_sync_msg", &_config_keep_sync_msg, "configure if sync messages are being kept or not");
-    def("sync_decode", &sync_decode, "decode sync message to XER/XML text");
-    def("sync_encode", &sync_encode, "encode sync message from XER/XML text");
 
     // key sync API
 
@@ -222,6 +220,10 @@ BOOST_PYTHON_MODULE(pEp)
 #endif
         .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult,
                 "call to deliver the handshake result");
+
+    // codecs
+
+    call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(sync_search));
 
     // init() and release()
 

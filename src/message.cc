@@ -110,7 +110,7 @@ namespace pEp {
         {
             if (encoding == "") {
                 if (string(_bl->mime_type) == "application/pEp")
-                    encoding = "sync";
+                    encoding = "pep-sync";
                 else
                     encoding = "ascii";
             }

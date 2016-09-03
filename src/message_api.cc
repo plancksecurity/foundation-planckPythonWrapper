@@ -66,7 +66,7 @@ namespace pEp {
             ::config_keep_sync_msg(session, enabled);
         }
 
-        string sync_decode(object buffer)
+        boost::python::tuple sync_decode(object buffer)
         {
             Py_buffer src;
             int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
@@ -80,10 +80,10 @@ namespace pEp {
 
             string _dst(dst);
             free(dst);
-            return _dst;
+            return boost::python::make_tuple(_dst, 0);
         }
 
-        object sync_encode(string text)
+        static boost::python::tuple sync_encode(string text)
         {
             char *data = NULL;
             size_t size = 0;
@@ -95,7 +95,23 @@ namespace pEp {
             if (!ba)
                 throw bad_alloc();
 
-            return object(handle<>(ba));
+            return boost::python::make_tuple(object(handle<>(ba)), 0);
+        }
+
+        object sync_search(string name)
+        {
+            if (name != "pep-sync") {
+                return object();
+            }
+            else {
+                object codecs = import("codecs");
+                object CodecInfo = codecs.attr("CodecInfo");
+
+                object _sync_decode = make_function(sync_decode);
+                object _sync_encode = make_function(sync_encode);
+
+                return call< object >(CodecInfo.ptr(), _sync_encode, _sync_decode);
+            }
         }
     }
 }
