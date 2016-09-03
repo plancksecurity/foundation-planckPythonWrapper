@@ -105,7 +105,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def(init<object, string>())
         .def(init<object>())
         .def("__repr__", &Message::Blob::_repr)
-        .def("__len__", &Message::Blob::size, "size of Blob in bytes")
+        .def("__len__", &Message::Blob::size, "size of Blob data in bytes")
         .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
                 (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
                 "MIME type of object in Blob")
