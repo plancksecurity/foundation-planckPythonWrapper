@@ -106,6 +106,19 @@ namespace pEp {
             return PyBuffer_FillInfo(view, self, bl->value, bl->size, 0, flags);
         }
 
+        string Message::Blob::decode(string encoding)
+        {
+            if (encoding == "") {
+                if (string(_bl->mime_type) == "application/pEp")
+                    encoding = "sync";
+                else
+                    encoding = "ascii";
+            }
+            object codecs = import("codecs");
+            object _decode = codecs.attr("decode");
+            return call< string >(_decode.ptr(), this, encoding);
+        }
+
         PyBufferProcs Message::Blob::bp = { getbuffer, NULL };
 
         Message::Message(PEP_msg_direction dir, Identity *from)

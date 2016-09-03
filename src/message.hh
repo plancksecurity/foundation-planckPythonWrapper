@@ -41,6 +41,8 @@ namespace pEp {
                 void filename(string value) { str_attr(_bl->filename, value); }
 
                 size_t size() { return _bl->size; }
+                string decode(string encoding);
+                string decode() { return decode(""); }
 
                 static PyBufferProcs bp;
 
