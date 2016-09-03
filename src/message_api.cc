@@ -100,7 +100,7 @@ namespace pEp {
 
         object sync_search(string name)
         {
-            if (name != "pep-sync") {
+            if (name != "pep.sync") {
                 return object();
             }
             else {
