@@ -105,13 +105,13 @@ BOOST_PYTHON_MODULE(pEp)
         .def(init<object, string>())
         .def(init<object>())
         .def("__repr__", &Message::Blob::_repr)
+        .def("__len__", &Message::Blob::size, "size of Blob in bytes")
         .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
                 (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
                 "MIME type of object in Blob")
         .add_property("filename", (string(Message::Blob::*)()) &Message::Blob::filename,
                 (void(Message::Blob::*)(string)) &Message::Blob::filename,
-                "filename of object in Blob")
-        .add_property("size", &Message::Blob::size, "size of Blob in bytes");
+                "filename of object in Blob");
 
     ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
