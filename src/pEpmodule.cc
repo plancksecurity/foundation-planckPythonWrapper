@@ -149,12 +149,21 @@ BOOST_PYTHON_MODULE(pEp)
     ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
     auto message_class = class_<Message>("Message",
+    "Message(dir=1, from=None)\n"
+    "\n"
+    "new p≡p message\n"
+    "\n"
+    "   dir         1 for outgoing, 2 for incoming\n"
+    "   from        Identity() of sender\n"
+    "\n"
     "Message(mime_text)\n"
     "\n"
-    "p≡p message\n"
+    "new incoming p≡p message\n"
     "\n"
     "   mime_text       text in Multipurpose Internet Mail Extensions format\n"
                 )
+        .def(init<int>())
+        .def(init<int, Identity *>())
         .def(init<string>())
         .def("__str__", &Message::_str,
     "the string representation of a Message is it's MIME text"

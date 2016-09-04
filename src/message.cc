@@ -123,8 +123,8 @@ namespace pEp {
 
         PyBufferProcs Message::Blob::bp = { getbuffer, NULL };
 
-        Message::Message(PEP_msg_direction dir, Identity *from)
-            : _msg(new_message(dir), &free_message)
+        Message::Message(int dir, Identity *from)
+            : _msg(new_message((PEP_msg_direction) dir), &free_message)
         {
             if (!_msg)
                 throw bad_alloc();
@@ -132,7 +132,7 @@ namespace pEp {
                 _msg->from = ::identity_dup(*from);
                 if (!_msg->from)
                     throw bad_alloc();
-                _msg->dir = dir;
+                _msg->dir = (PEP_msg_direction) dir;
             }
         }
 

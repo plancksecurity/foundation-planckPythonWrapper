@@ -52,7 +52,7 @@ namespace pEp {
                 static int getbuffer(PyObject *self, Py_buffer *view, int flags);
             };
 
-            Message(PEP_msg_direction dir = PEP_dir_outgoing, Identity *from = NULL);
+            Message(int dir = PEP_dir_outgoing, Identity *from = NULL);
             Message(string mimetext);
             Message(const Message& second);
             Message(message *msg);
