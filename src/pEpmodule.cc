@@ -236,7 +236,8 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "   extra_keys      list of strings with fingerprints for extra keys to use\n"
     "                   for encryption\n"
-    "   enc_format      'none', 'partitioned', 'S/MIME', 'PGP/MIME' or 'pEp'\n"
+    "   enc_format      'none' or 0, 'partitioned' or 1, 'S/MIME' or 2,\n"
+    "                   'PGP/MIME' or 3, 'pEp' or 4\n"
     "   flags           1 is force encryption\n"
                 )
         .def("decrypt", &Message::decrypt,
