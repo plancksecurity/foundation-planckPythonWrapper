@@ -123,10 +123,8 @@ namespace pEp {
             PEP_enc_format enc_format() { return _msg->enc_format; }
             void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
 
-            Message encrypt(list extra, int enc_format, int flags);
-            Message encrypt(list extra, int enc_format);
-            Message encrypt(list extra);
-            Message encrypt();
+            Message encrypt(list extra=list(), string enc_format="", int flags=0);
+            Message _encrypt(list extra=list(), int enc_format=4, int flags=0);
             boost::python::tuple decrypt();
             int outgoing_rating();
             int outgoing_color();
