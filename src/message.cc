@@ -288,31 +288,16 @@ namespace pEp {
             _msg->attachments = bl;
         }
 
-        static const vector< string > enc_format_s
-                = { "none", "partitioned", "S/MIME", "PGP/MIME", "pEp" };
-
-        static string _enc_format(int n)
+        Message Message::encrypt()
         {
-            return enc_format_s[n % enc_format_s.size()];
+            list extra;
+            return encrypt_message(*this, extra, 4, 0);
         }
 
-        static int _enc_format(string s)
+        Message Message::_encrypt(list extra, int enc_format, int flags)
         {
-            if (s == "p≡p")
-                return 4;
-            int i=0;
-            for (auto _s=enc_format_s.begin(); _s != enc_format_s.end(); _s++, i++) {
-                if (*_s == s)
-                    return i;
-            }
-            return -1;
-        }
-
-        Message Message::encrypt(list extra, string enc_format, int flags) {
-            return encrypt_message(*this, extra, _enc_format(enc_format), flags);
-        }
-
-        Message Message::_encrypt(list extra, int enc_format, int flags) {
+            if (!enc_format)
+                enc_format = 4;
             return encrypt_message(*this, extra, enc_format, flags);
         }
 
