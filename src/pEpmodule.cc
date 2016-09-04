@@ -72,7 +72,7 @@ BOOST_PYTHON_MODULE(pEp)
     "               hex encoded\n"
     "   comm_type   first rating level of this communication channel\n"
     "   lang        ISO 639-1 language code for language being preferred\n"
-    "               on this communication cahnnel\n"
+    "               on this communication channel\n"
         )
         .def(init<string>())
         .def(init<string, string>())
