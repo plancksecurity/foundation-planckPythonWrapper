@@ -133,7 +133,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def("__len__", &Message::Blob::size, "size of Blob data in bytes")
         .def("decode", (string(Message::Blob::*)()) &Message::Blob::decode)
         .def("decode", (string(Message::Blob::*)(string)) &Message::Blob::decode,
-    "text = decode(self, encoding='')\n"
+    "text = blob.decode(encoding='')\n"
     "\n"
     "decode Blob data into string depending on MIME type if encoding=''\n"
     "\n"
@@ -240,7 +240,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def("encrypt", (Message(Message::*)(list,string,int))&Message::encrypt)
         .def("encrypt", (Message(Message::*)(list,int))&Message::_encrypt)
         .def("encrypt", (Message(Message::*)(list,int,int))&Message::_encrypt,
-    "msg = encrypt(self, extra_keys=[], enc_format='pEp', flags=0)\n"
+    "msg2 = msg1.encrypt(extra_keys=[], enc_format='pEp', flags=0)\n"
     "\n"
     "encrypts a p≡p message and returns the encrypted message\n"
     "\n"
@@ -251,7 +251,7 @@ BOOST_PYTHON_MODULE(pEp)
     "   flags           1 is force encryption\n"
                 )
         .def("decrypt", &Message::decrypt,
-    "msg, keys, rating, flags = decrypt()\n"
+    "msg2, keys, rating, flags = msg1.decrypt()\n"
     "\n"
     "decrypts a p≡p message and returns a tuple with data\n"
     "\n"
