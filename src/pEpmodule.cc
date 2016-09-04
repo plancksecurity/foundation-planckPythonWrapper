@@ -136,6 +136,7 @@ BOOST_PYTHON_MODULE(pEp)
     "text = decode(self, encoding='')\n"
     "\n"
     "decode Blob data into string depending on MIME type if encoding=''\n"
+    "\n"
     "   mime_type='application/pEp.sync'    decode as 'pEp.sync'\n"
     "   other mime_type                     decode as 'ascii' by default\n"
                 )
