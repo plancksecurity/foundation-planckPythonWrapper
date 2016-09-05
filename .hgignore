@@ -5,3 +5,4 @@ syntax: glob
 *.so
 ws
 tags
+.DS_Store
