@@ -1,5 +1,5 @@
 """
-test for simplest keysync scenario : two device setting up sam account
+test for simplest keysync scenario : two device setting up same account
 
 Launch it with something like :
 DYLD_LIBRARY_PATH=/Users/ed/lib/ PYTHONPATH=`pwd`/../build/lib.macosx-10.11-x86_64-3.4 python3.4 sync_test.py
@@ -7,11 +7,6 @@ DYLD_LIBRARY_PATH=/Users/ed/lib/ PYTHONPATH=`pwd`/../build/lib.macosx-10.11-x86_
 """
 
 import multipEp as mp
-
-def create_account(address, name):
-    i = mp.pEp.Identity(address, name)
-    mp.pEp.myself(i)
-    mp.own_addresses.append(address)
 
 # unused
 def send_message(from_address, to_address):
@@ -24,8 +19,10 @@ def send_message(from_address, to_address):
 
 scenario0 = [
    #("instance name", ["func name", [args], {kwargs}]),
-    ("A", [create_account, ["some.one@some.where", "Some One"]]),
-    ("B", [create_account, ["some.one@some.where", "Some One"]])
+    ("A", [mp.create_account, ["some.one@some.where", "Some One"]]),
+    ("B", [mp.create_account, ["some.one@some.where", "Some One"]]),
+    ("A", [None, None]),
+    ("B", [None, None])
 ] 
 
 if __name__ == "__main__":

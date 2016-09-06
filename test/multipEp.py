@@ -8,27 +8,48 @@ from collections import OrderedDict
 pEp = None
 handler = None
 own_addresses = []
-sent_messages = []
 
-def pEp_instance_run(iname, conn):
-    global pEp, handler, sent_messages
+def create_account(address, name):
+    global own_addresses
+    i = pEp.Identity(address, name)
+    pEp.myself(i)
+    own_addresses.append(address)
+
+def header(blah=None):
+    if blah is None:
+        return "-" * 80
+    else:
+        return ("-" * (39 - int(len(blah)/2))  + 
+                " " + blah + " " + 
+                "-" * (39 - len(blah) + int(len(blah)/2)))
+
+
+def pEp_instance_run(iname, conn, msgs_folders):
+    global pEp, handler, own_addresses 
 
     pEp = importlib.import_module("pEp")
 
-    hdr = "-" * (39 - int(len(iname)/2))  + " " + iname + " " + "-" * (39 - len(iname) + int(len(iname)/2))
-
     class Handler(pEp.SyncMixIn):
         def messageToSend(self, msg):
-            msgstr = str(msg)
-            print(hdr)
-            print(msgstr.replace("\r", ""))
-            print("-" * 80)
-            sent_messages.append(msgstr)
+            print(header("SYNC MESSAGE from instance"+iname))
+            print("from :", msg.from_)
+            print("to :", msg.to)
+            print("short :", msg.shortmsg)
+            print("long :", (msg.longmsg[:250]+" [...]"
+                             if len(msg.longmsg)>250 
+                             else msg.longmsg))
+            print(msg.attachments)
+            print(header())
+            for rcpt in msg.to + msg.cc + msg.bcc:
+                # list inside dict from MP manager are not mutable, apparently.
+                msgs = msgs_folders.get(rcpt.address,[])
+                msgs.append(str(msg))
+                msgs_folders[rcpt.address] = msgs
 
         def showHandshake(self, me, partner):
-            print(hdr)
+            print(header("HANDSHAKE from instance"+iname))
             print("handshake needed between " + repr(me) + " and " + repr(partner))
-            print("-" * 80)
+            print(header())
             # TODO: accept or reject
 
     handler = Handler()
@@ -38,56 +59,60 @@ def pEp_instance_run(iname, conn):
         if order is None:
             break
 
-        command, new_msgs = order
+        func = order[0]
 
-        if new_msgs is not None:
-            for msgstr in new_msgs:
+        print(header("DECRYPT messages for instance "+iname))
+        # decrypt every non-consumed message for all instance accounts
+        for own_address in own_addresses:
+            msgs_for_me = msgs_folders[own_address]
+            for idx, msgstr in enumerate(msgs_for_me):
                 msg = pEp.incoming_message(msgstr)
-                for to in msg.to:
-                    # check if mail is for an account owned by that instance
-                    # checking if to.user_id == pEp.PEP_OWN_USERID
-                    # could lead to false positive depending on what pEpEngine
-                    # consider to be its own identity
-                    if to.address in own_addresses:
-                        decrypt_result = msg.decrypt()
-                        break
+                decrypt_result = msg.decrypt()
+                # TODO get status instead of an exception when consumed...
+                #if decrypt_result == 0xff02: #PEP_MESSAGE_CONSUMED
+                #    msgs_for_me.pop(idx)
+        print(header())
 
         res = None
-        if command is not None:
-            func = command[0]
-            args, kwargs = command[1:] + [[], {}][len(command) - 1:]
-            print(func, args, kwargs)
+        if func is not None:
+            print(header("Instance " + iname + " : function " + func.__name__))
+            args, kwargs = order[1:] + [[], {}][len(order) - 1:]
+            print("args :", args)
+            print("kwargs :", kwargs)
             res = func(*args,**kwargs)
-            print(func, args, kwargs, " -> ", res)
+            print(" -> ", res)
+            print(header())
 
-        conn.send([res, sent_messages])
-        sent_messages = []
+        conn.send(res)
 
-def pEp_instance_main(iname, conn):
+def pEp_instance_main(iname, conn, msgs_folders):
     # run with a dispensable $HOME to get fresh DB and PGP keyrings
     with tempfile.TemporaryDirectory() as tmpdirname:
-        print(iname + " instance runs into " + tmpdirname)
+        print("Instance " + iname + " runs into " + tmpdirname)
         os.environ['HOME'] = tmpdirname
-        pEp_instance_run(iname, conn)
+        pEp_instance_run(iname, conn, msgs_folders)
         print(iname + " exiting")
 
 def run_scenario(scenario):
     instances = OrderedDict()
-    for iname, order in scenario:
-        if iname not in instances:
-            to_inst_msg = []
-            conn, child_conn = multiprocessing.Pipe()
-            proc = multiprocessing.Process(target=pEp_instance_main, args=(iname,child_conn))
-            proc.start()
-            instances[iname] = (proc, conn, to_inst_msg)
-        else:
-            proc, conn, to_inst_msg = instances[iname]
+    with multiprocessing.Manager() as manager:
+        msgs_folders = manager.dict()
+        for iname, order in scenario:
+            if iname not in instances:
+                conn, child_conn = multiprocessing.Pipe()
+                proc = multiprocessing.Process(
+                    target=pEp_instance_main,
+                    args=(iname,child_conn,msgs_folders))
+                proc.start()
+                instances[iname] = (proc, conn)
+            else:
+                proc, conn = instances[iname]
 
-        conn.send([order, to_inst_msg])
-        res, from_inst_msgs = conn.recv()
+            conn.send(order)
+            res = conn.recv()
 
-    for iname, (proc, conn, to_inst_msg) in instances.items():
-        # tell process to terminate
-        conn.send(None)
-        proc.join()
+        for iname, (proc, conn) in instances.items():
+            # tell process to terminate
+            conn.send(None)
+            proc.join()
 
