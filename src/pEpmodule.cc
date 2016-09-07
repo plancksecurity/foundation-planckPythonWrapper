@@ -32,6 +32,8 @@ namespace pEp {
                 return;
             if (status >= 0x400 && status <= 0x4ff)
                 return;
+            if (status == PEP_MESSAGE_CONSUMED)
+                return;
             if (status == PEP_OUT_OF_MEMORY)
                 throw bad_alloc();
             if (status == PEP_ILLEGAL_VALUE)
@@ -249,13 +251,14 @@ BOOST_PYTHON_MODULE(pEp)
     "   flags           1 is force encryption\n"
                 )
         .def("decrypt", &Message::decrypt,
-    "msg2, keys, rating, flags = msg1.decrypt()\n"
+    "msg2, keys, rating, consumed, flags = msg1.decrypt()\n"
     "\n"
     "decrypts a p≡p message and returns a tuple with data\n"
     "\n"
     "   msg             the decrypted p≡p message\n"
     "   keys            a list of keys being used\n"
     "   rating          the rating of the message as integer\n"
+    "   consumed        boolean denoting message is consumed by sync\n"
     "   flags           flags set while decryption (reserved)\n"
                 )
         .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
