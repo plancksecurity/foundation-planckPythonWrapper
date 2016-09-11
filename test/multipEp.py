@@ -1,7 +1,9 @@
 import os
+import sys
 import multiprocessing
 import importlib
 import tempfile
+import time
 from collections import OrderedDict
 
 # per-instance globals
@@ -133,11 +135,29 @@ def run_scenario(scenario):
                     args=(iname,child_conn,msgs_folders))
                 proc.start()
                 instances[iname] = (proc, conn)
+                if "wait_for_debug" in sys.argv:
+                    yes = input("#"*80 + "\n" +
+                                "INSTANCE "  + iname + "\n" + 
+                                "Enter y/yes/Y/YES to attach debugger to process "  + 
+                                str(proc.pid) + "\nor just press ENTER\n" +
+                                "#"*80 + "\n")
+                    if yes in ["y", "Y", "yes" "YES"]:
+                        # TODO : linux terminal support
+                        #import subprocess
+                        #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
+                        import appscript
+                        appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
+                        time.sleep(2)
             else:
                 proc, conn = instances[iname]
 
             conn.send(order)
             res = conn.recv()
+
+        if "wait_for_debug" in sys.argv:
+            input("#"*80 + "\n" +
+                  "Press ENTER to cleanup\n" +
+                  "#"*80 + "\n")
 
         for iname, (proc, conn) in instances.items():
             # tell process to terminate

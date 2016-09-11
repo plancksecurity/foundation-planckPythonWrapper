@@ -22,6 +22,8 @@ scenario0 = [
     ("A", [mp.create_account, ["some.one@some.where", "Some One"]]),
     ("B", [mp.create_account, ["some.one@some.where", "Some One"]]),
     ("A", [None, None]),
+    ("B", [None, None]),
+    ("A", [None, None]),
     ("B", [None, None])
 ] 
 
