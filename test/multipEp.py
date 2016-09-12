@@ -12,6 +12,7 @@ handler = None
 own_addresses = []
 indent = 0
 i_name = ""
+handshakes_pending = []
 
 def create_account(address, name):
     global own_addresses
@@ -47,7 +48,7 @@ def printmsg(msg):
         pfx = "       "
     printi("attachments : ", msg.attachments)
 
-def pEp_instance_run(iname, conn, msgs_folders):
+def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_validated):
     global pEp, handler, own_addresses, i_name
 
     i_name = iname
@@ -68,8 +69,19 @@ def pEp_instance_run(iname, conn, msgs_folders):
         def showHandshake(self, me, partner):
             printheader("show HANDSHAKE dialog")
             printi("handshake needed between " + repr(me) + " and " + repr(partner))
+            tw = pEp.trustwords(me,partner,'en')
+            printi(tw)
+            if tw in handshakes_seen :
+                handshakes_seen.remove(tw)
+                handshakes_validated.append(tw)
+                printi("ACCEPTED (already seen)")
+                self.deliverHandshakeResult(0)
+            else:
+                handshakes_pending.append(tw)
+                handshakes_seen.append(tw)
             printheader()
-            # TODO: accept or reject
+
+            # TODO: reject scenario ?
 
     handler = Handler()
 
@@ -103,6 +115,16 @@ def pEp_instance_run(iname, conn, msgs_folders):
                     printi("---")
         printheader()
 
+        printheader("check validated handshakes")
+        for tw in handshakes_pending:
+            if tw in handshakes_validated:
+                handshakes_validated.remove(tw)
+                handshakes_pending.remove(tw)
+                printi("ACCEPT pending handshake : "+ tw)
+                handler.deliverHandshakeResult(0)
+
+        printheader()
+
         res = None
         if func is not None:
             printheader("Executing function " + func.__name__)
@@ -115,24 +137,27 @@ def pEp_instance_run(iname, conn, msgs_folders):
 
         conn.send(res)
 
-def pEp_instance_main(iname, conn, msgs_folders):
+def pEp_instance_main(iname, *args):
     # run with a dispensable $HOME to get fresh DB and PGP keyrings
     with tempfile.TemporaryDirectory() as tmpdirname:
         print("Instance " + iname + " runs into " + tmpdirname)
         os.environ['HOME'] = tmpdirname
-        pEp_instance_run(iname, conn, msgs_folders)
+        pEp_instance_run(iname, *args)
         print(iname + " exiting")
 
 def run_scenario(scenario):
     instances = OrderedDict()
     with multiprocessing.Manager() as manager:
         msgs_folders = manager.dict()
+        handshakes_seen = manager.list()
+        handshakes_validated = manager.list()
         for iname, order in scenario:
             if iname not in instances:
                 conn, child_conn = multiprocessing.Pipe()
                 proc = multiprocessing.Process(
                     target=pEp_instance_main,
-                    args=(iname,child_conn,msgs_folders))
+                    args=(iname, child_conn, msgs_folders, 
+                          handshakes_seen, handshakes_validated))
                 proc.start()
                 instances[iname] = (proc, conn)
                 if "wait_for_debug" in sys.argv:

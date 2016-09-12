@@ -24,6 +24,8 @@ scenario0 = [
     ("A", [None, None]),
     ("B", [None, None]),
     ("A", [None, None]),
+    ("B", [None, None]),
+    ("A", [None, None]),
     ("B", [None, None])
 ] 
 
