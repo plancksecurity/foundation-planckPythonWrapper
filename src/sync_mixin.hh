@@ -18,7 +18,7 @@ namespace pEp {
                     throw runtime_error("override this method");
                 }
 
-                virtual void deliverHandshakeResult(int result);
+                virtual void deliverHandshakeResult(Identity partner, int result);
 #ifndef NDEBUG
                 virtual void _inject(int event, Identity partner, object extra);
 #endif

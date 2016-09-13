@@ -345,8 +345,9 @@ BOOST_PYTHON_MODULE(pEp)
     "inject an event into the sync state machine (for debugging purposes only)")
 #endif
         .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult,
-    "deliverHandshakeResult(self, result)\n"
+    "deliverHandshakeResult(self, partber, result)\n"
     "\n"
+    "   partner         identity of communication partner\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
     "\n"
     "call to deliver the handshake result");

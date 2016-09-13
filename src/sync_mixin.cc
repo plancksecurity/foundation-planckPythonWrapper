@@ -51,9 +51,9 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        void SyncMixIn::deliverHandshakeResult(int result)
+        void SyncMixIn::deliverHandshakeResult(Identity partner, int result)
         {
-            PEP_STATUS status = ::deliverHandshakeResult(session,
+            PEP_STATUS status = ::deliverHandshakeResult(session, partner, 
                     (sync_handshake_result) result);
             _throw_status(status);
         }

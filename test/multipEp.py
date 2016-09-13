@@ -75,9 +75,9 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
                 handshakes_seen.remove(tw)
                 handshakes_validated.append(tw)
                 printi("ACCEPTED (already seen)")
-                self.deliverHandshakeResult(0)
+                self.deliverHandshakeResult(partner, 0)
             else:
-                handshakes_pending.append(tw)
+                handshakes_pending.append((tw,partner))
                 handshakes_seen.append(tw)
             printheader()
 
@@ -116,12 +116,13 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
         printheader()
 
         printheader("check validated handshakes")
-        for tw in handshakes_pending:
+        for tple in handshakes_pending:
+            tw, partner = tple 
             if tw in handshakes_validated:
                 handshakes_validated.remove(tw)
-                handshakes_pending.remove(tw)
+                handshakes_pending.remove(tple)
                 printi("ACCEPT pending handshake : "+ tw)
-                handler.deliverHandshakeResult(0)
+                handler.deliverHandshakeResult(partner, 0)
 
         printheader()
 
