@@ -13,6 +13,7 @@ own_addresses = []
 indent = 0
 i_name = ""
 handshakes_pending = []
+handshakes_to_accept = []
 
 def create_account(address, name):
     global own_addresses
@@ -73,9 +74,8 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
             printi(tw)
             if tw in handshakes_seen :
                 handshakes_seen.remove(tw)
-                handshakes_validated.append(tw)
-                printi("ACCEPTED (already seen)")
-                self.deliverHandshakeResult(partner, 0)
+                handshakes_to_accept.append((tw,partner))
+                printi("--> TO ACCEPT (already seen)")
             else:
                 handshakes_pending.append((tw,partner))
                 handshakes_seen.append(tw)
@@ -115,16 +115,16 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
                     printi("---")
         printheader()
 
-        printheader("check validated handshakes")
-        for tple in handshakes_pending:
-            tw, partner = tple 
-            if tw in handshakes_validated:
-                handshakes_validated.remove(tw)
-                handshakes_pending.remove(tple)
-                printi("ACCEPT pending handshake : "+ tw)
-                handler.deliverHandshakeResult(partner, 0)
-
-        printheader()
+        if handshakes_pending:
+            printheader("check pending handshakes accepted on other device")
+            for tple in handshakes_pending:
+                tw, partner = tple 
+                if tw in handshakes_validated:
+                    handshakes_validated.remove(tw)
+                    handshakes_pending.remove(tple)
+                    printi("ACCEPT pending handshake : "+ tw)
+                    handler.deliverHandshakeResult(partner, 0)
+            printheader()
 
         res = None
         if func is not None:
@@ -134,6 +134,16 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
             printi("kwargs :", kwargs)
             res = func(*args,**kwargs)
             printi("function " + func.__name__ + " returned :", res)
+            printheader()
+
+        if handshakes_to_accept:
+            printheader("apply to-accept-because-already-seen handshakes")
+            for tple in handshakes_to_accept:
+                tw, partner = tple 
+                printi("ACCEPT handshake : "+ tw)
+                handshakes_validated.append(tw)
+                handshakes_to_accept.remove(tple)
+                handler.deliverHandshakeResult(partner, 0)
             printheader()
 
         conn.send(res)
