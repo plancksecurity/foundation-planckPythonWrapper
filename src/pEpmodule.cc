@@ -280,6 +280,11 @@ BOOST_PYTHON_MODULE(pEp)
     "ensures that the own identity is being complete\n"
     "supply ident.address and ident.username\n"
             );
+    def("trust_personal_key", &trust_personal_key,
+    "trust_personal_key(ident)\n"
+    "\n"
+    "mark a key as trusted with a person\n"
+            );
 
     // message API
 

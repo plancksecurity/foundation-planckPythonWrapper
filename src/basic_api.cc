@@ -63,6 +63,17 @@ namespace pEp {
             else
                 return my_words + partner_words;
         }
+        
+        void trust_personal_key(Identity ident)
+        {
+            if (ident.fpr() == "")
+                throw invalid_argument("fingerprint needed in Identities");
+            if (ident.user_id() == "")
+                throw invalid_argument("user_id must be provided");
+
+            PEP_STATUS status = trust_personal_key(session, ident);
+            _throw_status(status);
+        }
     }
 }
 
