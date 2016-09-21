@@ -34,6 +34,8 @@ namespace pEp {
                 return;
             if (status == PEP_MESSAGE_CONSUMED)
                 return;
+            if (status == PEP_MESSAGE_DISCARDED)
+                return;
             if (status == PEP_OUT_OF_MEMORY)
                 throw bad_alloc();
             if (status == PEP_ILLEGAL_VALUE)

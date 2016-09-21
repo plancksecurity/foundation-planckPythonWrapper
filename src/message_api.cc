@@ -51,10 +51,12 @@ namespace pEp {
 
             int rating = (int) _rating;
             int flags = (int) _flags;
-            bool consumed = status == PEP_MESSAGE_CONSUMED;
+            string sync_status  = status == PEP_MESSAGE_CONSUMED ? "MESSAGE_CONSUMED" :
+                                  status == PEP_MESSAGE_DISCARDED ? "MESSAGE_DISCARDED" :
+                                  "";
 
             Message dst = _dst ? Message(_dst) : Message(src);
-            return boost::python::make_tuple(dst, keylist, rating, consumed, flags);
+            return boost::python::make_tuple(dst, keylist, rating, sync_status, flags);
         }
 
         int _color(int rating)

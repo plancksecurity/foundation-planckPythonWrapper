@@ -70,7 +70,7 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
         def showHandshake(self, me, partner):
             printheader("show HANDSHAKE dialog")
             printi("handshake needed between " + repr(me) + " and " + repr(partner))
-            tw = pEp.trustwords(me,partner,'en')
+            tw = pEp.trustwords(me, partner, 'en')
             printi(tw)
             if tw in handshakes_seen :
                 handshakes_seen.remove(tw)
@@ -102,13 +102,15 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
                 printmsg(msg)
                 msg2, keys, rating, consumed, flags = msg.decrypt()
 
-                if consumed: #PEP_MESSAGE_CONSUMED
+                if consumed == "MESSAGE_CONSUMED":
                     printi("--- PEP_MESSAGE_CONSUMED")
                     # folder may have changed in the meantime,
                     # remove item directly from latest version of it.
                     folder = msgs_folders[own_address]
                     folder.remove(msgstr)
                     msgs_folders[own_address] = folder
+                elif consumed == "MESSAGE_DISCARDED":
+                    printi("--- PEP_MESSAGE_DISCARDED")
                 else :
                     printi("->-")
                     printmsg(msg2)
