@@ -26,7 +26,23 @@ scenario0 = [
     ("A", [None, None]),
     ("B", [None, None]),
     ("A", [None, None]),
-    ("B", [None, None])
+    ("B", [None, None]),
+    ("C", [mp.create_account, ["some.one@some.where", "Some One"]]),
+    ("A", [None, None]),
+    ("B", [None, None]),
+    ("C", [None, None]),
+    ("A", [None, None]),
+    ("B", [None, None]),
+    ("C", [None, None]),
+    ("A", [None, None]),
+    ("B", [None, None]),
+    ("C", [None, None]),
+    ("A", [None, None]),
+    ("B", [None, None]),
+    ("C", [None, None]),
+    ("A", [None, None]),
+    ("B", [None, None]),
+    ("C", [None, None])
 ] 
 
 if __name__ == "__main__":
