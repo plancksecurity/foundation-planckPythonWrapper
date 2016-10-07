@@ -39,6 +39,8 @@ def printheader(blah=None):
 def printmsg(msg):
     printi("from :", msg.from_)
     printi("to :", msg.to)
+    printi("recv :", msg.recv)
+    printi("sent :", msg.sent)
     printi("short :", msg.shortmsg)
     printi("opt_fields :", msg.opt_fields)
     lng = msg.longmsg.splitlines()
@@ -64,6 +66,7 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
             for rcpt in msg.to + msg.cc + msg.bcc:
                 # list inside dict from MP manager are not proxified.
                 msgs = msgs_folders.get(rcpt.address,[])
+                msg.sent = int(time.time())
                 msgs.append(str(msg))
                 msgs_folders[rcpt.address] = msgs
 
@@ -90,7 +93,7 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
         if order is None:
             break
 
-        func = order[0]
+        func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
 
         printheader("DECRYPT messages")
         # decrypt every non-consumed message for all instance accounts
@@ -99,6 +102,7 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
             for msgstr in msgs_for_me:
                 msg = pEp.incoming_message(msgstr)
                 printi("--- decrypt()")
+                msg.recv = int(time.time() + timeoff)
                 printmsg(msg)
                 msg2, keys, rating, consumed, flags = msg.decrypt()
 
@@ -112,7 +116,7 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
                 elif consumed == "MESSAGE_DISCARDED":
                     printi("--- PEP_MESSAGE_DISCARDED")
                 else :
-                    printi("->-")
+                    printi("->-", rating, "->-")
                     printmsg(msg2)
                     printi("---")
         printheader()
@@ -131,7 +135,6 @@ def pEp_instance_run(iname, conn, msgs_folders, handshakes_seen, handshakes_vali
         res = None
         if func is not None:
             printheader("Executing function " + func.__name__)
-            args, kwargs = order[1:] + [[], {}][len(order) - 1:]
             printi("args :", args)
             printi("kwargs :", kwargs)
             res = func(*args,**kwargs)
