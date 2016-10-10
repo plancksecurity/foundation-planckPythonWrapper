@@ -179,7 +179,7 @@ namespace pEp {
         }
 
         Message::Message(message *msg)
-            : _msg(msg, &free_message)
+            : _msg(::message_dup(msg), &free_message)
         {
 
         }
