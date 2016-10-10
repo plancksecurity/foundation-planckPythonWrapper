@@ -39,13 +39,17 @@ def _send_message(address, msg):
     msgs.append(str(msg))
     msgs_folders[address] = msgs
 
+def flush_all_mails():
+    global msgs_folders
+    msgs_folders.clear()
+
 def _encrypted_message(from_address, to_address, shortmsg, longmsg):
-    m = pEp.outgoing_message(Identity(from_address, from_address))
+    m = pEp.outgoing_message(pEp.Identity(from_address, from_address))
     m.to = [pEp.Identity(to_address, to_address)]
     m.shortmsg = shortmsg
     m.longmsg = longmsg
     m.encrypt()
-    return msg
+    return m
 
 def encrypted_message(from_address, to_address, shortmsg, longmsg):
     return str(_encrypted_message(from_address, to_address, shortmsg, longmsg))
@@ -54,9 +58,19 @@ def send_message(from_address, to_address, shortmsg, longmsg):
     msg = _encrypted_message(from_address, to_address, shortmsg, longmsg)
     _send_message(to_address, msg)
 
-def decrypt_message(msgstr):
-    msg = pEp.incoming_message(msgstr)
-    msg2, keys, rating, consumed, flags = msg.decrypt()
+def decrypt_message(msgs):
+    res = []
+    for msgstr in msgs:
+        msg = pEp.incoming_message(msgstr)
+        printi("--- decrypt()")
+        msg.recv = int(time.time())
+        printmsg(msg)
+        msg2, keys, rating, consumed, flags = msg.decrypt()
+        res.append(rating)
+        printi("->-", rating, "->-")
+        printmsg(msg2)
+        printi("---")
+    return res
 
 def printi(*args):
     global indent
@@ -255,10 +269,10 @@ def run_scenario(scenario):
         handshakes_seen = manager.list()
         handshakes_validated = manager.list()
 
-        res = None
         for action in scenario:
+            res = None
             output = None
-            if type(action[-1]) == types.FunctionType:
+            if len(action) > 1 and type(action[-1]) == types.FunctionType:
                 output = action[-1]
                 action = action[:-1]
 
@@ -288,9 +302,14 @@ def cycle_until_no_change(*instancelist, maxcycles=20):
         count += 1
 
         if dict(msgs_folders) == tmp:
-            return
+            return count
 
         if count >= maxcycles:
             raise Exception("Too many cycles waiting for stability") 
     
+def expect(expectation):
+    def _expect(res, action):
+        if(expectation != res):
+            raise Exception("Expected " + str(expectation) + ", got " + str(res)) 
+    return _expect
 
