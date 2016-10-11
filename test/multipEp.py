@@ -48,8 +48,7 @@ def _encrypted_message(from_address, to_address, shortmsg, longmsg):
     m.to = [pEp.Identity(to_address, to_address)]
     m.shortmsg = shortmsg
     m.longmsg = longmsg
-    m.encrypt()
-    return m
+    return m.encrypt()
 
 def encrypted_message(from_address, to_address, shortmsg, longmsg):
     return str(_encrypted_message(from_address, to_address, shortmsg, longmsg))
@@ -102,7 +101,7 @@ def printmsg(msg):
         pfx = "       "
     printi("attachments : ", msg.attachments)
 
-def execute_order(order, handler, conn):
+def execute_order(order, handler):
     global handshakes_pending, handshakes_to_accept, handshakes_seen
     global handshakes_validated, msgs_folders
     func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
@@ -163,7 +162,7 @@ def execute_order(order, handler, conn):
             handler.deliverHandshakeResult(partner, 0)
         printheader()
 
-    conn.send(res)
+    return res
 
 def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_validated):
     global pEp, handler, own_addresses, i_name, msgs_folders
@@ -207,7 +206,9 @@ def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_v
         if order is None:
             break
 
-        execute_order(order, handler, conn)
+        res = execute_order(order, handler)
+
+        conn.send(res)
 
     msgs_folders = None
 

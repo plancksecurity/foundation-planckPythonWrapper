@@ -32,14 +32,16 @@ scenario0 = [
     ("SoloA", [encrypted_message, ["some.other@else.where", 
                                    "some.one@some.where", 
                                    "read this", "this is a secret message"]], store_message),
+    ("GroupA1", [decrypt_message, [stored_message]], expect([6])), 
     (flush_all_mails,),
     ("GroupA2", [create_account, ["some.one@some.where", "Some One"]]),
     (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
-    ("GroupA2", [decrypt_message, [stored_message]], print_res), 
+    ("GroupA2", [decrypt_message, [stored_message]], expect([6])), 
     ("GroupA3", [create_account, ["some.one@some.where", "Some One"]]),
     (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
     # force consume messages
-    ("GroupA3", [None, None, None, -60*15])
+    # ("GroupA3", [None, None, None, -60*15]),
+    ("GroupA3", [decrypt_message, [stored_message]], expect([6])) 
 ] 
 
 scenario1 = [
