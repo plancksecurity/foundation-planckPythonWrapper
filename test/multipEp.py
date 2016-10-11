@@ -57,19 +57,16 @@ def send_message(from_address, to_address, shortmsg, longmsg):
     msg = _encrypted_message(from_address, to_address, shortmsg, longmsg)
     _send_message(to_address, msg)
 
-def decrypt_message(msgs):
-    res = []
-    for msgstr in msgs:
-        msg = pEp.incoming_message(msgstr)
-        printi("--- decrypt()")
-        msg.recv = int(time.time())
-        printmsg(msg)
-        msg2, keys, rating, consumed, flags = msg.decrypt()
-        res.append(rating)
-        printi("->-", rating, "->-")
-        printmsg(msg2)
-        printi("---")
-    return res
+def decrypt_message(msgstr):
+    msg = pEp.incoming_message(msgstr)
+    printi("--- decrypt()")
+    msg.recv = int(time.time())
+    printmsg(msg)
+    msg2, keys, rating, consumed, flags = msg.decrypt()
+    printi("->-", rating, "->-")
+    printmsg(msg2)
+    printi("---")
+    return rating
 
 def printi(*args):
     global indent
@@ -109,7 +106,7 @@ def execute_order(order, handler):
     printheader("DECRYPT messages")
     # decrypt every non-consumed message for all instance accounts
     for own_address in own_addresses:
-        msgs_for_me = msgs_folders[own_address]
+        msgs_for_me = msgs_folders.get(own_address, [])
         for msgstr in msgs_for_me:
             msg = pEp.incoming_message(msgstr)
             printi("--- decrypt()")
@@ -206,6 +203,7 @@ def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_v
         if order is None:
             break
 
+        print(order)
         res = execute_order(order, handler)
 
         conn.send(res)
@@ -270,20 +268,28 @@ def run_scenario(scenario):
         handshakes_seen = manager.list()
         handshakes_validated = manager.list()
 
-        for action in scenario:
-            res = None
-            output = None
-            if len(action) > 1 and type(action[-1]) == types.FunctionType:
-                output = action[-1]
-                action = action[:-1]
+        sc = scenario()
+        try:
+            action = next(sc)
+            while True:
+                res = None
+                output = None
+                if len(action) > 1 and type(action[-1]) == types.FunctionType:
+                    output = action[-1]
+                    action = action[:-1]
 
-            if type(action[0]) == str:
-                res = run_instance_action(action)
-            else:
-                res = run_manager_action(action)
+                print(action)
+                if type(action[0]) == str:
+                    res = run_instance_action(action)
+                else:
+                    res = run_manager_action(action)
 
-            if output is not None:
-                output(res, action)
+                if output is not None:
+                    output(res, action)
+
+                action = sc.send(res)
+        except StopIteration: pass
+
 
         if "wait_for_debug" in sys.argv:
             input("#"*80 + "\n" +

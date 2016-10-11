@@ -9,46 +9,39 @@ python3.4 mp_sync_test.py
 
 """
 
-stored_message = []
-
-def store_message(res, action):
-    stored_message.append(res)
-
-def print_res(res, action):
-    print(res)
-
 from multipEp import *
 
-   #("instance name", [instance_action_func, [args], {kwargs}], result_func),
-   #(manager_action_func, [args], {kwargs}, result_func),
-scenario0 = [
-    ("GroupA1", [create_account, ["some.one@some.where", "Some One"]]),
-    ("SoloA", [create_account, ["some.other@else.where", "Some Other"]]),
-    # key exchange
-    ("SoloA", [send_message, ["some.other@else.where", "some.one@some.where", 
-                              "Hey Bro", "Heeeey Brooooo"]]),
-    ("GroupA1", [send_message, ["some.one@some.where", "some.other@else.where",
-                                "Yo Dude", "Yooooo Duuuude"]]),
-    ("SoloA", [encrypted_message, ["some.other@else.where", 
-                                   "some.one@some.where", 
-                                   "read this", "this is a secret message"]], store_message),
-    ("GroupA1", [decrypt_message, [stored_message]], expect([6])), 
-    (flush_all_mails,),
-    ("GroupA2", [create_account, ["some.one@some.where", "Some One"]]),
-    (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
-    ("GroupA2", [decrypt_message, [stored_message]], expect([6])), 
-    ("GroupA3", [create_account, ["some.one@some.where", "Some One"]]),
-    (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
-    # force consume messages
-    # ("GroupA3", [None, None, None, -60*15]),
-    ("GroupA3", [decrypt_message, [stored_message]], expect([6])) 
-] 
+#("instance name", [instance_action_func, [args], {kwargs}], result_func),
+#(manager_action_func, [args], {kwargs}, result_func),
 
-scenario1 = [
-   #("instance name", [func, [args], {kwargs}]),
-    ("B", [send_message, ["some.other@else.where", "some.one@some.where", "Hey Bro", "Heeeey Brooooo"]]),
-    ("A", [send_message, ["some.one@some.where", "some.other@else.where", "Hey Bro", "Heeeey Brooooo"]]),
-] 
+def scenario0():
+    for action in [
+        ("GroupA1", [create_account, ["some.one@some.where", "Some One"]]),
+        ("SoloA", [create_account, ["some.other@else.where", "Some Other"]]),
+        # key exchange
+        ("SoloA", [send_message, ["some.other@else.where",
+                                  "some.one@some.where", 
+                                  "Hey Bro", "Heeeey Brooooo"]]),
+        ("GroupA1", [send_message, ["some.one@some.where",
+                                    "some.other@else.where",
+                                    "Yo Dude", "Yooooo Duuuude"]])
+    ] : yield action
+
+    enc_msg = yield ("SoloA", [encrypted_message, ["some.other@else.where", 
+                                   "some.one@some.where", 
+                                   "read this", "this is a secret message"]])
+    for action in [
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(6)),
+        (flush_all_mails,),
+        ("GroupA2", [create_account, ["some.one@some.where", "Some One"]]),
+        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(6)), 
+        ("GroupA3", [create_account, ["some.one@some.where", "Some One"]]),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
+        # force consume messages
+        # ("GroupA3", [None, None, None, -60*15]),
+        ("GroupA3", [decrypt_message, [enc_msg]], expect(6)) 
+    ] : yield action
 
 if __name__ == "__main__":
     run_scenario(scenario0)
