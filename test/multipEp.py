@@ -8,6 +8,23 @@ import types
 from copy import deepcopy
 from collections import OrderedDict
 
+# FIXME : move to main pEp module
+# PEP_rating :
+PEP_rating_undefined = 0
+PEP_rating_cannot_decrypt = 1
+PEP_rating_have_no_key = 2
+PEP_rating_unencrypted = 3
+PEP_rating_unencrypted_for_some = 4
+PEP_rating_unreliable = 5
+PEP_rating_reliable = 6
+PEP_rating_trusted = 7
+PEP_rating_trusted_and_anonymized = 8
+PEP_rating_fully_anonymous = 9
+
+PEP_rating_mistrust = -1,
+PEP_rating_b0rken = -2,
+PEP_rating_under_attack = -3
+
 # manager globals
 instances = None
 
@@ -203,7 +220,6 @@ def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_v
         if order is None:
             break
 
-        print(order)
         res = execute_order(order, handler)
 
         conn.send(res)
@@ -278,7 +294,6 @@ def run_scenario(scenario):
                     output = action[-1]
                     action = action[:-1]
 
-                print(action)
                 if type(action[0]) == str:
                     res = run_instance_action(action)
                 else:
@@ -289,7 +304,6 @@ def run_scenario(scenario):
 
                 action = sc.send(res)
         except StopIteration: pass
-
 
         if "wait_for_debug" in sys.argv:
             input("#"*80 + "\n" +

@@ -60,7 +60,7 @@ BOOST_PYTHON_MODULE(pEp)
     std::locale::global(gen(""));
 
     scope().attr("about") = about();
-
+    
     auto identity_class = class_<Identity>("Identity",
     "Identity(address, username, user_id='', fpr='', comm_type=0, lang='en')\n"
     "\n"
