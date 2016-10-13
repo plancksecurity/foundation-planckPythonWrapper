@@ -14,52 +14,47 @@ from multipEp import *
 #("instance name", [instance_action_func, [args], {kwargs}], result_func),
 #(manager_action_func, [args], {kwargs}, result_func),
 
-def group_on_keygen():
+def pre_existing_peers_with_encrypted_mail():
     for action in [
-        ("GroupA1", [create_account, ["some.one@some.where", "Some One"]]),
-        ("SoloA", [create_account, ["some.other@else.where", "Some Other"]]),
+        ("GroupA1", [create_account, ["first@group.a", "GroupA First"]]),
+        ("SoloA", [create_account, ["first@solo.a", "First SoloA"]]),
         # key exchange
-        ("SoloA", [send_message, ["some.other@else.where",
-                                  "some.one@some.where", 
-                                  "Hey Bro", "Heeeey Brooooo"]]),
-        ("GroupA1", [send_message, ["some.one@some.where",
-                                    "some.other@else.where",
-                                    "Yo Dude", "Yooooo Duuuude"]])
+        ("SoloA", [send_message, ["first@solo.a",
+                                  "first@group.a", 
+                                  "SoloA First to GroupA First",
+                                  "SoloA First to GroupA First -- long"]]),
+        ("GroupA1", [send_message, ["first@group.a",
+                                    "first@solo.a",
+                                    "GroupA First to SoloA First",
+                                    "GroupA First to SoloA First -- long"]])
     ] : yield action
 
-    enc_msg = yield ("SoloA", [encrypted_message, ["some.other@else.where", 
-                                   "some.one@some.where", 
-                                   "read this", "this is a secret message"]])
+    enc_msg = yield ("SoloA", [encrypted_message, ["first@solo.a", 
+                             "first@group.a", 
+                             "SoloA First to GroupA First -- encrypted",
+                             "SoloA First to GroupA First -- long encrypted"]])
     for action in [
         ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
         (flush_all_mails,),
-        ("GroupA2", [create_account, ["some.one@some.where", "Some One"]]),
+    ] : yield action
+
+    return enc_msg
+
+def group_on_keygen():
+    enc_msg = yield from pre_existing_peers_with_encrypted_mail()
+    for action in [
+        ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)) 
     ] : yield action
 
     return enc_msg
 
-def group_on_cannotdecypt():
+def group_on_cannotdecrypt():
+    enc_msg = yield from pre_existing_peers_with_encrypted_mail()
     for action in [
-        ("GroupA1", [create_account, ["some.one@some.where", "Some One"]]),
-        ("SoloA", [create_account, ["some.other@else.where", "Some Other"]]),
-        # key exchange
-        ("SoloA", [send_message, ["some.other@else.where",
-                                  "some.one@some.where", 
-                                  "Hey Bro", "Heeeey Brooooo"]]),
-        ("GroupA1", [send_message, ["some.one@some.where",
-                                    "some.other@else.where",
-                                    "Yo Dude", "Yooooo Duuuude"]])
-    ] : yield action
-
-    enc_msg = yield ("SoloA", [encrypted_message, ["some.other@else.where", 
-                                   "some.one@some.where", 
-                                   "read this", "this is a secret message"]])
-    for action in [
-        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
         (flush_all_mails,),
-        ("GroupA2", [create_account, ["some.one@some.where", "Some One"]]),
+        ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (flush_all_mails,),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
         (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
@@ -69,7 +64,7 @@ def group_on_cannotdecypt():
 def group_of_3_members():
     enc_msg = yield from group_on_keygen()
     for action in [
-        ("GroupA3", [create_account, ["some.one@some.where", "Some One"]]),
+        ("GroupA3", [create_account, ["first@group.a", "GroupA First"]]),
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
         # force consume messages
         # ("GroupA3", [None, None, None, -60*15]),
@@ -78,8 +73,38 @@ def group_of_3_members():
 
     return enc_msg
 
+def keygen_in_a_group_of_3_members():
+    prev_enc_msg = yield from group_of_3_members()
+    for action in [
+        ("SoloB", [create_account, ["first@solo.b", "First SoloB"]]),
+        ("GroupA3", [create_account, ["second@group.a", "GroupA Second"]]),
+        # key exchange
+        ("SoloB", [send_message, ["first@solo.b",
+                                  "second@group.a", 
+                                  "SoloB First to GroupA second",
+                                  "SoloB First to GroupA second -- long"]]),
+        ("GroupA3", [send_message, ["second@group.a",
+                                    "first@solo.b",
+                                    "GroupA second to SoloB First"
+                                    "GroupA second to SoloB First"]]),
+        (flush_all_mails,),
+    ] : yield action
+
+    enc_msg = yield ("SoloB", [encrypted_message, ["first@solo.b", 
+                             "second@group.a", 
+                             "SoloB First to GroupA Second -- encrypted",
+                             "SoloB First to GroupA Second -- long encrypted"]])
+    for action in [
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+    ] : yield action
+
+
 if __name__ == "__main__":
     run_scenario(group_on_keygen)
-    run_scenario(group_on_cannotdecypt)
+    run_scenario(group_on_cannotdecrypt)
     run_scenario(group_of_3_members)
+    #run_scenario(keygen_in_a_group_of_3_members)
 
