@@ -53,7 +53,6 @@ def group_on_keygen():
 def group_on_cannotdecrypt():
     enc_msg = yield from pre_existing_peers_with_encrypted_mail()
     for action in [
-        (flush_all_mails,),
         ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (flush_all_mails,),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
@@ -65,7 +64,7 @@ def group_of_3_members():
     enc_msg = yield from group_on_keygen()
     for action in [
         ("GroupA3", [create_account, ["first@group.a", "GroupA First"]]),
-        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(4)),
         # force consume messages
         # ("GroupA3", [None, None, None, -60*15]),
         ("GroupA3", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)) 
@@ -85,9 +84,8 @@ def keygen_in_a_group_of_3_members():
                                   "SoloB First to GroupA second -- long"]]),
         ("GroupA3", [send_message, ["second@group.a",
                                     "first@solo.b",
-                                    "GroupA second to SoloB First"
+                                    "GroupA second to SoloB First",
                                     "GroupA second to SoloB First"]]),
-        (flush_all_mails,),
     ] : yield action
 
     enc_msg = yield ("SoloB", [encrypted_message, ["first@solo.b", 
@@ -95,16 +93,17 @@ def keygen_in_a_group_of_3_members():
                              "SoloB First to GroupA Second -- encrypted",
                              "SoloB First to GroupA Second -- long encrypted"]])
     for action in [
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(1)),
+        ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
+        ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
     ] : yield action
 
 
 if __name__ == "__main__":
-    run_scenario(group_on_keygen)
-    run_scenario(group_on_cannotdecrypt)
-    run_scenario(group_of_3_members)
-    #run_scenario(keygen_in_a_group_of_3_members)
+    #run_scenario(group_on_keygen)
+    #run_scenario(group_on_cannotdecrypt)
+    #run_scenario(group_of_3_members)
+    run_scenario(keygen_in_a_group_of_3_members)
 

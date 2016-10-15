@@ -246,19 +246,29 @@ def run_instance_action(action):
                   handshakes_seen, handshakes_validated))
         proc.start()
         instances[iname] = (proc, conn)
-        if "wait_for_debug" in sys.argv:
+        debug = False
+        if "debug_"+iname in sys.argv :
+            debug = True
+        if not debug and "wait_for_debug" in sys.argv :
             yes = input("#"*80 + "\n" +
                         "INSTANCE "  + iname + "\n" + 
                         "Enter y/yes/Y/YES to attach debugger to process "  + 
                         str(proc.pid) + "\nor just press ENTER\n" +
                         "#"*80 + "\n")
             if yes in ["y", "Y", "yes" "YES"]:
-                # TODO : linux terminal support
-                #import subprocess
-                #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
-                import appscript
-                appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
-                time.sleep(2)
+                debug = True
+        if debug :
+            print("#"*80 + "\n" +
+                        "INSTANCE "  + iname + "\n" + 
+                        "launching debugger attaching to process "  + 
+                        str(proc.pid) + "\n" +
+                        "#"*80 + "\n")
+            # TODO : linux terminal support
+            #import subprocess
+            #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
+            import appscript
+            appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
+            time.sleep(2)
     else:
         proc, conn = instances[iname]
 
