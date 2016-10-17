@@ -100,10 +100,40 @@ def keygen_in_a_group_of_3_members():
         ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
     ] : yield action
 
+def nokey_in_a_group_of_3_members():
+    prev_enc_msg = yield from group_of_3_members()
+    for action in [
+        ("SoloB", [create_account, ["first@solo.b", "First SoloB"]]),
+        ("GroupA3", [create_account, ["second@group.a", "GroupA Second"]]),
+        # key exchange
+        ("SoloB", [send_message, ["first@solo.b",
+                                  "second@group.a", 
+                                  "SoloB First to GroupA second",
+                                  "SoloB First to GroupA second -- long"]]),
+        ("GroupA3", [send_message, ["second@group.a",
+                                    "first@solo.b",
+                                    "GroupA second to SoloB First",
+                                    "GroupA second to SoloB First"]]),
+    ] : yield action
+
+    enc_msg = yield ("SoloB", [encrypted_message, ["first@solo.b", 
+                             "second@group.a", 
+                             "SoloB First to GroupA Second -- encrypted",
+                             "SoloB First to GroupA Second -- long encrypted"]])
+    for action in [
+        (flush_all_mails,),
+        ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(2)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+    ] : yield action
 
 if __name__ == "__main__":
-    #run_scenario(group_on_keygen)
-    #run_scenario(group_on_cannotdecrypt)
-    #run_scenario(group_of_3_members)
+    run_scenario(group_on_keygen)
+    run_scenario(group_on_cannotdecrypt)
+    run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
+    #run_scenario(nokey_in_a_group_of_3_members)
 
