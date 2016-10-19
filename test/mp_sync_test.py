@@ -65,15 +65,12 @@ def group_of_3_members():
     for action in [
         ("GroupA3", [create_account, ["first@group.a", "GroupA First"]]),
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(4)),
-        # force consume messages
-        # ("GroupA3", [None, None, None, -60*15]),
         ("GroupA3", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)) 
     ] : yield action
 
     return enc_msg
 
-def keygen_in_a_group_of_3_members():
-    prev_enc_msg = yield from group_of_3_members()
+def new_address_peer_and_mail():
     for action in [
         ("SoloB", [create_account, ["first@solo.b", "First SoloB"]]),
         ("GroupA3", [create_account, ["second@group.a", "GroupA Second"]]),
@@ -92,34 +89,35 @@ def keygen_in_a_group_of_3_members():
                              "second@group.a", 
                              "SoloB First to GroupA Second -- encrypted",
                              "SoloB First to GroupA Second -- long encrypted"]])
-    for action in [
+
+    return enc_msg
+
+def keygen_in_a_group_of_3_members(pre_actions=[]):
+    yield from group_of_3_members()
+    enc_msg = yield from new_address_peer_and_mail()
+
+    for action in pre_actions + [
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(1)),
+        (flush_all_mails,),
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
+        (flush_all_mails, expect(0)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
+        (flush_all_mails, expect(0)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
     ] : yield action
 
-def nokey_in_a_group_of_3_members():
-    prev_enc_msg = yield from group_of_3_members()
-    for action in [
-        ("SoloB", [create_account, ["first@solo.b", "First SoloB"]]),
-        ("GroupA3", [create_account, ["second@group.a", "GroupA Second"]]),
-        # key exchange
-        ("SoloB", [send_message, ["first@solo.b",
-                                  "second@group.a", 
-                                  "SoloB First to GroupA second",
-                                  "SoloB First to GroupA second -- long"]]),
-        ("GroupA3", [send_message, ["second@group.a",
-                                    "first@solo.b",
-                                    "GroupA second to SoloB First",
-                                    "GroupA second to SoloB First"]]),
-    ] : yield action
+def group_suvives_restart():
+    yield from keygen_in_a_group_of_3_members([
+        (restart_instance, ["GroupA1"]),
+        (restart_instance, ["GroupA2"]),
+        (restart_instance, ["GroupA3"])
+    ])
 
-    enc_msg = yield ("SoloB", [encrypted_message, ["first@solo.b", 
-                             "second@group.a", 
-                             "SoloB First to GroupA Second -- encrypted",
-                             "SoloB First to GroupA Second -- long encrypted"]])
+def nokey_in_a_group_of_3_members():
+    yield from group_of_3_members()
+    enc_msg = yield from new_address_peer_and_mail()
+
     for action in [
         (flush_all_mails,),
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
@@ -136,5 +134,6 @@ if __name__ == "__main__":
     run_scenario(group_on_cannotdecrypt)
     run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
+    # run_scenario(group_suvives_restart)
     run_scenario(nokey_in_a_group_of_3_members)
 

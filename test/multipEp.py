@@ -5,6 +5,7 @@ import importlib
 import tempfile
 import time
 import types
+import itertools
 from copy import deepcopy
 from collections import OrderedDict
 
@@ -58,7 +59,9 @@ def _send_message(address, msg):
 
 def flush_all_mails():
     global msgs_folders
+    count = sum(map(len,msgs_folders.values()))
     msgs_folders.clear()
+    return count
 
 def _encrypted_message(from_address, to_address, shortmsg, longmsg):
     m = pEp.outgoing_message(pEp.Identity(from_address, from_address))
@@ -117,7 +120,7 @@ def printmsg(msg):
 
 def execute_order(order, handler):
     global handshakes_pending, handshakes_to_accept, handshakes_seen
-    global handshakes_validated, msgs_folders
+    global handshakes_validated, msgs_folders, own_addresses
     func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
 
     printheader("DECRYPT messages")
@@ -178,12 +181,13 @@ def execute_order(order, handler):
 
     return res
 
-def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_validated):
+def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_seen, _handshakes_validated):
     global pEp, handler, own_addresses, i_name, msgs_folders
     global handshakes_pending, handshakes_to_accept
     global handshakes_seen, handshakes_validated
 
     # assign instance globals
+    own_addresses = _own_addresses
     msgs_folders = _msgs_folders
     handshakes_seen = _handshakes_seen
     handshakes_validated = _handshakes_validated
@@ -224,6 +228,8 @@ def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_v
 
         conn.send(res)
 
+    conn.send(own_addresses)
+
     msgs_folders = None
 
 def pEp_instance_main(iname, tmpdirname, *args):
@@ -233,7 +239,7 @@ def pEp_instance_main(iname, tmpdirname, *args):
     pEp_instance_run(iname, *args)
     print(iname + " exiting")
 
-def start_instance(iname, tmpdir=None):
+def start_instance(iname, tmpdir=None, instance_addresses = []):
     global handshakes_seen, handshakes_validated, msgs_folders
 
     if tmpdir is None:
@@ -243,7 +249,8 @@ def start_instance(iname, tmpdir=None):
     conn, child_conn = multiprocessing.Pipe()
     proc = multiprocessing.Process(
         target=pEp_instance_main,
-        args=(iname, tmpdirname, child_conn, msgs_folders, 
+        args=(iname, tmpdirname, instance_addresses,
+              child_conn, msgs_folders, 
               handshakes_seen, handshakes_validated))
     proc.start()
 
@@ -286,8 +293,9 @@ def stop_instance(iname):
     proc, conn, tmpdir = instances.pop(iname)
     # tell process to terminate
     conn.send(None)
+    instance_addresses = conn.recv()
     proc.join()
-    return tmpdir
+    return tmpdir, instance_addresses
 
 def purge_instances():
     global instances
@@ -295,8 +303,8 @@ def purge_instances():
         stop_instance(iname)
 
 def restart_instance(iname):
-    tmpdir = stop_instance(iname)
-    start_instance(iname, tmpdir)
+    tmpdir, instance_addresses = stop_instance(iname)
+    instances[iname] = start_instance(iname, tmpdir, instance_addresses)
 
 def run_instance_action(action):
     iname, order = action
