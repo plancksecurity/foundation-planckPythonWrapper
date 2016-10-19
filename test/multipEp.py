@@ -226,61 +226,83 @@ def pEp_instance_run(iname, conn, _msgs_folders, _handshakes_seen, _handshakes_v
 
     msgs_folders = None
 
-def pEp_instance_main(iname, *args):
+def pEp_instance_main(iname, tmpdirname, *args):
     # run with a dispensable $HOME to get fresh DB and PGP keyrings
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        print("Instance " + iname + " runs into " + tmpdirname)
-        os.environ['HOME'] = tmpdirname
-        pEp_instance_run(iname, *args)
-        print(iname + " exiting")
+    print("Instance " + iname + " runs into " + tmpdirname)
+    os.environ['HOME'] = tmpdirname
+    pEp_instance_run(iname, *args)
+    print(iname + " exiting")
+
+def start_instance(iname, tmpdir=None):
+    global handshakes_seen, handshakes_validated, msgs_folders
+
+    if tmpdir is None:
+        tmpdir = tempfile.TemporaryDirectory()
+
+    tmpdirname = tmpdir.name
+    conn, child_conn = multiprocessing.Pipe()
+    proc = multiprocessing.Process(
+        target=pEp_instance_main,
+        args=(iname, tmpdirname, child_conn, msgs_folders, 
+              handshakes_seen, handshakes_validated))
+    proc.start()
+
+    debug = False
+    if "debug_"+iname in sys.argv :
+        debug = True
+    if not debug and "wait_for_debug" in sys.argv :
+        yes = input("#"*80 + "\n" +
+                    "INSTANCE "  + iname + "\n" + 
+                    "Enter y/yes/Y/YES to attach debugger to process "  + 
+                    str(proc.pid) + "\nor just press ENTER\n" +
+                    "#"*80 + "\n")
+        if yes in ["y", "Y", "yes" "YES"]:
+            debug = True
+    if debug :
+        print("#"*80 + "\n" +
+                    "INSTANCE "  + iname + "\n" + 
+                    "launching debugger attaching to process "  + 
+                    str(proc.pid) + "\n" +
+                    "#"*80 + "\n")
+        # TODO : linux terminal support
+        #import subprocess
+        #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
+        import appscript
+        appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
+        time.sleep(2)
+
+    return (proc, conn, tmpdir)
+
+def get_instance(iname):
+    global instances
+    if iname not in instances:
+        res = start_instance(iname)
+        instances[iname] = res
+        return res
+    else:
+        return instances[iname]
+
+def stop_instance(iname):
+    proc, conn, tmpdir = instances.pop(iname)
+    # tell process to terminate
+    conn.send(None)
+    proc.join()
+    return tmpdir
+
+def purge_instances():
+    global instances
+    for iname in instances.keys():
+        stop_instance(iname)
+
+def restart_instance(iname):
+    tmpdir = stop_instance(iname)
+    start_instance(iname, tmpdir)
 
 def run_instance_action(action):
-    global handshakes_seen, handshakes_validated, msgs_folders
-    global instances
     iname, order = action
-    if iname not in instances:
-        conn, child_conn = multiprocessing.Pipe()
-        proc = multiprocessing.Process(
-            target=pEp_instance_main,
-            args=(iname, child_conn, msgs_folders, 
-                  handshakes_seen, handshakes_validated))
-        proc.start()
-        instances[iname] = (proc, conn)
-        debug = False
-        if "debug_"+iname in sys.argv :
-            debug = True
-        if not debug and "wait_for_debug" in sys.argv :
-            yes = input("#"*80 + "\n" +
-                        "INSTANCE "  + iname + "\n" + 
-                        "Enter y/yes/Y/YES to attach debugger to process "  + 
-                        str(proc.pid) + "\nor just press ENTER\n" +
-                        "#"*80 + "\n")
-            if yes in ["y", "Y", "yes" "YES"]:
-                debug = True
-        if debug :
-            print("#"*80 + "\n" +
-                        "INSTANCE "  + iname + "\n" + 
-                        "launching debugger attaching to process "  + 
-                        str(proc.pid) + "\n" +
-                        "#"*80 + "\n")
-            # TODO : linux terminal support
-            #import subprocess
-            #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
-            import appscript
-            appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
-            time.sleep(2)
-    else:
-        proc, conn = instances[iname]
-
+    proc, conn, tmpdir = get_instance(iname)
     conn.send(order)
     return conn.recv()
-
-def purge_instance():
-    global instances
-    for iname, (proc, conn) in instances.items():
-        # tell process to terminate
-        conn.send(None)
-        proc.join()
 
 def run_manager_action(action):
     func, args, kwargs = action[0:] + (None, [], {})[len(action):]
@@ -320,7 +342,7 @@ def run_scenario(scenario):
                   "Press ENTER to cleanup\n" +
                   "#"*80 + "\n")
 
-        purge_instance()
+        purge_instances()
 
 def cycle_until_no_change(*instancelist, maxcycles=20):
     count = 0
