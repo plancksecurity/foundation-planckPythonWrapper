@@ -134,6 +134,6 @@ if __name__ == "__main__":
     run_scenario(group_on_cannotdecrypt)
     run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
-    # run_scenario(group_suvives_restart)
+    run_scenario(group_suvives_restart)
     run_scenario(nokey_in_a_group_of_3_members)
 

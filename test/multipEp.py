@@ -345,7 +345,9 @@ def run_scenario(scenario):
                 action = sc.send(res)
         except StopIteration: pass
 
-        if "wait_for_debug" in sys.argv:
+        if "wait_for_cleanup" in sys.argv:
+            for iname,(proc, conn, tmpdir) in instances.items():
+                print("Instance " + iname + " waits into " + tmpdir.name)
             input("#"*80 + "\n" +
                   "Press ENTER to cleanup\n" +
                   "#"*80 + "\n")
