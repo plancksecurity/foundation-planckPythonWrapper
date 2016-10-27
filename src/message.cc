@@ -309,6 +309,10 @@ namespace pEp {
         {
             if (!(_msg && _msg->from))
                 throw invalid_argument("from must be a valid Identity()");
+            if (_msg->dir == PEP_dir_outgoing)
+                myself(session, _msg->from);
+            else
+                update_identity(session, _msg->from);
             if (!(_msg->dir == PEP_dir_outgoing && _msg->from->user_id &&
                         strcmp(_msg->from->user_id, PEP_OWN_USERID) == 0))
                 throw invalid_argument("Message.dir must be outgoing");

@@ -38,23 +38,27 @@ if not(args.encrypt) and not(args.decrypt) and not(args.version):
 if args.version:
     print(__doc__)
 
+def crlf(line):
+    if line[-2:] == '\r\n':
+        return line
+    elif line[-1:] == '\n':
+        return line[:-1] + '\r\n'
+    else:
+        return line + '\r\n'
+
 try:
     if len(args.files) == 0:
         args.files = ['-']
 
     for filename in args.files:
+        text = ''
         if filename == '-':
-            text = ''
             for line in sys.stdin.readlines():
-                if line[-2:] == '\r\n':
-                    text += line
-                elif line[-1:] == '\n':
-                    text += line[:-1] + '\r\n'
-                else:
-                    text += line + '\r\n'
+                text += line
         else:
             with open(filename, "r") as f:
-                text = f.readall()
+                for line in f:
+                    text += line
 
         src = Message(text)
 
@@ -63,7 +67,7 @@ try:
             dst = src.encrypt()
         else:
             src.dir = 0
-            dst, keys, rating, flags = src.decrypt()
+            dst, keys, rating, consumed, flags = src.decrypt()
 
         print(str(dst))
 
