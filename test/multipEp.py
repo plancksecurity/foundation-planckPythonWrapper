@@ -121,6 +121,7 @@ def printmsg(msg):
 def execute_order(order, handler):
     global handshakes_pending, handshakes_to_accept, handshakes_seen
     global handshakes_validated, msgs_folders, own_addresses
+
     func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
 
     printheader("DECRYPT messages")
@@ -239,6 +240,19 @@ def pEp_instance_main(iname, tmpdirname, *args):
     pEp_instance_run(iname, *args)
     print(iname + " exiting")
 
+def start_debug(iname, proc):
+    print("#"*80 + "\n" +
+                "INSTANCE "  + iname + "\n" + 
+                "launching debugger attaching to process "  + 
+                str(proc.pid) + "\n" +
+                "#"*80 + "\n")
+    # TODO : linux terminal support
+    #import subprocess
+    #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
+    import appscript
+    appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
+    time.sleep(2)
+
 def start_instance(iname, tmpdir=None, instance_addresses = []):
     global handshakes_seen, handshakes_validated, msgs_folders
 
@@ -266,19 +280,9 @@ def start_instance(iname, tmpdir=None, instance_addresses = []):
         if yes in ["y", "Y", "yes" "YES"]:
             debug = True
     if debug :
-        print("#"*80 + "\n" +
-                    "INSTANCE "  + iname + "\n" + 
-                    "launching debugger attaching to process "  + 
-                    str(proc.pid) + "\n" +
-                    "#"*80 + "\n")
-        # TODO : linux terminal support
-        #import subprocess
-        #subprocess.call(['xterm', '-e', 'lldb', '-p', str(proc.pid)])
-        import appscript
-        appscript.app('Terminal').do_script('lldb -p ' + str(proc.pid))
-        time.sleep(2)
+        start_debug(iname, proc)
 
-    return (proc, conn, tmpdir)
+    return (proc, conn, tmpdir, 0)
 
 def get_instance(iname):
     global instances
@@ -290,7 +294,7 @@ def get_instance(iname):
         return instances[iname]
 
 def stop_instance(iname):
-    proc, conn, tmpdir = instances.pop(iname)
+    proc, conn, tmpdir, execnt = instances.pop(iname)
     # tell process to terminate
     conn.send(None)
     instance_addresses = conn.recv()
@@ -308,7 +312,13 @@ def restart_instance(iname):
 
 def run_instance_action(action):
     iname, order = action
-    proc, conn, tmpdir = get_instance(iname)
+    proc, conn, tmpdir, execnt = get_instance(iname)
+    execnt = execnt + 1
+    instances[iname] = (proc, conn, tmpdir, execnt)
+    debug_here_arg = "debug_"+iname+"_"+str(execnt)
+    print(iname, ": execution number :", execnt , "(add", debug_here_arg, "to args to debug from here)")
+    if debug_here_arg in sys.argv :
+        start_debug(iname, proc)
     conn.send(order)
     return conn.recv()
 
@@ -346,7 +356,7 @@ def run_scenario(scenario):
         except StopIteration: pass
 
         if "wait_for_cleanup" in sys.argv:
-            for iname,(proc, conn, tmpdir) in instances.items():
+            for iname,(proc, conn, tmpdir, execnt) in instances.items():
                 print("Instance " + iname + " waits into " + tmpdir.name)
             input("#"*80 + "\n" +
                   "Press ENTER to cleanup\n" +

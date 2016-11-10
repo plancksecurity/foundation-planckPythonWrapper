@@ -107,7 +107,7 @@ def keygen_in_a_group_of_3_members(pre_actions=[]):
         ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
     ] : yield action
 
-def group_suvives_restart():
+def group_survives_restart():
     yield from keygen_in_a_group_of_3_members([
         (restart_instance, ["GroupA1"]),
         (restart_instance, ["GroupA2"]),
@@ -134,6 +134,6 @@ if __name__ == "__main__":
     run_scenario(group_on_cannotdecrypt)
     run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
-    run_scenario(group_suvives_restart)
+    run_scenario(group_survives_restart)
     run_scenario(nokey_in_a_group_of_3_members)
 
