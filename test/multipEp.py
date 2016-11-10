@@ -135,14 +135,14 @@ def execute_order(order, handler):
             printmsg(msg)
             msg2, keys, rating, consumed, flags = msg.decrypt()
 
-            if consumed == "MESSAGE_CONSUMED":
+            if consumed == "MESSAGE_CONSUME":
                 printi("--- PEP_MESSAGE_CONSUMED")
                 # folder may have changed in the meantime,
                 # remove item directly from latest version of it.
                 folder = msgs_folders[own_address]
                 folder.remove(msgstr)
                 msgs_folders[own_address] = folder
-            elif consumed == "MESSAGE_DISCARDED":
+            elif consumed == "MESSAGE_IGNORE":
                 printi("--- PEP_MESSAGE_DISCARDED")
             else :
                 printi("->-", rating, "->-")
