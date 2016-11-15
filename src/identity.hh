@@ -10,6 +10,7 @@
 namespace pEp {
     namespace PythonAdapter {
         using namespace utility;
+        using namespace std;
 
         // Identity is owning a pEp_identity
 
