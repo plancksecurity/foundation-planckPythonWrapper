@@ -1,5 +1,5 @@
 """
-test for simplest keysync scenario : two device setting up same account
+tests for keysync scenario
 
 Launch it with something like :
 LC_ALL=en_US.UTF-8 \

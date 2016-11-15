@@ -327,6 +327,12 @@ def run_manager_action(action):
     return func(*args, **kwargs)
 
 def run_scenario(scenario):
+    for a in sys.argv:
+        if a.startswith("only_") and a != "only_" + scenario.__name__ :
+            print("IGNORING: " + scenario.__name__)
+            return
+    print("RUNNING: " + scenario.__name__)
+
     global handshakes_seen, handshakes_validated, msgs_folders, instances
     instances = OrderedDict()
     with multiprocessing.Manager() as manager:
