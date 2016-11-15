@@ -26,7 +26,7 @@ OPTION_PREFIX = option_value("prefix")
 OPTION_BOOST = option_value("boost")
 
 if OPTION_PREFIX is None :
-    OPTION_PREFIX = '/Users/vb'
+    OPTION_PREFIX = os.environ["HOME"]
 
 if OPTION_BOOST is None :
     OPTION_BOOST = '/opt/local'
