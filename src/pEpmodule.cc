@@ -7,6 +7,8 @@
 #include "message_api.hh"
 #include "sync_mixin.hh"
 
+#include <pEp/message_api.h>
+
 namespace pEp {
     namespace PythonAdapter {
         using namespace std;
@@ -266,25 +268,57 @@ BOOST_PYTHON_MODULE(pEp)
 
     // basic API
 
-    def("update_identity", &update_identity,
+    def("update_identity", &pEp::PythonAdapter::update_identity,
     "update_identity(ident)\n"
     "\n"
     "update identity information\n"
     "call this to complete identity information when you at least have an address\n"
             );
-    def("myself", &myself,
+    def("myself", &pEp::PythonAdapter::myself,
     "myself(ident)\n"
     "\n"
     "ensures that the own identity is being complete\n"
     "supply ident.address and ident.username\n"
             );
-    def("trust_personal_key", &trust_personal_key,
+    def("trust_personal_key", &pEp::PythonAdapter::trust_personal_key,
     "trust_personal_key(ident)\n"
     "\n"
     "mark a key as trusted with a person\n"
             );
 
+    enum_<identity_flags>("identity_flags")
+        .value("PEP_idf_not_for_sync", PEP_idf_not_for_sync)
+        .value("PEP_idf_list", PEP_idf_list)
+        .value("PEP_idf_devicegroup", PEP_idf_devicegroup);
+
+    def("set_identity_flags", &pEp::PythonAdapter::set_identity_flags,
+    "set_identity_flags(ident, flags)\n"
+    "\n"
+    "set identity flags\n"
+            );
+
+    def("unset_identity_flags", &pEp::PythonAdapter::unset_identity_flags,
+    "unset_identity_flags(ident, flags)\n"
+    "\n"
+    "unset identity flags\n"
+            );
+
     // message API
+
+    enum_<PEP_rating>("PEP_rating")
+        .value("PEP_rating_undefined", PEP_rating_undefined)
+        .value("PEP_rating_cannot_decrypt", PEP_rating_cannot_decrypt)
+        .value("PEP_rating_have_no_key", PEP_rating_have_no_key)
+        .value("PEP_rating_unencrypted", PEP_rating_unencrypted)
+        .value("PEP_rating_unencrypted_for_some", PEP_rating_unencrypted_for_some)
+        .value("PEP_rating_unreliable", PEP_rating_unreliable)
+        .value("PEP_rating_reliable", PEP_rating_reliable)
+        .value("PEP_rating_trusted", PEP_rating_trusted)
+        .value("PEP_rating_trusted_and_anonymized", PEP_rating_trusted_and_anonymized)
+        .value("PEP_rating_fully_anonymous", PEP_rating_fully_anonymous)
+        .value("PEP_rating_mistrust", PEP_rating_mistrust)
+        .value("PEP_rating_b0rken", PEP_rating_b0rken)
+        .value("PEP_rating_under_attack", PEP_rating_under_attack);
 
     def("incoming_message", &incoming_message,
     "msg = incoming_message(mime_text)\n"

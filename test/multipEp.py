@@ -9,28 +9,19 @@ import itertools
 from copy import deepcopy
 from collections import OrderedDict
 
-# FIXME : move to main pEp module
-# PEP_rating :
-PEP_rating_undefined = 0
-PEP_rating_cannot_decrypt = 1
-PEP_rating_have_no_key = 2
-PEP_rating_unencrypted = 3
-PEP_rating_unencrypted_for_some = 4
-PEP_rating_unreliable = 5
-PEP_rating_reliable = 6
-PEP_rating_trusted = 7
-PEP_rating_trusted_and_anonymized = 8
-PEP_rating_fully_anonymous = 9
-
-PEP_rating_mistrust = -1,
-PEP_rating_b0rken = -2,
-PEP_rating_under_attack = -3
-
 # manager globals
 instances = None
 
 # per-instance globals
-pEp = None
+if(multiprocessing.current_process().name == "MainProcess"):
+    ctx = multiprocessing.get_context('spawn')
+
+    # import pEp in main process just to get enums
+    # TODO: would be really great if no session was created until we really use it.
+    pEp = importlib.import_module("pEp")
+else:
+    pEp = None
+
 handler = None
 own_addresses = []
 indent = 0
@@ -260,8 +251,8 @@ def start_instance(iname, tmpdir=None, instance_addresses = []):
         tmpdir = tempfile.TemporaryDirectory()
 
     tmpdirname = tmpdir.name
-    conn, child_conn = multiprocessing.Pipe()
-    proc = multiprocessing.Process(
+    conn, child_conn = ctx.Pipe()
+    proc = ctx.Process(
         target=pEp_instance_main,
         args=(iname, tmpdirname, instance_addresses,
               child_conn, msgs_folders, 
@@ -327,6 +318,8 @@ def run_manager_action(action):
     return func(*args, **kwargs)
 
 def run_scenario(scenario):
+    global pEp
+
     for a in sys.argv:
         if a.startswith("only_") and a != "only_" + scenario.__name__ :
             print("IGNORING: " + scenario.__name__)
@@ -335,7 +328,7 @@ def run_scenario(scenario):
 
     global handshakes_seen, handshakes_validated, msgs_folders, instances
     instances = OrderedDict()
-    with multiprocessing.Manager() as manager:
+    with ctx.Manager() as manager:
         msgs_folders = manager.dict()
         handshakes_seen = manager.list()
         handshakes_validated = manager.list()
@@ -359,7 +352,11 @@ def run_scenario(scenario):
                     output(res, action)
 
                 action = sc.send(res)
-        except StopIteration: pass
+        except StopIteration: 
+            pass
+        except : 
+            import traceback
+            traceback.print_exc()
 
         if "wait_for_cleanup" in sys.argv:
             for iname,(proc, conn, tmpdir, execnt) in instances.items():

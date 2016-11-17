@@ -74,6 +74,28 @@ namespace pEp {
             PEP_STATUS status = trust_personal_key(session, ident);
             _throw_status(status);
         }
+
+        void set_identity_flags(Identity ident, identity_flags_t flags)
+        {
+            if (ident.address() == "")
+                throw invalid_argument("address needed");
+            if (ident.user_id() == "")
+                throw invalid_argument("user_id needed");
+
+            PEP_STATUS status = set_identity_flags(session, ident, flags);
+            _throw_status(status);
+        }
+
+        void unset_identity_flags(Identity ident, identity_flags_t flags)
+        {
+            if (ident.address() == "")
+                throw invalid_argument("address needed");
+            if (ident.user_id() == "")
+                throw invalid_argument("user_id needed");
+
+            PEP_STATUS status = unset_identity_flags(session, ident, flags);
+            _throw_status(status);
+        }
     }
 }
 

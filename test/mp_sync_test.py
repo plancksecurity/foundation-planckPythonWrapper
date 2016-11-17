@@ -34,7 +34,7 @@ def pre_existing_peers_with_encrypted_mail():
                              "SoloA First to GroupA First -- encrypted",
                              "SoloA First to GroupA First -- long encrypted"]])
     for action in [
-        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
         (flush_all_mails,),
     ] : yield action
 
@@ -45,7 +45,7 @@ def group_on_keygen():
     for action in [
         ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)) 
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 
     ] : yield action
 
     return enc_msg
@@ -55,9 +55,9 @@ def group_on_cannotdecrypt():
     for action in [
         ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (flush_all_mails,),
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
         (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
 def group_of_3_members():
@@ -65,7 +65,7 @@ def group_of_3_members():
     for action in [
         ("GroupA3", [create_account, ["first@group.a", "GroupA First"]]),
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(4)),
-        ("GroupA3", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)) 
+        ("GroupA3", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 
     ] : yield action
 
     return enc_msg
@@ -103,8 +103,8 @@ def keygen_in_a_group_of_3_members(pre_actions=[]):
         (flush_all_mails, expect(0)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
         (flush_all_mails, expect(0)),
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
-        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
 def group_survives_restart():
@@ -122,11 +122,11 @@ def nokey_in_a_group_of_3_members():
         (flush_all_mails,),
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
         (flush_all_mails,),
-        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_have_no_key)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
-        ("GroupA1", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
-        ("GroupA2", [decrypt_message, [enc_msg]], expect(PEP_rating_reliable)),
+        ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
 if __name__ == "__main__":

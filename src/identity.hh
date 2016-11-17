@@ -20,7 +20,7 @@ namespace pEp {
         public:
             Identity(string address = "", string username = "",
                     string user_id = "", string fpr = "", int comm_type = 0,
-                    string lang = "");
+                    string lang = "", identity_flags_t flags = 0);
 
             Identity(const Identity& second);
             Identity(pEp_identity *ident);

@@ -12,13 +12,14 @@ namespace pEp {
         using namespace std;
 
         Identity::Identity(string address, string username, string user_id,
-                string fpr, int comm_type, string lang)
+                string fpr, int comm_type, string lang, identity_flags_t flags)
             : _ident(new_identity(address.c_str(), fpr.c_str(),
                         user_id.c_str(), username.c_str()), &::free_identity)
         {
             if (!_ident)
                 throw bad_alloc();
             _ident->comm_type = (PEP_comm_type) comm_type;
+            _ident->flags = (identity_flags_t) flags;
             this->lang(lang);
         }
 
