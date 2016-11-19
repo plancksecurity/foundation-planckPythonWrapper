@@ -34,9 +34,11 @@ handshakes_seen = []
 handshakes_validated = []
 msgs_folders = None
 
-def create_account(address, name):
+def create_account(address, name, flags=None):
     global own_addresses
     i = pEp.Identity(address, name)
+    if flags is not None:
+        i.flags = flags
     pEp.myself(i)
     own_addresses.append(address)
 
