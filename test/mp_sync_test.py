@@ -129,7 +129,6 @@ def nokey_in_a_group_of_3_members():
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
-
 def not_for_sync_in_a_group_of_3_members(pre_actions=[]):
     yield from group_of_3_members()
     enc_msg = yield from new_address_peer_and_mail(pEp.identity_flags.PEP_idf_not_for_sync)
@@ -138,14 +137,12 @@ def not_for_sync_in_a_group_of_3_members(pre_actions=[]):
         (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(1)),
         (flush_all_mails,),
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second", pEp.identity_flags.PEP_idf_not_for_sync]]),
-        (flush_all_mails, expect(0)),
+        (flush_all_mails, expect(1)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second", pEp.identity_flags.PEP_idf_not_for_sync]]),
-        (flush_all_mails, expect(0)),
+        (flush_all_mails, expect(1)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
     ] : yield action
-
-
 
 if __name__ == "__main__":
     run_scenario(group_on_keygen)
