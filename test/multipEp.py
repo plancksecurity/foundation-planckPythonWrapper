@@ -336,6 +336,7 @@ def run_scenario(scenario):
         handshakes_validated = manager.list()
 
         sc = scenario()
+        t = None
         try:
             action = next(sc)
             while True:
@@ -357,7 +358,9 @@ def run_scenario(scenario):
         except StopIteration: 
             pass
         except : 
+            t,v,tv = sys.exc_info()
             import traceback
+            print("EXCEPTION IN: " + scenario.__name__)
             traceback.print_exc()
 
         if "wait_for_cleanup" in sys.argv:
@@ -368,6 +371,9 @@ def run_scenario(scenario):
                   "#"*80 + "\n")
 
         purge_instances()
+
+        if t: 
+            raise t(v).with_traceback(tv)
 
 def cycle_until_no_change(*instancelist, maxcycles=20):
     count = 0
