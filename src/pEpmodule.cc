@@ -76,12 +76,12 @@ BOOST_PYTHON_MODULE(pEp)
     "   lang        ISO 639-1 language code for language being preferred\n"
     "               on this communication channel\n"
         )
-        .def(init<string>())
-        .def(init<string, string>())
-        .def(init<string, string, string>())
-        .def(init<string, string, string, string>())
-        .def(init<string, string, string, string, int>())
-        .def(init<string, string, string, string, int, string>())
+        .def(boost::python::init<string>())
+        .def(boost::python::init<string, string>())
+        .def(boost::python::init<string, string, string>())
+        .def(boost::python::init<string, string, string, string>())
+        .def(boost::python::init<string, string, string, string, int>())
+        .def(boost::python::init<string, string, string, string, int, string>())
         .def("__repr__", &Identity::_repr)
         .def("__str__", &Identity::_str,
     "string representation of this identity\n"
@@ -128,9 +128,9 @@ BOOST_PYTHON_MODULE(pEp)
     "   data            bytes-like object\n"
     "   mime_type       MIME type for the data\n"
     "   filename        filename to store the data\n" ,
-            init< object, char const*, char const* >(args("data", "mime_type", "filename")))
-        .def(init<object, string>())
-        .def(init<object>())
+            boost::python::init< object, char const*, char const* >(args("data", "mime_type", "filename")))
+        .def(boost::python::init<object, string>())
+        .def(boost::python::init<object>())
         .def("__repr__", &Message::Blob::_repr)
         .def("__len__", &Message::Blob::size, "size of Blob data in bytes")
         .def("decode", (string(Message::Blob::*)()) &Message::Blob::decode)
@@ -165,9 +165,9 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "   mime_text       text in Multipurpose Internet Mail Extensions format\n"
                 )
-        .def(init<int>())
-        .def(init<int, Identity *>())
-        .def(init<string>())
+        .def(boost::python::init<int>())
+        .def(boost::python::init<int, Identity *>())
+        .def(boost::python::init<string>())
         .def("__str__", &Message::_str,
     "the string representation of a Message is it's MIME text"
                 )
