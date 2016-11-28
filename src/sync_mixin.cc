@@ -61,32 +61,56 @@ namespace pEp {
 #ifndef NDEBUG
         void SyncMixIn::_inject(int event, Identity partner, object extra)
         {
+            time_t timeout = 0;
             PEP_STATUS status = fsm_DeviceState_inject(session,
-                    (DeviceState_event) event, partner, NULL);
+                    (DeviceState_event) event, partner, NULL, &timeout);
             _throw_status(status);
         }
 #endif
 
         jmp_buf SyncMixIn::env;
+        jmp_buf SyncMixIn::env_timeout;
         void *SyncMixIn::_msg;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
             _msg = msg;
             int val = setjmp(env);
-            if (!val)
+            if (!val){
+                // call python timeout timer cancel
+                auto that = dynamic_cast< SyncMixIn_callback * >(
+                        static_cast< SyncMixIn * > (management));
+                that->cancelTimeout();
                 do_sync_protocol(session, management);
+            }
             return 0;
         }
 
-        void *SyncMixIn::retrieve_next_sync_msg(void *management)
+        void *SyncMixIn::retrieve_next_sync_msg(void *management, time_t *timeout)
         {
             static int twice = 1;
             twice = !twice;
             if (!twice)
                 return (void *) _msg;
+            if (*timeout != 0){
+                int val = setjmp(env_timeout);
+                if (!val){
+                    // call python timeout timer start
+                    auto that = dynamic_cast< SyncMixIn_callback * >(
+                            static_cast< SyncMixIn * > (management));
+                    that->setTimeout(*timeout);
+                }else{
+                    // this will inject tiemout event
+                    return NULL;
+                }
+            }
             longjmp(env, 1);
             return (void *) 23;
+        }
+
+        // to be called from python timeout timer - may GIL protect us
+        void SyncMixIn::onTimeout(){
+            longjmp(env_timeout, 1);
         }
 
         void SyncMixIn_callback::messageToSend(Message msg)
@@ -97,6 +121,11 @@ namespace pEp {
         void SyncMixIn_callback::showHandshake(Identity me, Identity partner)
         {
             call_method< void >(_self, "showHandshake", me, partner);
+        }
+
+        void SyncMixIn_callback::setTimeout(time_t timeout)
+        {
+            call_method< void >(_self, "SetTimeout", timeout);
         }
     }
 }
