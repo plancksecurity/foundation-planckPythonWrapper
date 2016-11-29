@@ -1,8 +1,8 @@
 #pragma once
 
 #include <boost/python.hpp>
-#include "Identity.hh"
-#include "Message.hh"
+#include "identity.hh"
+#include "message.hh"
 #include <pEp/pEpEngine.h>
 
 namespace pEp {
