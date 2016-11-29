@@ -9,30 +9,34 @@ import itertools
 from copy import deepcopy
 from collections import OrderedDict
 
-# manager globals
-instances = None
+# ----------------------------------------------------------------------------
+#                                  GLOBALS
+# ----------------------------------------------------------------------------
 
 # per-instance globals
-if(multiprocessing.current_process().name == "MainProcess"):
-    ctx = multiprocessing.get_context('spawn')
-
-    # import pEp in main process just to get enums
-    # TODO: would be really great if no session was created until we really use it.
-    pEp = importlib.import_module("pEp")
-else:
-    pEp = None
-
-handler = None
+sync_handler = None
 own_addresses = []
 indent = 0
 i_name = ""
 handshakes_pending = []
 handshakes_to_accept = []
+pEp = None
+
+# manager globals
+instances = None
+if(multiprocessing.current_process().name == "MainProcess"):
+    ctx = multiprocessing.get_context('spawn')
+    # import pEp in main process to get enums
+    pEp = importlib.import_module("pEp")
 
 # both side globals (managed by MP)
 handshakes_seen = []
 handshakes_validated = []
 msgs_folders = None
+
+# ----------------------------------------------------------------------------
+#                               INSTANCE ACIONS
+# ----------------------------------------------------------------------------
 
 def create_account(address, name, flags=None):
     global own_addresses
@@ -49,12 +53,6 @@ def _send_message(address, msg):
     msg.sent = int(time.time())
     msgs.append(str(msg))
     msgs_folders[address] = msgs
-
-def flush_all_mails():
-    global msgs_folders
-    count = sum(map(len,msgs_folders.values()))
-    msgs_folders.clear()
-    return count
 
 def _encrypted_message(from_address, to_address, shortmsg, longmsg):
     m = pEp.outgoing_message(pEp.Identity(from_address, from_address))
@@ -80,6 +78,46 @@ def decrypt_message(msgstr):
     printmsg(msg2)
     printi("---")
     return rating
+
+# ----------------------------------------------------------------------------
+#                               MANAGER ACIONS
+# ----------------------------------------------------------------------------
+
+def flush_all_mails():
+    global msgs_folders
+    count = sum(map(len,msgs_folders.values()))
+    msgs_folders.clear()
+    return count
+
+def restart_instance(iname):
+    tmpdir, instance_addresses = stop_instance(iname)
+    instances[iname] = start_instance(iname, tmpdir, instance_addresses)
+
+def cycle_until_no_change(*instancelist, maxcycles=20):
+    count = 0
+    while True:
+        global msgs_folders
+        tmp = deepcopy(dict(msgs_folders))
+        for iname in instancelist:
+            action = (iname, [])
+            run_instance_action(action)
+        count += 1
+
+        if dict(msgs_folders) == tmp:
+            return count
+
+        if count >= maxcycles:
+            raise Exception("Too many cycles waiting for stability") 
+
+def expect(expectation):
+    def _expect(res, action):
+        if(expectation != res):
+            raise Exception("Expected " + str(expectation) + ", got " + str(res)) 
+    return _expect
+
+# ----------------------------------------------------------------------------
+#                               "PRETTY" PRINTING
+# ----------------------------------------------------------------------------
 
 def printi(*args):
     global indent
@@ -111,7 +149,11 @@ def printmsg(msg):
         pfx = "       "
     printi("attachments : ", msg.attachments)
 
-def execute_order(order, handler):
+# ----------------------------------------------------------------------------
+#                          INSTANCE TEST EXECUTION
+# ----------------------------------------------------------------------------
+
+def execute_order(order):
     global handshakes_pending, handshakes_to_accept, handshakes_seen
     global handshakes_validated, msgs_folders, own_addresses
 
@@ -151,7 +193,7 @@ def execute_order(order, handler):
                 handshakes_validated.remove(tw)
                 handshakes_pending.remove(tple)
                 printi("ACCEPT pending handshake : "+ tw)
-                handler.deliverHandshakeResult(partner, 0)
+                sync_handler.deliverHandshakeResult(partner, 0)
         printheader()
 
     res = None
@@ -170,13 +212,13 @@ def execute_order(order, handler):
             printi("ACCEPT handshake : "+ tw)
             handshakes_validated.append(tw)
             handshakes_to_accept.remove(tple)
-            handler.deliverHandshakeResult(partner, 0)
+            sync_handler.deliverHandshakeResult(partner, 0)
         printheader()
 
     return res
 
 def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_seen, _handshakes_validated):
-    global pEp, handler, own_addresses, i_name, msgs_folders
+    global pEp, sync_handler, own_addresses, i_name, msgs_folders
     global handshakes_pending, handshakes_to_accept
     global handshakes_seen, handshakes_validated
 
@@ -212,20 +254,20 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
             printheader()
 
         def setTimeout(self, timeout):
-           print("SET TIMEOUT :", timeout) 
+           printi("SET TIMEOUT :", timeout) 
 
         def cancelTimeout(self):
-           print("CANCEL TIMEOUT !") 
+           printi("CANCEL TIMEOUT !") 
 
 
-    handler = Handler()
+    sync_handler = Handler()
 
     while True:
         order = conn.recv()
         if order is None:
             break
 
-        res = execute_order(order, handler)
+        res = execute_order(order)
 
         conn.send(res)
 
@@ -239,6 +281,10 @@ def pEp_instance_main(iname, tmpdirname, *args):
     os.environ['HOME'] = tmpdirname
     pEp_instance_run(iname, *args)
     print(iname + " exiting")
+
+# ----------------------------------------------------------------------------
+#                          MANAGER TEST EXECUTION
+# ----------------------------------------------------------------------------
 
 def start_debug(iname, proc):
     print("#"*80 + "\n" +
@@ -305,10 +351,6 @@ def purge_instances():
     global instances
     for iname in instances.keys():
         stop_instance(iname)
-
-def restart_instance(iname):
-    tmpdir, instance_addresses = stop_instance(iname)
-    instances[iname] = start_instance(iname, tmpdir, instance_addresses)
 
 def run_instance_action(action):
     iname, order = action
@@ -381,26 +423,4 @@ def run_scenario(scenario):
 
         if t: 
             raise t(v).with_traceback(tv)
-
-def cycle_until_no_change(*instancelist, maxcycles=20):
-    count = 0
-    while True:
-        global msgs_folders
-        tmp = deepcopy(dict(msgs_folders))
-        for iname in instancelist:
-            action = (iname, [])
-            run_instance_action(action)
-        count += 1
-
-        if dict(msgs_folders) == tmp:
-            return count
-
-        if count >= maxcycles:
-            raise Exception("Too many cycles waiting for stability") 
-    
-def expect(expectation):
-    def _expect(res, action):
-        if(expectation != res):
-            raise Exception("Expected " + str(expectation) + ", got " + str(res)) 
-    return _expect
 
