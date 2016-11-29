@@ -39,6 +39,7 @@ namespace pEp {
 
                 static jmp_buf env;
                 static jmp_buf env_timeout;
+                static bool running_timeout;
                 static void *_msg;
                 static int inject_sync_msg(void *msg, void *management);
                 static void *retrieve_next_sync_msg(void *management, time_t *timeout);
@@ -54,6 +55,7 @@ namespace pEp {
                 void messageToSend(Message msg);
                 void showHandshake(Identity me, Identity partner);
                 void setTimeout(time_t timeout);
+                void cancelTimeout();
         };
     }
 }

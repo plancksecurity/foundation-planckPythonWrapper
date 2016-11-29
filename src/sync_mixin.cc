@@ -71,16 +71,20 @@ namespace pEp {
         jmp_buf SyncMixIn::env;
         jmp_buf SyncMixIn::env_timeout;
         void *SyncMixIn::_msg;
+        bool SyncMixIn::running_timeout = false;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
             _msg = msg;
             int val = setjmp(env);
             if (!val){
-                // call python timeout timer cancel
-                auto that = dynamic_cast< SyncMixIn_callback * >(
-                        static_cast< SyncMixIn * > (management));
-                that->cancelTimeout();
+                if(running_timeout){
+                    // call python timeout timer cancel
+                    auto that = dynamic_cast< SyncMixIn_callback * >(
+                            static_cast< SyncMixIn * > (management));
+                    that->cancelTimeout();
+                    running_timeout = false;
+                }
                 do_sync_protocol(session, management);
             }
             return 0;
@@ -99,7 +103,9 @@ namespace pEp {
                     auto that = dynamic_cast< SyncMixIn_callback * >(
                             static_cast< SyncMixIn * > (management));
                     that->setTimeout(*timeout);
+                    running_timeout = true;
                 }else{
+                    running_timeout = false;
                     // this will inject tiemout event
                     return NULL;
                 }
@@ -125,7 +131,12 @@ namespace pEp {
 
         void SyncMixIn_callback::setTimeout(time_t timeout)
         {
-            call_method< void >(_self, "SetTimeout", timeout);
+            call_method< void >(_self, "setTimeout", timeout);
+        }
+
+        void SyncMixIn_callback::cancelTimeout()
+        {
+            call_method< void >(_self, "cancelTimeout");
         }
     }
 }

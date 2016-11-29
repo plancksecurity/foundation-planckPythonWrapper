@@ -387,7 +387,21 @@ BOOST_PYTHON_MODULE(pEp)
     "   partner         identity of communication partner\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
     "\n"
-    "call to deliver the handshake result");
+    "call to deliver the handshake result")
+        .def("setTimeout", &SyncMixIn::setTimeout,
+    "setTimeout(self, timeout)\n"
+    "\n"
+    "   timeout         timeout to wait for\n"
+    "\n"
+    "overwrite this method with code setting timeout timer")
+        .def("cancelTimeout", &SyncMixIn::cancelTimeout,
+    "cancelTimeout(self)\n"
+    "\n"
+    "overwrite this method with code canceling timeout timer")
+        .def("onTimeout", &SyncMixIn::onTimeout,
+    "onTimeout(self)\n"
+    "\n"
+    "call this method when timeout occurs");
 
     // codecs
 

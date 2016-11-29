@@ -211,6 +211,13 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
                 handshakes_seen.append(tw)
             printheader()
 
+        def setTimeout(self, timeout):
+           print("SET TIMEOUT :", timeout) 
+
+        def cancelTimeout(self):
+           print("CANCEL TIMEOUT !") 
+
+
     handler = Handler()
 
     while True:
