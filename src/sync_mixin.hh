@@ -38,8 +38,8 @@ namespace pEp {
                         pEp_identity *me, pEp_identity *partner);
 
                 static jmp_buf env;
-                static jmp_buf env_timeout;
                 static bool running_timeout;
+                static bool expiring_timeout;
                 static void *_msg;
                 static int inject_sync_msg(void *msg, void *management);
                 static void *retrieve_next_sync_msg(void *management, time_t *timeout);

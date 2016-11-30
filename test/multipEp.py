@@ -20,6 +20,7 @@ indent = 0
 i_name = ""
 handshakes_pending = []
 handshakes_to_accept = []
+disable_handshake = False
 pEp = None
 
 # manager globals
@@ -35,7 +36,7 @@ handshakes_validated = []
 msgs_folders = None
 
 # ----------------------------------------------------------------------------
-#                               INSTANCE ACIONS
+#                               INSTANCE ACTIONS
 # ----------------------------------------------------------------------------
 
 def create_account(address, name, flags=None):
@@ -79,8 +80,25 @@ def decrypt_message(msgstr):
     printi("---")
     return rating
 
+def disable_auto_handshake():
+    global disable_handshake
+    disable_handshake = True
+
+def enable_auto_handshake():
+    global disable_handshake
+    disable_handshake = False
+    del handshakes_pending[:]
+    del handshakes_to_accept[:]
+    del handshakes_seen[:]
+    del handshakes_validated[:]
+
+def simulate_timeout():
+    global sync_handler
+    sync_handler.onTimeout()
+
+no_inbox_decrypt = [disable_auto_handshake, enable_auto_handshake, simulate_timeout]
 # ----------------------------------------------------------------------------
-#                               MANAGER ACIONS
+#                               MANAGER ACTIONS
 # ----------------------------------------------------------------------------
 
 def flush_all_mails():
@@ -155,37 +173,39 @@ def printmsg(msg):
 
 def execute_order(order):
     global handshakes_pending, handshakes_to_accept, handshakes_seen
-    global handshakes_validated, msgs_folders, own_addresses
+    global handshakes_validated, msgs_folders, own_addresses, sync_handler
+    global disable_handshake
 
     func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
 
     printheader("DECRYPT messages")
     # decrypt every non-consumed message for all instance accounts
-    for own_address in own_addresses:
-        msgs_for_me = msgs_folders.get(own_address, [])
-        for msgstr in msgs_for_me:
-            msg = pEp.incoming_message(msgstr)
-            printi("--- decrypt()")
-            msg.recv = int(time.time() + timeoff)
-            printmsg(msg)
-            msg2, keys, rating, consumed, flags = msg.decrypt()
+    if func not in no_inbox_decrypt :
+        for own_address in own_addresses :
+            msgs_for_me = msgs_folders.get(own_address, [])
+            for msgstr in msgs_for_me:
+                msg = pEp.incoming_message(msgstr)
+                printi("--- decrypt()")
+                msg.recv = int(time.time() + timeoff)
+                printmsg(msg)
+                msg2, keys, rating, consumed, flags = msg.decrypt()
 
-            if consumed == "MESSAGE_CONSUME":
-                printi("--- PEP_MESSAGE_CONSUMED")
-                # folder may have changed in the meantime,
-                # remove item directly from latest version of it.
-                folder = msgs_folders[own_address]
-                folder.remove(msgstr)
-                msgs_folders[own_address] = folder
-            elif consumed == "MESSAGE_IGNORE":
-                printi("--- PEP_MESSAGE_DISCARDED")
-            else :
-                printi("->-", rating, "->-")
-                printmsg(msg2)
-                printi("---")
+                if consumed == "MESSAGE_CONSUME":
+                    printi("--- PEP_MESSAGE_CONSUMED")
+                    # folder may have changed in the meantime,
+                    # remove item directly from latest version of it.
+                    folder = msgs_folders[own_address]
+                    folder.remove(msgstr)
+                    msgs_folders[own_address] = folder
+                elif consumed == "MESSAGE_IGNORE":
+                    printi("--- PEP_MESSAGE_DISCARDED")
+                else :
+                    printi("->-", rating, "->-")
+                    printmsg(msg2)
+                    printi("---")
     printheader()
 
-    if handshakes_pending:
+    if handshakes_pending and not disable_handshake:
         printheader("check pending handshakes accepted on other device")
         for tple in handshakes_pending:
             tw, partner = tple 
@@ -205,7 +225,7 @@ def execute_order(order):
         printi("function " + func.__name__ + " returned :", res)
         printheader()
 
-    if handshakes_to_accept:
+    if handshakes_to_accept and not disable_handshake:
         printheader("apply to-accept-because-already-seen handshakes")
         for tple in handshakes_to_accept:
             tw, partner = tple 
@@ -257,8 +277,7 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
            printi("SET TIMEOUT :", timeout) 
 
         def cancelTimeout(self):
-           printi("CANCEL TIMEOUT !") 
-
+           printi("CANCEL TIMEOUT") 
 
     sync_handler = Handler()
 

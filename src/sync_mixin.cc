@@ -69,9 +69,9 @@ namespace pEp {
 #endif
 
         jmp_buf SyncMixIn::env;
-        jmp_buf SyncMixIn::env_timeout;
         void *SyncMixIn::_msg;
         bool SyncMixIn::running_timeout = false;
+        bool SyncMixIn::expiring_timeout = false;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
@@ -94,21 +94,19 @@ namespace pEp {
         {
             static int twice = 1;
             twice = !twice;
-            if (!twice)
-                return (void *) _msg;
-            if (*timeout != 0){
-                int val = setjmp(env_timeout);
-                if (!val){
+
+            if (!twice){
+                if (expiring_timeout){
+                    *timeout = 1;
+                    expiring_timeout = true;
+                } else if (_msg != NULL && *timeout != 0){
                     // call python timeout timer start
                     auto that = dynamic_cast< SyncMixIn_callback * >(
                             static_cast< SyncMixIn * > (management));
                     that->setTimeout(*timeout);
                     running_timeout = true;
-                }else{
-                    running_timeout = false;
-                    // this will inject tiemout event
-                    return NULL;
                 }
+                return (void *) _msg;
             }
             longjmp(env, 1);
             return (void *) 23;
@@ -116,7 +114,13 @@ namespace pEp {
 
         // to be called from python timeout timer - may GIL protect us
         void SyncMixIn::onTimeout(){
-            longjmp(env_timeout, 1);
+            _msg = NULL;
+            int val = setjmp(env);
+            if (!val){
+                expiring_timeout = true;
+                do_sync_protocol(session, (void*)this);
+                running_timeout = false;
+            }
         }
 
         void SyncMixIn_callback::messageToSend(Message msg)
