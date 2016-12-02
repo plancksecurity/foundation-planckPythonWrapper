@@ -10,7 +10,7 @@ namespace pEp {
         SyncMixIn_callback::SyncMixIn_callback(PyObject *self) : _self(self)
         {
             PEP_STATUS status = register_sync_callbacks(session, (void *) this,
-                    _messageToSend, _showHandshake, inject_sync_msg,
+                    _messageToSend, _notifyHandshake, inject_sync_msg,
                     retrieve_next_sync_msg);
             assert(status == PEP_STATUS_OK);
         }
@@ -35,8 +35,8 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        PEP_STATUS SyncMixIn::_showHandshake(void *obj,
-                pEp_identity *me, pEp_identity *partner)
+        PEP_STATUS SyncMixIn::_notifyHandshake(void *obj,
+                pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal)
         {
             if (!obj)
                 return PEP_SEND_FUNCTION_NOT_REGISTERED;
@@ -46,7 +46,7 @@ namespace pEp {
 
             auto that = dynamic_cast< SyncMixIn_callback * >(
                     static_cast< SyncMixIn * > (obj));
-            that->showHandshake(Identity(me), Identity(partner));
+            that->notifyHandshake(Identity(me), Identity(partner), signal);
 
             return PEP_STATUS_OK;
         }
@@ -128,9 +128,10 @@ namespace pEp {
             call_method< void >(_self, "messageToSend", msg);
         }
 
-        void SyncMixIn_callback::showHandshake(Identity me, Identity partner)
+        void SyncMixIn_callback::notifyHandshake(
+            Identity me, Identity partner, sync_handshake_signal signal)
         {
-            call_method< void >(_self, "showHandshake", me, partner);
+            call_method< void >(_self, "notifyHandshake", me, partner, signal);
         }
 
         void SyncMixIn_callback::setTimeout(time_t timeout)

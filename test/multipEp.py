@@ -259,19 +259,25 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
             for rcpt in msg.to + msg.cc + msg.bcc:
                 _send_message(rcpt.address, msg)
 
-        def showHandshake(self, me, partner):
-            printheader("show HANDSHAKE dialog")
-            printi("handshake needed between " + repr(me) + " and " + repr(partner))
-            tw = pEp.trustwords(me, partner, 'en')
-            printi(tw)
-            if tw in handshakes_seen :
-                handshakes_seen.remove(tw)
-                handshakes_to_accept.append((tw,partner))
-                printi("--> TO ACCEPT (already seen)")
-            else:
-                handshakes_pending.append((tw,partner))
-                handshakes_seen.append(tw)
-            printheader()
+        def notifyHandshake(self, me, partner, signal):
+            if signal == pEp.sync_handshake_signal.SYNC_HANDSHAKE_SHOW_DIALOG:
+                printheader("show HANDSHAKE dialog")
+                printi("handshake needed between " + repr(me) + " and " + repr(partner))
+                tw = pEp.trustwords(me, partner, 'en')
+                printi(tw)
+                if tw in handshakes_seen :
+                    handshakes_seen.remove(tw)
+                    handshakes_to_accept.append((tw,partner))
+                    printi("--> TO ACCEPT (already seen)")
+                else:
+                    handshakes_pending.append((tw,partner))
+                    handshakes_seen.append(tw)
+                printheader()
+            else :
+                printheader("other notification HANDSHAKE dialog")
+                printi(signal)
+                #TODO
+                printheader()
 
         def setTimeout(self, timeout):
            printi("SET TIMEOUT :", timeout) 

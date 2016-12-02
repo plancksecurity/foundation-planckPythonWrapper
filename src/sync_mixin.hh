@@ -2,6 +2,7 @@
 
 #include "pEpmodule.hh"
 #include <setjmp.h> 
+#include <pEp/sync.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -14,13 +15,20 @@ namespace pEp {
                     throw runtime_error("override this method");
                 }
 
-                virtual void showHandshake(Identity me, Identity partner) {
+                virtual void notifyHandshake(
+                    pEp::PythonAdapter::Identity me,
+                    pEp::PythonAdapter::Identity partner, 
+                    sync_handshake_signal signal)
+                {
                     throw runtime_error("override this method");
                 }
 
-                virtual void deliverHandshakeResult(Identity partner, int result);
+                virtual void deliverHandshakeResult(
+                    pEp::PythonAdapter::Identity partner, int result);
 #ifndef NDEBUG
-                virtual void _inject(int event, Identity partner, object extra);
+                virtual void _inject(
+                    int event, 
+                    pEp::PythonAdapter::Identity partner, object extra);
 #endif
                 virtual void setTimeout(time_t timeout){
                     throw runtime_error("override this method");
@@ -34,8 +42,8 @@ namespace pEp {
 
             protected:
                 static PEP_STATUS _messageToSend(void *obj, message *msg);
-                static PEP_STATUS _showHandshake(void *obj,
-                        pEp_identity *me, pEp_identity *partner);
+                static PEP_STATUS _notifyHandshake(void *obj,
+                        pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
 
                 static jmp_buf env;
                 static bool running_timeout;
@@ -53,7 +61,11 @@ namespace pEp {
                 ~SyncMixIn_callback();
 
                 void messageToSend(Message msg);
-                void showHandshake(Identity me, Identity partner);
+                void notifyHandshake(
+                    pEp::PythonAdapter::Identity me,
+                    pEp::PythonAdapter::Identity partner, 
+                    sync_handshake_signal signal);
+
                 void setTimeout(time_t timeout);
                 void cancelTimeout();
         };

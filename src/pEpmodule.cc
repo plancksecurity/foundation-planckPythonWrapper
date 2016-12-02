@@ -8,6 +8,7 @@
 #include "sync_mixin.hh"
 
 #include <pEp/message_api.h>
+#include <pEp/sync.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -59,7 +60,7 @@ BOOST_PYTHON_MODULE(pEp)
 
     scope().attr("about") = about();
     
-    auto identity_class = class_<Identity>("Identity",
+    auto identity_class = class_<pEp::PythonAdapter::Identity>("Identity",
     "Identity(address, username, user_id='', fpr='', comm_type=0, lang='en')\n"
     "\n"
     "represents a p≡p identity\n"
@@ -82,41 +83,41 @@ BOOST_PYTHON_MODULE(pEp)
         .def(boost::python::init<string, string, string, string>())
         .def(boost::python::init<string, string, string, string, int>())
         .def(boost::python::init<string, string, string, string, int, string>())
-        .def("__repr__", &Identity::_repr)
-        .def("__str__", &Identity::_str,
+        .def("__repr__", &pEp::PythonAdapter::Identity::_repr)
+        .def("__str__", &pEp::PythonAdapter::Identity::_str,
     "string representation of this identity\n"
     "following the pattern 'username < address >'\n"
                 )
-        .add_property("address", (string(Identity::*)()) &Identity::address,
-                (void(Identity::*)(string)) &Identity::address,
+        .add_property("address", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::address,
+                (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::address,
                 "email address or URI")
-        .add_property("fpr", (string(Identity::*)()) &Identity::fpr,
-                (void(Identity::*)(string)) &Identity::fpr,
+        .add_property("fpr", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::fpr,
+                (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::fpr,
                 "key ID (full fingerprint, hex encoded)")
-        .add_property("user_id", (string(Identity::*)()) &Identity::user_id,
-                (void(Identity::*)(string)) &Identity::user_id,
+        .add_property("user_id", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::user_id,
+                (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::user_id,
                 "ID of person associated or 'pEp_own_userId' if own identity")
-        .add_property("username", (string(Identity::*)()) &Identity::username,
-                (void(Identity::*)(string)) &Identity::username,
+        .add_property("username", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::username,
+                (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::username,
                 "name in full of person associated")
-        .add_property("comm_type", (int(Identity::*)())
-                (PEP_comm_type(Identity::*)()) &Identity::comm_type,
-                (void(Identity::*)(int))
-                (void(Identity::*)(PEP_comm_type)) &Identity::comm_type,
+        .add_property("comm_type", (int(pEp::PythonAdapter::Identity::*)())
+                (PEP_comm_type(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::comm_type,
+                (void(pEp::PythonAdapter::Identity::*)(int))
+                (void(pEp::PythonAdapter::Identity::*)(PEP_comm_type)) &pEp::PythonAdapter::Identity::comm_type,
                  "communication type, first rating level (p≡p internal)")
-        .add_property("lang", (string(Identity::*)()) &Identity::lang,
-                (void(Identity::*)(string)) &Identity::lang,
+        .add_property("lang", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::lang,
+                (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::lang,
                 "ISO 639-1 language code")
-        .add_property("me", (bool(Identity::*)()) &Identity::me,
-                (void(Identity::*)(bool)) &Identity::me,
+        .add_property("me", (bool(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::me,
+                (void(pEp::PythonAdapter::Identity::*)(bool)) &pEp::PythonAdapter::Identity::me,
                  "true if own identity, false otherwise")
-        .add_property("flags", (identity_flags_t(Identity::*)()) &Identity::flags,
-                (void(Identity::*)(identity_flags_t)) &Identity::flags,
+        .add_property("flags", (identity_flags_t(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::flags,
+                (void(pEp::PythonAdapter::Identity::*)(identity_flags_t)) &pEp::PythonAdapter::Identity::flags,
                 "flags (p≡p internal)")
-        .add_property("rating", &Identity::rating, "rating of Identity")
-        .add_property("color", &Identity::color, "color of Identity")
-        .def("__deepcopy__", &Identity::deepcopy)
-        .def("__copy__", &Identity::copy);
+        .add_property("rating", &pEp::PythonAdapter::Identity::rating, "rating of Identity")
+        .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
+        .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
+        .def("__copy__", &pEp::PythonAdapter::Identity::copy);
     
     identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";
 
@@ -166,7 +167,7 @@ BOOST_PYTHON_MODULE(pEp)
     "   mime_text       text in Multipurpose Internet Mail Extensions format\n"
                 )
         .def(boost::python::init<int>())
-        .def(boost::python::init<int, Identity *>())
+        .def(boost::python::init<int, pEp::PythonAdapter::Identity *>())
         .def(boost::python::init<string>())
         .def("__str__", &Message::_str,
     "the string representation of a Message is it's MIME text"
@@ -198,13 +199,13 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("recv", (time_t(Message::*)()) &Message::recv,
                 (void(Message::*)(time_t)) &Message::recv,
                 "time when message was received in UTC seconds since epoch")
-        .add_property("from_", (Identity(Message::*)()) &Message::from,
+        .add_property("from_", (pEp::PythonAdapter::Identity(Message::*)()) &Message::from,
                 (void(Message::*)(object)) &Message::from,
                 "identity where message is from")
         .add_property("to", (list(Message::*)()) &Message::to,
                 (void(Message::*)(list)) &Message::to,
                 "list of identities message is going to")
-        .add_property("recv_by", (Identity(Message::*)()) &Message::recv_by,
+        .add_property("recv_by", (pEp::PythonAdapter::Identity(Message::*)()) &Message::recv_by,
                 (void(Message::*)(object)) &Message::recv_by,
                 "identity where message was received by")
         .add_property("cc", (list(Message::*)()) &Message::cc,
@@ -346,13 +347,27 @@ BOOST_PYTHON_MODULE(pEp)
 
     // key sync API
 
+    enum_<sync_handshake_signal>("sync_handshake_signal")
+        .value("SYNC_HANDSHAKE_DISMISS_DIALOG",SYNC_HANDSHAKE_DISMISS_DIALOG)
+        .value("SYNC_HANDSHAKE_SHOW_DIALOG"   ,SYNC_HANDSHAKE_SHOW_DIALOG)
+        .value("SYNC_HANDSHAKE_SUCCESS"       ,SYNC_HANDSHAKE_SUCCESS)
+        .value("SYNC_HANDSHAKE_FAILURE"       ,SYNC_HANDSHAKE_FAILURE)
+        .value("SYNC_DEVICE_ADDED"            ,SYNC_DEVICE_ADDED)
+        .value("SYNC_GROUP_CREATED"           ,SYNC_GROUP_CREATED);
+
     auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
             "SyncMixIn",
     "class MySyncHandler(SyncMixIn):\n"
     "   def messageToSend(self, msg):\n"
     "       ...\n"
     "\n"
-    "   def showHandshake(self, me, partner):\n"
+    "   def notifyHandshake(self, me, partner):\n"
+    "       ...\n"
+    "\n"
+    "   def setTimeout(self, timeout):\n"
+    "       ...\n"
+    "\n"
+    "   def cancelTimeout(self):\n"
     "       ...\n"
     "\n"
     "p≡p Sync MixIn\n"
@@ -364,8 +379,8 @@ BOOST_PYTHON_MODULE(pEp)
     "   msg             p≡p message to send\n"
     "\n"
     "overwrite this method with code actually sending msg")
-        .def("showHandshake", &SyncMixIn::showHandshake,
-    "showHandshake(self, me, partner)\n"
+        .def("notifyHandshake", &SyncMixIn::notifyHandshake,
+    "notifyHandshake(self, me, partner)\n"
     "\n"
     "   me              own identity\n"
     "   partner         identity of communication partner\n"
