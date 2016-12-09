@@ -348,12 +348,13 @@ BOOST_PYTHON_MODULE(pEp)
     // key sync API
 
     enum_<sync_handshake_signal>("sync_handshake_signal")
-        .value("SYNC_HANDSHAKE_DISMISS_DIALOG",SYNC_HANDSHAKE_DISMISS_DIALOG)
-        .value("SYNC_HANDSHAKE_SHOW_DIALOG"   ,SYNC_HANDSHAKE_SHOW_DIALOG)
-        .value("SYNC_HANDSHAKE_SUCCESS"       ,SYNC_HANDSHAKE_SUCCESS)
-        .value("SYNC_HANDSHAKE_FAILURE"       ,SYNC_HANDSHAKE_FAILURE)
-        .value("SYNC_DEVICE_ADDED"            ,SYNC_DEVICE_ADDED)
-        .value("SYNC_GROUP_CREATED"           ,SYNC_GROUP_CREATED);
+        .value("SYNC_NOTIFY_UNDEFINED"             , SYNC_NOTIFY_UNDEFINED)
+        .value("SYNC_NOTIFY_INIT_ADD_OUR_DEVICE"   , SYNC_NOTIFY_INIT_ADD_OUR_DEVICE)
+        .value("SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE" , SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE)
+        .value("SYNC_NOTIFY_INIT_FORM_GROUP"       , SYNC_NOTIFY_INIT_FORM_GROUP)
+        .value("SYNC_NOTIFY_TIMEOUT"               , SYNC_NOTIFY_TIMEOUT)
+        .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED" , SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED)
+        .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", SYNC_NOTIFY_ACCEPTED_GROUP_CREATED);
 
     auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
             "SyncMixIn",
