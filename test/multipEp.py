@@ -35,6 +35,9 @@ handshakes_seen = []
 handshakes_validated = []
 msgs_folders = None
 
+# both side globals (not managed)
+disable_sync = False
+
 # ----------------------------------------------------------------------------
 #                               INSTANCE ACTIONS
 # ----------------------------------------------------------------------------
@@ -57,17 +60,26 @@ def _send_message(address, msg):
 
 def _encrypted_message(from_address, to_address, shortmsg, longmsg):
     m = pEp.outgoing_message(pEp.Identity(from_address, from_address))
-    m.to = [pEp.Identity(to_address, to_address)]
+    if type(to_address) != list :
+        to_address = [to_address]
+    m.to = [ pEp.Identity(address, address) for address in to_address ]
     m.shortmsg = shortmsg
     m.longmsg = longmsg
-    return m.encrypt()
+    begin = time.time()
+    ret = m.encrypt()
+    end = time.time()
+    printi("ENCRYPTION TIME:", end - begin)
+    return ret
 
 def encrypted_message(from_address, to_address, shortmsg, longmsg):
     return str(_encrypted_message(from_address, to_address, shortmsg, longmsg))
 
 def send_message(from_address, to_address, shortmsg, longmsg):
     msg = _encrypted_message(from_address, to_address, shortmsg, longmsg)
-    _send_message(to_address, msg)
+    if type(to_address) != list :
+        to_address = [to_address]
+    for address in to_address:
+        _send_message(address, msg)
 
 def decrypt_message(msgstr):
     msg = pEp.incoming_message(msgstr)
@@ -288,7 +300,8 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
         def cancelTimeout(self):
            printi("CANCEL TIMEOUT") 
 
-    sync_handler = Handler()
+    if not disable_sync:
+        sync_handler = Handler()
 
     while True:
         order = conn.recv()
