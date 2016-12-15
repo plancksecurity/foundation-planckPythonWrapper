@@ -1,8 +1,8 @@
 import sys
 first = True
 funcs = {}
-prevfs = [0,0,0,[0]]
 prevtime = 0
+stack=[]
 
 for line in sys.stdin:
     if first:
@@ -17,13 +17,26 @@ for line in sys.stdin:
     entry = point == "entry"
     fs = funcs.setdefault(func,[0,0,0,[]])
     if entry:
-        prevfs[2] = prevfs[2] + time - prevtime  
+        if len(stack) > 0:
+            prevfunc, prevfs = stack[-1]
+            prevfs[2] = prevfs[2] + time - prevtime  
         fs[0] = fs[0] + 1
         fs[3].append(time)
+        stack.append((func,fs))
     else:
-        prevfs[2] = prevfs[2] + time - prevtime  
+        while len(stack) > 0 :
+            prevfunc, prevfs=stack.pop()
+            if func != prevfunc:
+                print(prevfunc, ": NO RETURN, unwinded in", func, file=sys.stderr)
+                prevfs[2] = prevfs[2] + time - prevtime  
+                prevtime = time #don't add to all unwinded calls
+                prevfs[1] = prevfs[1] + time - prevfs[3].pop()
+            else:
+                break
+
+        fs[2] = fs[2] + time - prevtime  
         fs[1] = fs[1] + time - fs[3].pop()
-    prevfs = fs
+        
     prevtime = time
 
     #print(_cpu, _id, func,point, time)
@@ -31,6 +44,6 @@ for line in sys.stdin:
 for func in sorted(funcs.items(), key=lambda fs: fs[1][1]):
     name,(count, totaltime, insidetime, entries) = func
 
-    print("{:<40} {:<6} {:<4} {:>6.2f} {:>6.2f}".format( name, count, len(entries), totaltime/1000000000, insidetime/1000000000))
+    print("{:<40} {:<6} {:<4} {:>6.2f} {:>6.2f}".format( name, count, totaltime/1000000000, insidetime/1000000000))
 
     
