@@ -28,8 +28,9 @@ for line in sys.stdin:
             prevfunc, prevfs=stack.pop()
             if func != prevfunc:
                 print(prevfunc, ": NO RETURN, unwinded in", func, file=sys.stderr)
+                # in case unwinding from non returning func, cannot guess time spent
+                # spent time is then (abusively) added to all unwinded, worst case.
                 prevfs[2] = prevfs[2] + time - prevtime  
-                prevtime = time #don't add to all unwinded calls
                 prevfs[1] = prevfs[1] + time - prevfs[3].pop()
             else:
                 break
@@ -44,6 +45,6 @@ for line in sys.stdin:
 for func in sorted(funcs.items(), key=lambda fs: fs[1][1]):
     name,(count, totaltime, insidetime, entries) = func
 
-    print("{:<40} {:<6} {:<4} {:>6.2f} {:>6.2f}".format( name, count, totaltime/1000000000, insidetime/1000000000))
+    print("{:<40} {:<6} {:>6.2f} {:>6.2f}".format( name, count, totaltime/1000000000, insidetime/1000000000))
 
     

@@ -1,607 +1,603 @@
-gpgme_key_release                        1      0      0.00   0.00
-computeJD                                1      0      0.00   0.00
-decodeFlags                              1      0      0.00   0.00
-free_stringpair_list                     1      0      0.00   0.00
-sqlite3StrICmp                           1      0      0.00   0.00
-sqlite3PagerGetData                      1      0      0.00   0.00
-sqlite3_value_type                       1      0      0.00   0.00
-sqlite3HeapNearlyFull                    1      0      0.00   0.00
-computeYMD                               1      0      0.00   0.00
-unixCurrentTimeInt64                     1      0      0.00   0.00
-stringlist_append                        1      0      0.00   0.00
-sqlite3AtoF                              1      0      0.00   0.00
-new_stringpair_list                      1      0      0.00   0.00
-new_stringpair                           1      0      0.00   0.00
-parse_sec_field15                        2      0      0.00   0.00
-free_timestamp                           2      0      0.00   0.00
-_rating                                  1      0      0.00   0.00
-_gpgme_op_encrypt_init_result            1      0      0.00   0.00
-is_whitespace                            2      0      0.00   0.00
-pcache1AllocPage                         1      0      0.00   0.00
-getDigits                                2      0      0.00   0.00
-pcacheFetchFinishWithInit                1      0      0.00   0.00
-_gpgme_wait_one                          2      0      0.00   0.00
-mem_release                              3      0      0.00   0.00
-_gpgme_op_sign_init_result               1      0      0.00   0.00
-parseHhMmSs                              1      0      0.00   0.00
-free_identity_list                       4      0      0.00   0.00
-btreeInitPage                            1      0      0.00   0.00
-applyNumericAffinity                     1      0      0.00   0.00
-combine_short_and_long                   1      0      0.00   0.00
-pcache1UnderMemoryPressure               1      0      0.00   0.00
-_gpgme_data_new                          3      0      0.00   0.00
-stringpair_list_add                      1      0      0.00   0.00
-mem_seek                                 4      0      0.00   0.00
-computeHMS                               1      0      0.00   0.00
-export_status_handler                    1      0      0.00   0.00
-get_file_part                            1      0      0.00   0.00
-sqlite3OsCurrentTimeInt64                1      0      0.00   0.00
-gpgme_data_get_file_name                 1      0      0.00   0.00
-export_common                            1      0      0.00   0.00
-gpgme_signers_clear                      1      0      0.00   0.00
-parseYyyyMmDd                            1      0      0.00   0.00
-new_bloblist                             3      0      0.00   0.00
-mime_attachment                          1      0      0.00   0.00
-determine_encryption_format              1      0      0.00   0.00
-generate_boundary                        1      0      0.00   0.00
-sqlite3StmtCurrentTime                   1      0      0.00   0.00
-is_PGP_message_text                      2      0      0.00   0.00
-gpgme_sig_notation_get                   1      0      0.00   0.00
-bloblist_add                             2      0      0.00   0.00
-_gpgme_io_set_nonblocking                1      0      0.00   0.00
-computeYMD_HMS                           1      0      0.00   0.00
-_gpgme_progress_status_handler           10     0      0.00   0.00
-readDbPage                               1      0      0.00   0.00
-add_opt_field                            1      0      0.00   0.00
-gpgme_data_new_from_mem                  1      0      0.00   0.00
-pcache1FetchStage2                       1      0      0.00   0.00
-append_args_from_sig_notations           1      0      0.00   0.00
-gpg_export                               1      0      0.00   0.00
-setDateTimeToCurrent                     1      0      0.00   0.00
-gpgme_key_ref                            2      0      0.00   0.00
-part_new_empty                           3      0      0.00   0.00
-part_multiple_new                        1      0      0.00   0.00
-gpgme_signers_enum                       2      0      0.00   0.00
-get_text_part                            1      0      0.00   0.00
-_gpgme_fd_table_deinit                   13     0      0.00   0.00
-_gpgme_ath_write                         12     0      0.00   0.00
-gpgme_signers_add                        1      0      0.00   0.00
-gpg_get_version                          13     0      0.00   0.00
-new_identity_list                        11     0      0.00   0.00
-_gpgme_fd_table_init                     13     0      0.00   0.00
-_gpgme_ath_mutex_destroy                 13     0      0.00   0.00
-_gpgme_signers_clear                     13     0      0.00   0.00
-gpgme_data_new                           2      0      0.00   0.00
-stringlist_length                        15     0      0.00   0.00
-gpgme_data_release                       3      0      0.00   0.00
-append_args_from_signers                 1      0      0.00   0.00
-sqlite3JournalIsInMemory                 24     0      0.00   0.00
-writeMasterJournal                       24     0      0.00   0.00
-parseDateOrTime                          1      0      0.00   0.00
-sqlite3TempInMemory                      24     0      0.00   0.00
-_gpgme_encrypt_status_handler            10     0      0.00   0.00
-sqlite3FaultSim                          24     0      0.00   0.00
-mem_read                                 15     0      0.00   0.00
-sqlite3PagerGetJournalMode               24     0      0.00   0.00
-sqlite3_initialize                       24     0      0.00   0.00
-sqlite3_uri_parameter                    24     0      0.00   0.00
-verifyDbFile                             24     0      0.00   0.00
-pcache1Truncate                          24     0      0.00   0.00
-pager_error                              24     0      0.00   0.00
-gpgme_data_seek                          4      0      0.00   0.00
-sqlite3StrAccumFinish                    25     0      0.00   0.00
-unixUnmapfile                            24     0      0.00   0.00
-sqlite3StrAccumInit                      25     0      0.00   0.00
-isDate                                   1      0      0.00   0.00
-status_cmp                               57     0      0.00   0.00
-mime_encode_message_plain                1      0      0.00   0.00
-gpgme_strerror                           35     0      0.00   0.00
-gpgme_strsource                          35     0      0.00   0.00
-robustFchown                             24     0      0.00   0.00
-_gpgme_sema_cs_destroy                   13     0      0.00   0.00
-sqlite3StrAccumAppend                    35     0      0.00   0.00
-render_mime                              1      0      0.00   0.00
-sqlite3VtabUnlockList                    46     0      0.00   0.00
-sqlite3CloseSavepoints                   46     0      0.00   0.00
-saveAllCursors                           46     0      0.00   0.00
-sqlite3_column_count                     46     0      0.00   0.00
-sqlite3VdbeDeletePriorOpcode             46     0      0.00   0.00
-sqlite3DeleteTrigger                     46     0      0.00   0.00
-sqlite3BtreeNext                         47     0      0.00   0.00
-sqlite3DeleteTable                       46     0      0.00   0.00
-sqlite3BtreeFirst                        1      0      0.00   0.00
-_gpgme_engine_info_release               13     0      0.00   0.00
-_gpgme_passphrase_status_handler         10     0      0.00   0.00
-sqlite3AuthCheck                         46     0      0.00   0.00
-storeLastErrno                           48     0      0.00   0.00
-sqlite3PcacheClearSyncFlags              24     0      0.00   0.00
-journalHdrOffset                         48     0      0.00   0.00
-encrypt_sign_status_handler              10     0      0.00   0.00
-pagerFlushOnCommit                       48     0      0.00   0.00
-gpgme_ctx_get_engine_info                13     0      0.00   0.00
-gpgme_set_keylist_mode                   13     0      0.00   0.00
-sqlite3ExprListDelete                    46     0      0.00   0.00
-_gpgme_sign_status_handler               10     0      0.00   0.00
-gpgme_get_keylist_mode                   13     0      0.00   0.00
-sqlite3VdbeMemSetNull                    68     0      0.00   0.00
-keywordCode                              46     0      0.00   0.00
-sqlite3VdbeAddOp1                        23     0      0.00   0.00
-btreeClearHasContent                     24     0      0.00   0.00
-identity_list_dup                        1      0      0.00   0.00
-mem_write                                32     0      0.00   0.00
-gpg_encrypt_sign                         1      0      0.00   0.00
-_gpgme_parse_status                      9      0      0.00   0.00
-sqlite3_uri_boolean                      24     0      0.00   0.00
-newDatabase                              71     0      0.00   0.00
-sqlite3VdbeSetChanges                    94     0      0.00   0.00
-yy_shift                                 92     0      0.00   0.00
-sqlite3SafetyCheckOk                     92     0      0.00   0.00
-sqlite3PcacheTruncate                    24     0      0.00   0.00
-datetimeFunc                             1      0      0.00   0.00
-sqlite3VtabSavepoint                     94     0      0.00   0.00
-copy_fields                              1      0      0.00   0.00
-moveToRightmost                          94     0      0.00   0.00
-clone_to_empty_message                   1      0      0.00   0.00
-sqlite3BtreeEnterAll                     46     0      0.00   0.00
-closePendingFds                          116    0      0.00   0.00
-sqlite3BtreeLeaveAll                     46     0      0.00   0.00
-_gpgme_io_fd2str                         124    0      0.00   0.00
-sqlite3PagerPagecount                    116    0      0.00   0.00
-sqlite3CommitInternalChanges             116    0      0.00   0.00
-sqlite3VtabSync                          116    0      0.00   0.00
-sqlite3DbStrNDup                         46     0      0.00   0.00
-callFinaliser                            116    0      0.00   0.00
-sqlite3PagerFilename                     116    0      0.00   0.00
-clearAllSharedCacheTableLocks            116    0      0.00   0.00
-gpgme_key_unref                          16     0      0.00   0.00
-yy_destructor                            184    0      0.00   0.00
-_gpgme_get_basename                      123    0      0.00   0.00
-free_stringlist                          26     0      0.00   0.00
-_gpgme_engine_info_copy                  13     0      0.00   0.00
-gpg_set_pinentry_mode                    123    0      0.00   0.00
-new_stringlist                           74     0      0.00   0.00
-gpg_set_io_cbs                           123    0      0.00   0.00
-binCollFunc                              162    0      0.00   0.00
-sqlite3VdbeIntValue                      160    0      0.00   0.00
-findCreateFileMode                       24     0      0.00   0.00
-gpgme_data_read                          15     0      0.00   0.00
-free_identity                            47     0      0.00   0.00
-gpg_set_status_handler                   123    0      0.00   0.00
-sqlite3WalCallback                       141    0      0.00   0.00
-invalidateIncrblobCursors                187    0      0.00   0.00
-sqlite3BtreePager                        165    0      0.00   0.00
-querySharedCacheTableLock                162    0      0.00   0.00
-pageFindSlot                             189    0      0.00   0.00
-allocSpace                               230    0      0.00   0.00
-sqlite3BackupUpdate                      235    0      0.00   0.00
-identity_dup                             34     0      0.00   0.00
-unixDeviceCharacteristics                164    0      0.00   0.00
-sqlite3_result_int64                     68     0      0.00   0.00
-balance                                  209    0      0.00   0.00
-sqlite3VdbeMemSetInt64                   208    0      0.00   0.00
-createAggContext                         68     0      0.00   0.00
-allocateTempSpace                        211    0      0.00   0.00
-new_identity                             57     0      0.00   0.00
-sqlite3BtreeCursorHasHint                206    0      0.00   0.00
-sqlite3PutVarint                         211    0      0.00   0.00
-gpg_cancel                               123    0      0.00   0.00
-sqlite3BtreeIsInTrans                    232    0      0.00   0.00
-sqlite3VdbeMemInit                       231    0      0.00   0.00
-sqlite3VdbeSetSql                        46     0      0.00   0.00
-sqlite3ParserReset                       46     0      0.00   0.00
-yy_find_reduce_action                    207    0      0.00   0.00
-stringlist_add                           73     0      0.00   0.00
-parse_user_id                            161    0      0.00   0.00
-sqlite3VdbeMemMakeWriteable              91     0      0.00   0.00
-fillInUnixFile                           24     0      0.00   0.00
-sqlite3BtreeLockTable                    255    0      0.00   0.00
-fileHasMoved                             24     0      0.00   0.00
-pager_cksum                              235    0      0.00   0.00
-sqlite3BtreeSchemaLocked                 46     0      0.00   0.00
-sqlite3VXPrintf                          25     0      0.00   0.00
-gpgme_data_write                         32     0      0.00   0.00
-yy_pop_parser_stack                      184    0      0.00   0.00
-sqlite3_context_db_handle                301    0      0.00   0.00
-freeSpace                                209    0      0.00   0.00
-sqlite3PagerUnref                        24     0      0.00   0.00
-sqlite3BitvecSet                         329    0      0.00   0.00
-sqlite3WalDbsize                         348    0      0.00   0.00
-sqlite3_bind_null                        23     0      0.00   0.00
-yy_find_shift_action                     299    0      0.00   0.00
-sqlite3_value_int                        114    0      0.00   0.00
-sqlite3VdbeRecordUnpack                  117    0      0.00   0.00
-addToSavepointBitvecs                    235    0      0.00   0.00
-sqlite3_randomness                       24     0      0.00   0.00
-sqlite3VarintLen                         406    0      0.00   0.00
-sqlite3_aggregate_context                68     0      0.00   0.00
-gpgme_new                                13     0      0.00   0.00
-_gpgme_map_pk_algo                       323    0      0.00   0.00
-btreeParseCellPtr                        373    0      0.00   0.00
-_gpgme_ath_read                          420    0      0.00   0.00
-sqlite3BitvecTestNotNull                 423    0      0.00   0.00
-btreePageFromDbPage                      117    0      0.00   0.00
-btreeParseCellPtrIndex                   347    0      0.00   0.00
-sqlite3VtabCommit                        116    0      0.00   0.00
-keylist_status_handler                   121    0      0.00   0.00
-sqlite3_vsnprintf                        25     0      0.00   0.00
-_gpgme_key_add_subkey                    322    0      0.00   0.00
-sqlite3BtreeGetFilename                  116    0      0.00   0.00
-sqlite3VdbeRewind                        418    0      0.00   0.00
-unixFileControl                          72     0      0.00   0.00
-pager_write_changecounter                48     0      0.00   0.00
-sqlite3VdbeLeave                         464    0      0.00   0.00
-gpg_set_locale                           246    0      0.00   0.00
-sqlite3VdbeCheckFk                       485    0      0.00   0.00
-robust_close                             48     0      0.00   0.00
-sqlite3VdbeEnter                         464    0      0.00   0.00
-vdbeCompareMemString                     162    0      0.00   0.00
-subjRequiresPage                         188    0      0.00   0.00
-sqlite3VdbeSerialTypeLen                 592    0      0.00   0.00
-sqlite3_snprintf                         25     0      0.00   0.00
-sqlite3PagerWalCallback                  141    0      0.00   0.00
-sqlite3BtreeCursorHintFlags              556    0      0.00   0.00
-vdbeRecordDecodeInt                      243    0      0.00   0.00
-fetchPayload                             554    0      0.00   0.00
-pcacheManageDirtyList                    587    0      0.00   0.00
-_gpgme_wait_private_event_cb             442    0      0.00   0.00
-_gpgme_engine_set_io_cbs                 123    0      0.00   0.00
-seekAndRead                              141    0      0.00   0.00
-closeUnixFile                            24     0      0.00   0.00
-sqlite3ValueBytes                        625    0      0.00   0.00
-vdbeSafety                               629    0      0.00   0.00
-sqlite3BtreeCursorZero                   556    0      0.00   0.00
-gpgme_op_keylist_end                     108    0      0.00   0.00
-sqlite3BtreeCursorSize                   556    0      0.00   0.00
-sqlite3Strlen30                          495    0      0.00   0.00
-databaseIsUnmoved                        24     0      0.00   0.00
-_gpgme_getenv                            246    0      0.00   0.00
-allocateSpace                            211    0      0.00   0.00
-pthreadMutexAlloc                        632    0      0.00   0.00
-sqlite3VdbeFindCompare                   532    0      0.00   0.00
-resolveP2Values                          46     0      0.00   0.00
-btreePagecount                           556    0      0.00   0.00
-sqlite3BtreeCursorHasMoved               625    0      0.00   0.00
-sqlite3OsDeviceCharacteristics           164    0      0.00   0.00
-_gpgme_parse_timestamp                   645    0      0.00   0.00
-nolockClose                              24     0      0.00   0.00
-sqlite3VdbeSerialType                    749    0      0.00   0.00
-applyAffinity                            628    0      0.00   0.00
-pcache1Unpin                             626    0      0.00   0.00
-sqlite3VdbeSerialPut                     749    0      0.00   0.00
-sqlite3GetVarint                         726    0      0.00   0.00
-sqlite3Get4byte                          653    0      0.00   0.00
-sqlite3PcacheRefCount                    696    0      0.00   0.00
-pagerUseWal                              588    0      0.00   0.00
-sqlite3OsFileControl                     72     0      0.00   0.00
-clearCell                                209    0      0.00   0.00
-sqlite3BtreeDataFetch                    231    0      0.00   0.00
-sqlite3PagerGetExtra                     673    0      0.00   0.00
-sqlite3PagerBegin                        24     0      0.00   0.00
-sqlite3VdbeChangeEncoding                698    0      0.00   0.00
-sqlite3PcacheFetchFinish                 697    0      0.00   0.00
-sqlite3VdbeMakeReady                     46     0      0.00   0.00
-_gpgme_decode_c_string                   161    0      0.00   0.00
-sqlite3Put4byte                          734    0      0.00   0.00
-sqlite3VdbeTransferError                 232    0      0.00   0.00
-sqlite3PcacheMakeDirty                   235    0      0.00   0.00
-_gpgme_op_keylist_event_cb               161    0      0.00   0.00
-sqlite3_bind_int64                       46     0      0.00   0.00
-columnMem                                183    0      0.00   0.00
-sqlite3Realloc                           47     0      0.00   0.00
-gpgme_release                            13     0      0.00   0.00
-unixFileSize                             348    0      0.00   0.00
-pcacheMergeDirtyList                     931    0      0.00   0.00
-_gpgme_debug_end                         771    0      0.00   0.00
-get_revoked                              1      0      0.00   0.00
-sqlite3VdbeMemTooBig                     836    0      0.00   0.00
-sqlite3MemCompare                        162    0      0.00   0.00
-countFinalize                            68     0      0.00   0.00
-_gpgme_key_new                           161    0      0.00   0.00
-sqlite3_bind_int                         46     0      0.00   0.00
-dropCell                                 209    0      0.00   0.00
-sqlite3VdbeMemShallowCopy                836    0      0.00   0.00
-sqlite3VdbeOneByteSerialTypeLen          923    0      0.00   0.00
-subjournalPageIfRequired                 188    0      0.00   0.00
-sqlite3VdbeAllocUnpackedRecord           117    0      0.00   0.00
-_gpgme_io_write                          12     0      0.00   0.00
-unixRead                                 141    0      0.00   0.00
-sqlite3OsClose                           280    0      0.00   0.00
-sqlite3VdbeCursorRestore                 301    0      0.00   0.00
-sqlite3PagerSavepoint                    47     0      0.00   0.00
-sqlite3VdbeMemFinalize                   68     0      0.00   0.00
-vdbeFreeOpArray                          46     0      0.00   0.00
-fillInCell                               211    0      0.00   0.00
-sqlite3StatusHighwater                   1159   0      0.00   0.00
-btreeCursor                              556    0      0.00   0.00
-_gpgme_key_append_name                   161    0      0.00   0.00
-get_gpgconf_item                         123    0      0.00   0.00
-columnMallocFailure                      183    0      0.00   0.00
-sqlite3Error                             1049   0      0.00   0.00
-sqlite3BtreeKeyFetch                     323    0      0.00   0.00
-sqlite3BtreeGetMeta                      186    0      0.00   0.00
-sqlite3MemRoundup                        1183   0      0.00   0.00
-sqlite3_column_text                      69     0      0.00   0.00
-Cleanup                                  418    0      0.00   0.00
-sqlite3PagerExclusiveLock                48     0      0.00   0.00
-sqlite3DbRealloc                         46     0      0.00   0.00
-_gpgme_engine_set_pinentry_mode          123    0      0.00   0.00
-sqlite3ParserAlloc                       46     0      0.00   0.00
-sqlite3VdbeRecordCompare                 173    0      0.00   0.00
-out2Prerelease                           1419   0      0.00   0.00
-_gpgme_data_outbound_handler             13     0      0.00   0.00
-gpg_keylist_build_options                121    0      0.00   0.00
-sqlite3OsRead                            141    0      0.00   0.00
-_gpgme_in_gpg_one_mode                   123    0      0.00   0.00
-releaseAllSavepoints                     140    0      0.00   0.00
-sqlite3PcacheMakeClean                   235    0      0.00   0.00
-sqlite3ApiExit                           1439   0      0.00   0.00
-openDirectory                            24     0      0.00   0.00
-sqlite3FinishCoding                      46     0      0.00   0.00
-setResultStrOrError                      302    0      0.00   0.00
-sqlite3ParserFree                        46     0      0.00   0.00
-sqlite3BtreeDataSize                     231    0      0.00   0.00
-sqlite3VdbeMemFromBtree                  231    0      0.00   0.00
-_gpgme_release_result                    123    0      0.00   0.00
-pcache1PinPage                           625    0      0.00   0.00
-sqlite3OsFileSize                        348    0      0.00   0.00
-sqlite3BtreeClearCursor                  556    0      0.00   0.00
-writeJournalHdr                          24     0      0.00   0.00
-sqlite3BtreeSavepoint                    47     0      0.00   0.00
-gpgme_result_unref                       123    0      0.00   0.00
-sqlite3VdbeCreate                        46     0      0.00   0.00
-growOpArray                              46     0      0.00   0.00
-sqlite3BitvecDestroy                     211    0      0.00   0.00
-sqlite3PcacheCleanAll                    48     0      0.00   0.00
-unixFileLock                             584    0      0.00   0.00
-sqlite3MemFree                           1159   0      0.00   0.00
-sqlite3MallocZero                        71     0      0.00   0.00
-pcacheSortDirtyList                      24     0      0.00   0.00
-_gpgme_debug_add                         1791   0      0.00   0.00
-sqlite3VdbeClearObject                   46     0      0.00   0.00
-sqlite3BtreeEnter                        1975   0      0.00   0.00
-sqlite3_value_bytes                      625    0      0.00   0.00
-_gpgme_remove_io_cb                      247    0      0.00   0.00
-doWalCallbacks                           141    0      0.00   0.00
-sqlite3PcacheDirtyList                   24     0      0.00   0.00
-_gpgme_debug_begin                       1507   0      0.00   0.00
-vdbeSafetyNotNull                        629    0      0.00   0.00
-btreeParseCell                           511    0      0.00   0.00
-_gpgme_op_data_lookup                    1679   0      0.00   0.00
-sqlite3MutexAlloc                        632    0      0.00   0.00
-sqlite3BitvecCreate                      71     0      0.00   0.00
-growOp3                                  46     0      0.00   0.00
-_gpgme_sema_cs_leave                     1847   0      0.00   0.00
-pcacheUnpin                              626    0      0.00   0.00
-sqlite3BtreeLeave                        1975   0      0.00   0.00
-sqlite3VdbeCloseStatement                207    0      0.00   0.00
-sqlite3StatusDown                        2318   0      0.00   0.00
-pagerOpenWalIfPresent                    116    0      0.00   0.00
-sqlite3_result_text                      302    0      0.00   0.00
-_gpgme_sema_cs_enter                     1847   0      0.00   0.00
-sqlite3_column_int                       114    0      0.00   0.00
-sqlite3StatusUp                          2318   0      0.00   0.00
-gpg_keylist                              121    0      0.00   0.00
-sqlite3VdbeAddOp3                        184    0      0.00   0.00
-_gpgme_ath_mutex_unlock                  1847   0      0.00   0.00
-sqlite3MemMalloc                         1159   0      0.00   0.00
-sqlite3BeginTransaction                  23     0      0.00   0.00
-sqlite3CommitTransaction                 23     0      0.00   0.00
-pagerOpenSavepoint                       47     0      0.00   0.00
-unixAccess                               232    0      0.00   0.00
-sqlite3VdbeAddOp0                        115    0      0.00   0.00
-insertCell                               211    0      0.00   0.00
-hasHotJournal                            116    0      0.00   0.00
-isLookaside                              2762   0      0.00   0.00
-sqlite3VdbeMemSetStr                     630    0      0.00   0.00
-unixLeaveMutex                           304    0      0.00   0.00
-pager_incr_changecounter                 24     0      0.00   0.00
-sqlite3VdbeRecordCompareWithSkip         359    0      0.00   0.00
-sqlite3PagerOpenSavepoint                141    0      0.00   0.00
-_gpgme_data_inbound_handler              34     0      0.00   0.00
-sqlite3BtreeBeginStmt                    47     0      0.00   0.00
-sqlite3BtreeLast                         94     0      0.00   0.00
-_gpgme_add_io_cb                         247    0      0.00   0.00
-log_event                                1      0      0.00   0.00
-vdbeMemClearExternAndSetNull             162    0      0.00   0.00
-sqlite3PcacheRelease                     696    0      0.00   0.00
-btreeGetPage                             116    0      0.00   0.00
-sqlite3DbMallocZero                      92     0      0.00   0.00
-unixEnterMutex                           304    0      0.00   0.00
-sqlite3MemSize                           2944   0      0.00   0.00
-sqlite3OsAccess                          232    0      0.00   0.00
-close_notify_handler                     494    0      0.00   0.00
-sqlite3VdbeDelete                        46     0      0.00   0.00
-pagerPagecount                           348    0      0.00   0.00
-pager_write_pagelist                     24     0      0.00   0.00
-getCellInfo                              718    0      0.00   0.00
-vdbeRecordCompareString                  1425   0      0.00   0.00
-sqlite3BtreeKeySize                      487    0      0.00   0.00
-unixDelete                               24     0      0.00   0.00
-vdbeMemClear                             162    0      0.00   0.00
-pcache1FetchNoMutex                      696    0      0.00   0.00
-sqlite3OsDelete                          24     0      0.00   0.00
-_gpgme_io_pipe                           260    0      0.00   0.00
-pthreadMutexLeave                        3922   0      0.00   0.00
-gpg_release                              123    0      0.00   0.00
-_add_arg                                 2853   0      0.00   0.00
-_gpgme_ath_mutex_lock                    1847   0      0.00   0.00
-pthreadMutexEnter                        3922   0      0.00   0.00
-handleDeferredMoveto                     138    0      0.00   0.00
-posixUnlock                              140    0      0.00   0.00
-vdbeMemAddTerminator                     139    0      0.00   0.00
-_gpgme_engine_release                    123    0      0.00   0.00
-allocVdbe                                46     0      0.00   0.00
-sqlite3BtreeCursor                       556    0      0.00   0.00
-btreeMoveto                              117    0      0.00   0.00
-sqlite3VdbeFinalize                      46     0      0.00   0.00
-sqlite3GetVdbe                           92     0      0.00   0.00
-_gpgme_engine_set_locale                 246    0      0.00   0.00
-unixUnlock                               140    0      0.00   0.00
-sqlite3DbMallocSize                      1300   0      0.00   0.00
-posixOpen                                48     0      0.00   0.00
-sqlite3VdbeMemNulTerminate               322    0      0.00   0.00
-sqlite3OsUnlock                          140    0      0.00   0.00
-pcache1Fetch                             696    0      0.00   0.00
-robust_open                              48     0      0.00   0.00
-valueToText                              139    0      0.00   0.00
-sqlite3PagerSync                         24     0      0.00   0.00
-unixOpen                                 24     0      0.00   0.00
-sqlite3VdbeMemRelease                    1419   0      0.00   0.00
-vdbeUnbind                               397    0      0.00   0.00
-sqlite3OsOpen                            24     0      0.00   0.00
-sqlite3JournalOpen                       24     0      0.01   0.00
-pagerUnlockDb                            140    0      0.01   0.00
-unixLock                                 164    0      0.01   0.00
-sqlite3VdbeCursorMoveto                  462    0      0.01   0.00
-sqlite3VdbeIdxRowid                      231    0      0.01   0.00
-sqlite3OsLock                            164    0      0.01   0.00
-sqlite3ValueText                         695    0      0.01   0.00
-_gpgme_debug_frame_end                   6087   0      0.01   0.01
-pager_wait_on_lock                       164    0      0.01   0.00
-pagerLockDb                              188    0      0.01   0.00
-sqlite3PcacheFetch                       696    0      0.01   0.00
-sqlite3MallocSize                        2342   0      0.01   0.00
-_gpgme_debug_frame_begin                 6088   0      0.01   0.01
-seekAndWriteFd                           988    0      0.01   0.01
-write32bits                              470    0      0.01   0.00
-pager_unlock                             116    0      0.01   0.00
-gpg_set_colon_line_handler               121    0      0.01   0.00
-sqlite3_value_text                       695    0      0.01   0.00
-sqlite3PagerCommitPhaseTwo               24     0      0.01   0.00
-pager_end_transaction                    140    0      0.01   0.00
-pagerUnlockAndRollback                   116    0      0.01   0.00
-status_handler                           131    0      0.01   0.00
-_gpgme_io_set_close_notify               494    0      0.01   0.00
-sqlite3Parser                            92     0      0.01   0.00
-pager_open_journal                       24     0      0.01   0.00
-seekAndWrite                             988    0      0.01   0.00
-releasePage                              767    0      0.01   0.00
-contextMalloc                            301    0      0.01   0.00
-_gpgme_debug_buffer                      432    0      0.01   0.00
-sqlite3BtreeInsert                       211    0      0.01   0.00
-sqlite3PagerGet                          696    0      0.01   0.00
-closeCursorsInFrame                      559    0      0.01   0.00
-bindText                                 328    0      0.01   0.00
-pagerUnlockIfUnused                      696    0      0.01   0.00
-unixWrite                                988    0      0.01   0.00
-btreeEndTransaction                      116    0      0.01   0.00
-sqlite3_mutex_leave                      3922   0      0.01   0.01
-unlockBtreeIfUnused                      672    0      0.01   0.00
-gpg_io_event                             319    0      0.01   0.00
-sqlite3_mutex_enter                      3922   0      0.01   0.01
-replaceFunc                              162    0      0.01   0.00
-sqlite3_bind_text                        328    0      0.01   0.00
-getAndInitPage                           556    0      0.01   0.00
-_gpgme_engine_io_event                   319    0      0.01   0.00
-upperFunc                                139    0      0.01   0.00
-sqlite3OsWrite                           988    0      0.01   0.00
-sqlite3RunParser                         46     0      0.01   0.00
-moveToRoot                               1115   0      0.01   0.00
-pagerAddPageToRollbackJournal            235    0      0.01   0.00
-sqlite3PagerSharedLock                   116    0      0.01   0.00
-sqlite3PagerUnrefNotNull                 696    0      0.02   0.00
-sqlite3BtreeCloseCursor                  556    0      0.02   0.00
-sqlite3Prepare                           46     0      0.02   0.00
-releasePageNotNull                       672    0      0.02   0.00
-sqlite3VdbeFreeCursor                    556    0      0.02   0.00
-mallocWithAlarm                          1159   0      0.02   0.01
-sqlite3DbFree                            2619   0      0.02   0.00
-sqlite3LockAndPrepare                    46     0      0.02   0.00
-sqlite3_prepare_v2                       46     0      0.02   0.00
-dbMallocRawFinish                        718    0      0.02   0.00
-_gpgme_debug                             18241  0      0.02   0.02
-_gpgme_io_close                          520    0      0.02   0.01
-releaseMemArray                          651    0      0.02   0.00
-sqlite3BtreeCommitPhaseTwo               116    0      0.02   0.00
-lockBtree                                116    0      0.02   0.00
-sqlite3DbMallocRawNN                     1464   0      0.02   0.00
-sqlite3BtreeMovetoUnpacked               856    0      0.02   0.00
-yy_reduce                                207    0      0.02   0.00
-sqlite3DbMallocRaw                       1370   0      0.02   0.00
-sqlite3_free                             2458   0      0.02   0.01
-sqlite3BtreeBeginTrans                   186    0      0.02   0.00
-sqlite3VdbeMemClearAndResize             768    0      0.02   0.00
-pager_write                              235    0      0.02   0.00
-allocateCursor                           556    0      0.02   0.00
-sqlite3PagerWrite                        444    0      0.03   0.00
-sqlite3BtreeDelete                       209    0      0.03   0.00
-sqlite3Malloc                            1159   0      0.03   0.00
-sqlite3VdbeMemGrow                       1254   0      0.03   0.00
-syncJournal                              24     0      0.03   0.00
-full_fsync                               96     0      0.03   0.03
-closeAllCursors                          559    0      0.03   0.00
-sqlite3GetToken                          138    0      0.03   0.00
-unixSync                                 72     0      0.03   0.00
-sqlite3OsSync                            72     0      0.03   0.00
-colon_line_handler                       242    0      0.03   0.00
-sqlite3VdbeReset                         418    0      0.03   0.00
-sqlite3_reset                            372    0      0.04   0.00
-sqlite3PagerCommitPhaseOne               24     0      0.04   0.00
-sqlite3BtreeCommitPhaseOne               116    0      0.04   0.00
-sqlite3VdbeSerialGet                     650    0      0.05   0.00
-get_identity                             23     0      0.05   0.00
-blacklist_is_listed                      68     0      0.06   0.00
-_gpgme_run_io_cb                         420    0      0.06   0.00
-_gpgme_engine_op_export                  1      0      0.06   0.00
-export_start                             1      0      0.06   0.00
-gpgme_op_export                          1      0      0.06   0.00
-vdbeCommit                               116    0      0.07   0.00
-_gpgme_engine_op_encrypt_sign            1      0      0.07   0.00
-encrypt_sign_start                       1      0      0.07   0.00
-keylist_colon_handler                    1046   0      0.08   0.01
-sqlite3_exec                             46     0      0.08   0.00
-sqlite3VdbeHalt                          559    0      0.10   0.00
-_gpgme_engine_reset                      110    0      0.10   0.00
-gpg_new                                  123    0      0.11   0.10
-_gpgme_engine_new                        123    0      0.11   0.00
-_gpgme_op_reset                          123    0      0.12   0.00
-pgp_export_keydata                       1      0      0.23   0.00
-export_key                               1      0      0.23   0.00
-_attach_key                              1      0      0.23   0.00
-attach_own_key                           1      0      0.23   0.00
-pgp_key_expired                          1      0      0.23   0.00
-key_expired                              1      0      0.23   0.00
-pgp_key_revoked                          1      0      0.24   0.00
-key_revoked                              1      0      0.24   0.00
-set_identity                             23     0      0.25   0.00
-sqlite3VdbeExec                          232    0      0.26   0.01
-sqlite3Step                              232    0      0.26   0.00
-sqlite3_step                             232    0      0.26   0.00
-pgp_contains_priv_key                    1      0      0.43   0.00
-contains_priv_key                        1      0      0.43   0.00
-_has_usable_priv_key                     1      0      0.43   0.00
-find_single_key                          2      0      0.48   0.00
-_myself                                  1      0      0.93   0.00
-myself                                   1      0      0.93   0.00
-gpgme_op_encrypt_sign                    1      0      1.03   0.00
-_gpgme_io_read                           420    0      1.05   1.04
-_gpgme_get_program_version               13     0      1.95   0.00
-_gpgme_set_engine_info                   13     0      1.95   0.00
-_gpgme_ath_waitpid                       136    0      2.70   2.70
-gpgme_ctx_set_engine_info                13     0      5.14   0.00
-gpgme_set_protocol                       13     0      5.14   0.00
-gpgme_get_protocol                       13     0      5.14   0.00
-gpgme_get_key                            13     0      5.14   0.00
-_pgp_search_keys                         22     0      5.15   0.00
-pgp_find_keys                            22     0      5.15   0.00
-find_keys                                22     0      5.15   0.00
-pgp_encrypt_and_sign                     1      0      5.73   0.00
-encrypt_and_sign                         1      0      5.73   0.00
-mime_encode_message                      1      0      5.73   0.00
-encrypt_PGP_MIME                         1      0      5.73   0.00
-_gpgme_engine_op_keylist                 121    0      8.13   0.00
-_gpgme_engine_set_colon_line_handler     121    0      8.14   0.00
-start                                    123    0      8.25   0.00
-gpgme_op_keylist_start                   121    0      8.26   0.00
-_gpgme_engine_set_status_handler         123    0      8.27   0.00
-_gpgme_io_spawn                          136    0      9.15   6.43
-_get_comm_type                           11     0     12.81   0.00
-elect_pubkey                             22     0     19.97   0.00
-pgp_get_key_rating                       84     0     20.04   0.00
-get_key_rating                           84     0     20.04   0.00
-gpgme_op_keylist_next                    196    0     20.60   0.00
-_gpgme_ath_select                        736    0     21.65  21.65
-_gpgme_io_select                         771    0     21.67   0.01
-_gpgme_wait_on_condition                 178    0     21.72   0.00
-update_identity                          22     0     25.52   0.00
-encrypt_message                          1      0     32.41   0.00
+gpgme_key_release                        1        0.00   0.00
+_rating                                  1        0.00   0.00
+computeJD                                1        0.00   0.00
+unixCurrentTimeInt64                     1        0.00   0.00
+sqlite3_value_type                       1        0.00   0.00
+computeYMD                               1        0.00   0.00
+sqlite3PagerGetData                      1        0.00   0.00
+stringlist_append                        1        0.00   0.00
+decodeFlags                              1        0.00   0.00
+sqlite3AtoF                              1        0.00   0.00
+sqlite3HeapNearlyFull                    1        0.00   0.00
+new_stringpair_list                      1        0.00   0.00
+sqlite3StrICmp                           1        0.00   0.00
+free_stringpair_list                     1        0.00   0.00
+parse_sec_field15                        2        0.00   0.00
+_gpgme_wait_one                          2        0.00   0.00
+getDigits                                2        0.00   0.00
+free_timestamp                           2        0.00   0.00
+_gpgme_op_sign_init_result               1        0.00   0.00
+new_stringpair                           1        0.00   0.00
+parseHhMmSs                              1        0.00   0.00
+_gpgme_op_encrypt_init_result            1        0.00   0.00
+is_whitespace                            2        0.00   0.00
+sqlite3OsCurrentTimeInt64                1        0.00   0.00
+applyNumericAffinity                     1        0.00   0.00
+mem_release                              3        0.00   0.00
+computeHMS                               1        0.00   0.00
+free_identity_list                       4        0.00   0.00
+combine_short_and_long                   1        0.00   0.00
+parseYyyyMmDd                            1        0.00   0.00
+export_status_handler                    1        0.00   0.00
+get_file_part                            1        0.00   0.00
+_gpgme_data_new                          3        0.00   0.00
+pcacheFetchFinishWithInit                1        0.00   0.00
+btreeInitPage                            1        0.00   0.00
+stringpair_list_add                      1        0.00   0.00
+pcache1UnderMemoryPressure               1        0.00   0.00
+sqlite3StmtCurrentTime                   1        0.00   0.00
+gpgme_data_get_file_name                 1        0.00   0.00
+gpgme_signers_clear                      1        0.00   0.00
+pcache1AllocPage                         1        0.00   0.00
+gpgme_sig_notation_get                   1        0.00   0.00
+determine_encryption_format              1        0.00   0.00
+mime_attachment                          1        0.00   0.00
+export_common                            1        0.00   0.00
+setDateTimeToCurrent                     1        0.00   0.00
+generate_boundary                        1        0.00   0.00
+computeYMD_HMS                           1        0.00   0.00
+new_bloblist                             3        0.00   0.00
+append_args_from_sig_notations           1        0.00   0.00
+_gpgme_io_set_nonblocking                1        0.00   0.00
+is_PGP_message_text                      2        0.00   0.00
+new_identity_list                        11       0.00   0.00
+bloblist_add                             2        0.00   0.00
+add_opt_field                            1        0.00   0.00
+_gpgme_progress_status_handler           10       0.00   0.00
+free_stringlist                          4        0.00   0.00
+part_multiple_new                        1        0.00   0.00
+gpg_export                               1        0.00   0.00
+gpgme_signers_enum                       2        0.00   0.00
+part_new_empty                           3        0.00   0.00
+gpgme_key_ref                            2        0.00   0.00
+gpgme_data_new_from_mem                  1        0.00   0.00
+_gpgme_ath_write                         12       0.00   0.00
+_gpgme_fd_table_init                     13       0.00   0.00
+get_text_part                            1        0.00   0.00
+gpgme_strsource                          13       0.00   0.00
+gpgme_strerror                           13       0.00   0.00
+pcache1FetchStage2                       1        0.00   0.00
+_gpgme_fd_table_deinit                   13       0.00   0.00
+stringlist_length                        15       0.00   0.00
+_gpgme_signers_clear                     13       0.00   0.00
+gpg_get_version                          13       0.00   0.00
+_gpgme_ath_mutex_destroy                 13       0.00   0.00
+gpgme_signers_add                        1        0.00   0.00
+gpgme_data_new                           2        0.00   0.00
+readDbPage                               1        0.00   0.00
+parseDateOrTime                          1        0.00   0.00
+gpgme_data_release                       3        0.00   0.00
+append_args_from_signers                 1        0.00   0.00
+new_stringlist                           12       0.00   0.00
+pager_error                              24       0.00   0.00
+pcache1Truncate                          24       0.00   0.00
+writeMasterJournal                       24       0.00   0.00
+sqlite3PagerGetJournalMode               24       0.00   0.00
+unixUnmapfile                            24       0.00   0.00
+isDate                                   1        0.00   0.00
+mem_read                                 15       0.00   0.00
+_gpgme_encrypt_status_handler            10       0.00   0.00
+sqlite3TempInMemory                      24       0.00   0.00
+sqlite3FaultSim                          24       0.00   0.00
+verifyDbFile                             24       0.00   0.00
+sqlite3_uri_parameter                    24       0.00   0.00
+sqlite3_initialize                       24       0.00   0.00
+sqlite3JournalIsInMemory                 24       0.00   0.00
+sqlite3StrAccumFinish                    25       0.00   0.00
+sqlite3StrAccumInit                      25       0.00   0.00
+gpg_set_pinentry_mode                    39       0.00   0.00
+_gpgme_io_fd2str                         40       0.00   0.00
+mime_encode_message_plain                1        0.00   0.00
+gpg_set_io_cbs                           39       0.00   0.00
+_gpgme_sema_cs_destroy                   13       0.00   0.00
+robustFchown                             24       0.00   0.00
+status_cmp                               57       0.00   0.00
+_gpgme_get_basename                      39       0.00   0.00
+gpg_set_status_handler                   39       0.00   0.00
+sqlite3BtreeNext                         48       0.00   0.00
+stringlist_add                           11       0.00   0.00
+sqlite3CloseSavepoints                   46       0.00   0.00
+sqlite3VtabUnlockList                    46       0.00   0.00
+sqlite3DeleteTable                       46       0.00   0.00
+render_mime                              1        0.00   0.00
+_gpgme_engine_info_release               13       0.00   0.00
+sqlite3VdbeMemSetNull                    46       0.00   0.00
+sqlite3VdbeDeletePriorOpcode             46       0.00   0.00
+sqlite3DeleteTrigger                     46       0.00   0.00
+identity_list_dup                        1        0.00   0.00
+saveAllCursors                           46       0.00   0.00
+sqlite3StrAccumAppend                    35       0.00   0.00
+sqlite3AuthCheck                         46       0.00   0.00
+pagerFlushOnCommit                       48       0.00   0.00
+storeLastErrno                           48       0.00   0.00
+_gpgme_passphrase_status_handler         10       0.00   0.00
+journalHdrOffset                         48       0.00   0.00
+sqlite3VdbeAddOp1                        23       0.00   0.00
+sqlite3PcacheClearSyncFlags              24       0.00   0.00
+btreeClearHasContent                     24       0.00   0.00
+sqlite3_column_count                     46       0.00   0.00
+sqlite3ExprListDelete                    46       0.00   0.00
+_gpgme_sign_status_handler               10       0.00   0.00
+gpgme_ctx_get_engine_info                13       0.00   0.00
+gpgme_get_keylist_mode                   13       0.00   0.00
+gpgme_set_keylist_mode                   13       0.00   0.00
+keywordCode                              46       0.00   0.00
+encrypt_sign_status_handler              10       0.00   0.00
+parse_user_id                            37       0.00   0.00
+newDatabase                              71       0.00   0.00
+datetimeFunc                             1        0.00   0.00
+mem_seek                                 4        0.00   0.00
+copy_fields                              1        0.00   0.00
+sqlite3CommitInternalChanges             94       0.00   0.00
+gpg_encrypt_sign                         1        0.00   0.00
+sqlite3_uri_boolean                      24       0.00   0.00
+clone_to_empty_message                   1        0.00   0.00
+gpg_set_locale                           78       0.00   0.00
+sqlite3BtreeFirst                        1        0.00   0.00
+sqlite3PcacheTruncate                    24       0.00   0.00
+_gpgme_map_pk_algo                       75       0.00   0.00
+closePendingFds                          94       0.00   0.00
+sqlite3SafetyCheckOk                     92       0.00   0.00
+yy_shift                                 92       0.00   0.00
+mem_write                                32       0.00   0.00
+callFinaliser                            94       0.00   0.00
+_gpgme_parse_status                      9        0.00   0.00
+sqlite3VdbeSetChanges                    94       0.00   0.00
+clearAllSharedCacheTableLocks            94       0.00   0.00
+gpg_cancel                               39       0.00   0.00
+sqlite3VtabSavepoint                     94       0.00   0.00
+keylist_status_handler                   37       0.00   0.00
+sqlite3VtabSync                          94       0.00   0.00
+sqlite3PagerPagecount                    94       0.00   0.00
+sqlite3PagerFilename                     94       0.00   0.00
+sqlite3BtreeEnterAll                     46       0.00   0.00
+_gpgme_key_add_subkey                    74       0.00   0.00
+moveToRightmost                          94       0.00   0.00
+sqlite3VdbeIntValue                      138      0.00   0.00
+gpgme_data_seek                          4        0.00   0.00
+sqlite3DbStrNDup                         46       0.00   0.00
+sqlite3BtreeLeaveAll                     46       0.00   0.00
+identity_dup                             34       0.00   0.00
+gpgme_op_keylist_end                     24       0.00   0.00
+sqlite3_result_int64                     46       0.00   0.00
+gpgme_key_unref                          16       0.00   0.00
+_gpgme_ath_read                          168      0.00   0.00
+binCollFunc                              162      0.00   0.00
+_gpgme_parse_timestamp                   149      0.00   0.00
+querySharedCacheTableLock                140      0.00   0.00
+_gpgme_engine_set_io_cbs                 39       0.00   0.00
+free_identity                            47       0.00   0.00
+new_identity                             57       0.00   0.00
+_gpgme_engine_info_copy                  13       0.00   0.00
+_gpgme_wait_private_event_cb             128      0.00   0.00
+yy_destructor                            184      0.00   0.00
+createAggContext                         46       0.00   0.00
+_gpgme_getenv                            78       0.00   0.00
+_gpgme_op_keylist_event_cb               37       0.00   0.00
+_gpgme_decode_c_string                   37       0.00   0.00
+unixDeviceCharacteristics                142      0.00   0.00
+sqlite3BtreePager                        165      0.00   0.00
+invalidateIncrblobCursors                187      0.00   0.00
+sqlite3BtreeCursorHasHint                184      0.00   0.00
+pageFindSlot                             189      0.00   0.00
+allocSpace                               230      0.00   0.00
+sqlite3BtreeIsInTrans                    188      0.00   0.00
+sqlite3PagerUnref                        24       0.00   0.00
+sqlite3BackupUpdate                      235      0.00   0.00
+findCreateFileMode                       24       0.00   0.00
+sqlite3WalCallback                       141      0.00   0.00
+sqlite3VdbeMemSetInt64                   186      0.00   0.00
+allocateTempSpace                        211      0.00   0.00
+yy_find_reduce_action                    207      0.00   0.00
+balance                                  209      0.00   0.00
+sqlite3_value_int                        92       0.00   0.00
+sqlite3VdbeSetSql                        46       0.00   0.00
+_gpgme_key_append_name                   37       0.00   0.00
+_gpgme_key_new                           37       0.00   0.00
+gpgme_data_read                          15       0.00   0.00
+sqlite3PutVarint                         211      0.00   0.00
+sqlite3WalDbsize                         282      0.00   0.00
+sqlite3VdbeMemInit                       231      0.00   0.00
+sqlite3VdbeMemMakeWriteable              69       0.00   0.00
+sqlite3_aggregate_context                46       0.00   0.00
+sqlite3BtreeLockTable                    233      0.00   0.00
+sqlite3ParserReset                       46       0.00   0.00
+sqlite3_context_db_handle                257      0.00   0.00
+sqlite3VtabCommit                        94       0.00   0.00
+get_gpgconf_item                         39       0.00   0.00
+sqlite3VXPrintf                          25       0.00   0.00
+sqlite3BtreeSchemaLocked                 46       0.00   0.00
+btreePageFromDbPage                      95       0.00   0.00
+pager_cksum                              235      0.00   0.00
+yy_pop_parser_stack                      184      0.00   0.00
+_gpgme_engine_set_pinentry_mode          39       0.00   0.00
+_gpgme_debug_end                         319      0.00   0.00
+fillInUnixFile                           24       0.00   0.00
+yy_find_shift_action                     299      0.00   0.00
+sqlite3BitvecSet                         329      0.00   0.00
+sqlite3_bind_null                        23       0.00   0.00
+gpgme_data_write                         32       0.00   0.00
+sqlite3VdbeRewind                        374      0.00   0.00
+_gpgme_in_gpg_one_mode                   39       0.00   0.00
+btreeParseCellPtrIndex                   347      0.00   0.00
+gpgme_new                                13       0.00   0.00
+addToSavepointBitvecs                    235      0.00   0.00
+freeSpace                                209      0.00   0.00
+robust_close                             48       0.00   0.00
+sqlite3BtreeGetFilename                  94       0.00   0.00
+sqlite3VarintLen                         406      0.00   0.00
+fileHasMoved                             24       0.00   0.00
+sqlite3_randomness                       24       0.00   0.00
+sqlite3VdbeLeave                         420      0.00   0.00
+sqlite3VdbeEnter                         420      0.00   0.00
+sqlite3VdbeCheckFk                       419      0.00   0.00
+sqlite3BitvecTestNotNull                 423      0.00   0.00
+btreeParseCellPtr                        373      0.00   0.00
+sqlite3VdbeRecordUnpack                  117      0.00   0.00
+_gpgme_release_result                    39       0.00   0.00
+sqlite3_vsnprintf                        25       0.00   0.00
+gpg_keylist_build_options                37       0.00   0.00
+seekAndRead                              119      0.00   0.00
+vdbeCompareMemString                     162      0.00   0.00
+closeUnixFile                            24       0.00   0.00
+pager_write_changecounter                48       0.00   0.00
+subjRequiresPage                         188      0.00   0.00
+sqlite3BtreeCursorHintFlags              534      0.00   0.00
+sqlite3_snprintf                         25       0.00   0.00
+_gpgme_op_data_lookup                    453      0.00   0.00
+pthreadMutexAlloc                        544      0.00   0.00
+sqlite3BtreeCursorZero                   534      0.00   0.00
+sqlite3OsDeviceCharacteristics           142      0.00   0.00
+pagerUseWal                              522      0.00   0.00
+nolockClose                              24       0.00   0.00
+sqlite3VdbeFindCompare                   510      0.00   0.00
+sqlite3VdbeSerialTypeLen                 592      0.00   0.00
+fetchPayload                             554      0.00   0.00
+sqlite3BtreeCursorSize                   534      0.00   0.00
+btreePagecount                           534      0.00   0.00
+unixFileControl                          72       0.00   0.00
+sqlite3Strlen30                          451      0.00   0.00
+vdbeSafety                               585      0.00   0.00
+sqlite3Get4byte                          565      0.00   0.00
+sqlite3PagerWalCallback                  141      0.00   0.00
+vdbeRecordDecodeInt                      243      0.00   0.00
+countFinalize                            46       0.00   0.00
+pcache1Unpin                             582      0.00   0.00
+pcacheManageDirtyList                    587      0.00   0.00
+unixFileSize                             282      0.00   0.00
+_gpgme_remove_io_cb                      79       0.00   0.00
+sqlite3PcacheRefCount                    652      0.00   0.00
+allocateSpace                            211      0.00   0.00
+sqlite3BtreeDataFetch                    231      0.00   0.00
+sqlite3VdbeChangeEncoding                610      0.00   0.00
+databaseIsUnmoved                        24       0.00   0.00
+sqlite3BtreeCursorHasMoved               625      0.00   0.00
+applyAffinity                            606      0.00   0.00
+sqlite3PagerGetExtra                     629      0.00   0.00
+_gpgme_sema_cs_leave                     671      0.00   0.00
+resolveP2Values                          46       0.00   0.00
+sqlite3OsFileControl                     72       0.00   0.00
+clearCell                                209      0.00   0.00
+columnMem                                161      0.00   0.00
+gpgme_result_unref                       39       0.00   0.00
+sqlite3PagerBegin                        24       0.00   0.00
+sqlite3PcacheFetchFinish                 653      0.00   0.00
+_gpgme_debug_begin                       625      0.00   0.00
+sqlite3VdbeSerialType                    749      0.00   0.00
+_gpgme_sema_cs_enter                     671      0.00   0.00
+_gpgme_debug_add                         741      0.00   0.00
+sqlite3VdbeTransferError                 210      0.00   0.00
+sqlite3GetVarint                         726      0.00   0.00
+sqlite3VdbeMakeReady                     46       0.00   0.00
+sqlite3VdbeMemFinalize                   46       0.00   0.00
+sqlite3MemCompare                        162      0.00   0.00
+gpg_keylist                              37       0.00   0.00
+sqlite3PcacheMakeDirty                   235      0.00   0.00
+sqlite3Put4byte                          734      0.00   0.00
+unixRead                                 119      0.00   0.00
+sqlite3VdbeSerialPut                     749      0.00   0.00
+sqlite3VdbeMemTooBig                     748      0.00   0.00
+sqlite3Realloc                           47       0.00   0.00
+pcacheMergeDirtyList                     931      0.00   0.00
+gpgme_release                            13       0.00   0.00
+sqlite3OsClose                           236      0.00   0.00
+sqlite3_bind_int64                       46       0.00   0.00
+_gpgme_add_io_cb                         79       0.00   0.00
+sqlite3VdbeMemShallowCopy                792      0.00   0.00
+subjournalPageIfRequired                 188      0.00   0.00
+sqlite3VdbeOneByteSerialTypeLen          923      0.00   0.00
+_gpgme_ath_mutex_unlock                  671      0.00   0.00
+columnMallocFailure                      161      0.00   0.00
+dropCell                                 209      0.00   0.00
+sqlite3VdbeAllocUnpackedRecord           117      0.00   0.00
+sqlite3_bind_int                         46       0.00   0.00
+sqlite3VdbeCursorRestore                 301      0.00   0.00
+sqlite3PagerSavepoint                    47       0.00   0.00
+sqlite3BtreeKeyFetch                     323      0.00   0.00
+sqlite3ValueBytes                        537      0.00   0.00
+sqlite3Error                             983      0.00   0.00
+_gpgme_io_write                          12       0.00   0.00
+vdbeFreeOpArray                          46       0.00   0.00
+close_notify_handler                     158      0.00   0.00
+gpg_release                              39       0.00   0.00
+Cleanup                                  374      0.00   0.00
+btreeCursor                              534      0.00   0.00
+sqlite3BtreeGetMeta                      164      0.00   0.00
+sqlite3OsRead                            119      0.00   0.00
+_gpgme_io_pipe                           92       0.00   0.00
+_gpgme_engine_set_locale                 78       0.00   0.00
+sqlite3StatusHighwater                   1093     0.00   0.00
+sqlite3_column_text                      69       0.00   0.00
+sqlite3MemRoundup                        1117     0.00   0.00
+sqlite3OsFileSize                        282      0.00   0.00
+sqlite3PagerExclusiveLock                48       0.00   0.00
+unixFileLock                             496      0.00   0.00
+_gpgme_engine_release                    39       0.00   0.00
+sqlite3DbRealloc                         46       0.00   0.00
+_add_arg                                 921      0.00   0.00
+pcache1PinPage                           581      0.00   0.00
+sqlite3FinishCoding                      46       0.00   0.00
+sqlite3ApiExit                           1307     0.00   0.00
+sqlite3VdbeMemFromBtree                  231      0.00   0.00
+releaseAllSavepoints                     118      0.00   0.00
+out2Prerelease                           1331     0.00   0.00
+fillInCell                               211      0.00   0.00
+setResultStrOrError                      258      0.00   0.00
+get_revoked                              1        0.00   0.00
+sqlite3BtreeDataSize                     231      0.00   0.00
+sqlite3VdbeRecordCompare                 173      0.00   0.00
+sqlite3ParserAlloc                       46       0.00   0.00
+sqlite3PcacheMakeClean                   235      0.00   0.00
+_gpgme_ath_mutex_lock                    671      0.00   0.00
+sqlite3VdbeCreate                        46       0.00   0.00
+openDirectory                            24       0.00   0.00
+sqlite3ParserFree                        46       0.00   0.00
+unixAccess                               188      0.00   0.00
+sqlite3BitvecDestroy                     189      0.00   0.00
+pagerOpenWalIfPresent                    94       0.00   0.00
+_gpgme_data_outbound_handler             13       0.00   0.00
+sqlite3BtreeClearCursor                  534      0.00   0.00
+sqlite3MemFree                           1093     0.00   0.00
+hasHotJournal                            94       0.00   0.00
+sqlite3BtreeSavepoint                    47       0.00   0.00
+sqlite3_column_int                       92       0.00   0.00
+sqlite3MutexAlloc                        544      0.00   0.00
+growOpArray                              46       0.00   0.00
+pcacheSortDirtyList                      24       0.00   0.00
+sqlite3PcacheCleanAll                    48       0.00   0.00
+sqlite3VdbeClearObject                   46       0.00   0.00
+pcacheUnpin                              582      0.00   0.00
+vdbeSafetyNotNull                        585      0.00   0.00
+sqlite3PcacheDirtyList                   24       0.00   0.00
+writeJournalHdr                          24       0.00   0.00
+btreeParseCell                           511      0.00   0.00
+sqlite3BtreeLeave                        1865     0.00   0.00
+sqlite3BtreeEnter                        1865     0.00   0.00
+growOp3                                  46       0.00   0.00
+sqlite3OsAccess                          188      0.00   0.00
+gpg_set_colon_line_handler               37       0.00   0.00
+sqlite3_result_text                      258      0.00   0.00
+sqlite3MallocZero                        71       0.00   0.00
+doWalCallbacks                           141      0.00   0.00
+sqlite3MemMalloc                         1093     0.00   0.00
+sqlite3StatusDown                        2186     0.00   0.00
+unixLeaveMutex                           260      0.00   0.00
+sqlite3VdbeCloseStatement                185      0.00   0.00
+gpg_io_event                             89       0.00   0.00
+sqlite3VdbeAddOp3                        184      0.00   0.00
+sqlite3_value_bytes                      537      0.00   0.00
+sqlite3CommitTransaction                 23       0.00   0.00
+btreeGetPage                             94       0.00   0.00
+sqlite3StatusUp                          2186     0.00   0.00
+_gpgme_engine_io_event                   89       0.00   0.00
+_gpgme_debug_frame_end                   2203     0.00   0.00
+sqlite3BitvecCreate                      71       0.00   0.00
+log_event                                1        0.00   0.00
+insertCell                               211      0.00   0.00
+sqlite3VdbeAddOp0                        115      0.00   0.00
+sqlite3BeginTransaction                  23       0.00   0.00
+pager_incr_changecounter                 24       0.00   0.00
+sqlite3VdbeMemSetStr                     564      0.00   0.00
+sqlite3PcacheRelease                     652      0.00   0.00
+pagerPagecount                           282      0.00   0.00
+_gpgme_debug_frame_begin                 2204     0.00   0.00
+unixEnterMutex                           260      0.00   0.00
+_gpgme_io_set_close_notify               158      0.00   0.00
+isLookaside                              2674     0.00   0.00
+pagerOpenSavepoint                       47       0.00   0.00
+sqlite3VdbeRecordCompareWithSkip         359      0.00   0.00
+unixDelete                               24       0.00   0.00
+vdbeMemClearExternAndSetNull             140      0.00   0.00
+pcache1FetchNoMutex                      652      0.00   0.00
+sqlite3OsDelete                          24       0.00   0.00
+sqlite3DbMallocZero                      92       0.00   0.00
+sqlite3VdbeDelete                        46       0.00   0.00
+pager_write_pagelist                     24       0.00   0.00
+sqlite3PagerOpenSavepoint                141      0.00   0.00
+status_handler                           47       0.00   0.00
+_gpgme_data_inbound_handler              34       0.00   0.00
+getCellInfo                              718      0.00   0.00
+sqlite3MemSize                           2790     0.00   0.00
+sqlite3BtreeBeginStmt                    47       0.00   0.00
+posixUnlock                              118      0.00   0.00
+vdbeMemClear                             140      0.00   0.00
+sqlite3BtreeLast                         94       0.00   0.00
+sqlite3BtreeKeySize                      487      0.00   0.00
+vdbeRecordCompareString                  1421     0.00   0.00
+unixUnlock                               118      0.00   0.00
+vdbeMemAddTerminator                     117      0.00   0.00
+pthreadMutexLeave                        3636     0.00   0.00
+sqlite3OsUnlock                          118      0.00   0.00
+pthreadMutexEnter                        3636     0.00   0.00
+handleDeferredMoveto                     138      0.00   0.00
+allocVdbe                                46       0.00   0.00
+pagerUnlockDb                            118      0.00   0.00
+sqlite3VdbeFinalize                      46       0.00   0.00
+sqlite3VdbeMemNulTerminate               278      0.00   0.00
+sqlite3GetVdbe                           92       0.00   0.00
+sqlite3BtreeCursor                       534      0.00   0.00
+sqlite3PagerSync                         24       0.00   0.00
+pcache1Fetch                             652      0.00   0.00
+valueToText                              117      0.00   0.00
+posixOpen                                48       0.00   0.00
+unixLock                                 142      0.00   0.00
+robust_open                              48       0.00   0.00
+sqlite3DbMallocSize                      1256     0.00   0.00
+btreeMoveto                              117      0.00   0.00
+sqlite3VdbeMemRelease                    1309     0.00   0.00
+_gpgme_debug_buffer                      180      0.00   0.00
+sqlite3OsLock                            142      0.00   0.00
+pager_unlock                             94       0.00   0.00
+pager_wait_on_lock                       142      0.00   0.00
+vdbeUnbind                               375      0.00   0.00
+unixOpen                                 24       0.00   0.00
+sqlite3OsOpen                            24       0.00   0.00
+sqlite3ValueText                         607      0.00   0.00
+sqlite3JournalOpen                       24       0.00   0.00
+sqlite3VdbeCursorMoveto                  462      0.00   0.00
+pagerLockDb                              166      0.00   0.00
+pagerUnlockAndRollback                   94       0.00   0.00
+sqlite3VdbeIdxRowid                      231      0.00   0.00
+sqlite3PcacheFetch                       652      0.01   0.00
+seekAndWriteFd                           988      0.01   0.01
+sqlite3_value_text                       607      0.01   0.00
+sqlite3MallocSize                        2210     0.01   0.00
+pager_end_transaction                    118      0.01   0.00
+write32bits                              470      0.01   0.00
+sqlite3PagerCommitPhaseTwo               24       0.01   0.00
+_gpgme_io_close                          184      0.01   0.00
+btreeEndTransaction                      94       0.01   0.00
+pagerUnlockIfUnused                      652      0.01   0.00
+unlockBtreeIfUnused                      628      0.01   0.00
+_gpgme_debug                             7075     0.01   0.01
+releasePage                              745      0.01   0.00
+sqlite3Parser                            92       0.01   0.00
+seekAndWrite                             988      0.01   0.00
+contextMalloc                            257      0.01   0.00
+closeCursorsInFrame                      515      0.01   0.00
+sqlite3PagerGet                          652      0.01   0.00
+pager_open_journal                       24       0.01   0.00
+colon_line_handler                       74       0.01   0.00
+bindText                                 306      0.01   0.00
+unixWrite                                988      0.01   0.00
+sqlite3BtreeInsert                       211      0.01   0.00
+getAndInitPage                           534      0.01   0.00
+replaceFunc                              140      0.01   0.00
+sqlite3_bind_text                        306      0.01   0.00
+sqlite3_mutex_enter                      3636     0.01   0.01
+sqlite3_mutex_leave                      3636     0.01   0.01
+upperFunc                                117      0.01   0.00
+sqlite3PagerSharedLock                   94       0.01   0.00
+sqlite3OsWrite                           988      0.01   0.00
+moveToRoot                               1093     0.01   0.00
+sqlite3PagerUnrefNotNull                 652      0.01   0.00
+sqlite3RunParser                         46       0.01   0.00
+releasePageNotNull                       628      0.01   0.00
+pagerAddPageToRollbackJournal            235      0.01   0.00
+keylist_colon_handler                    258      0.01   0.00
+lockBtree                                94       0.01   0.00
+sqlite3BtreeCloseCursor                  534      0.01   0.00
+sqlite3BtreeCommitPhaseTwo               94       0.01   0.00
+sqlite3VdbeFreeCursor                    534      0.01   0.00
+sqlite3Prepare                           46       0.01   0.00
+mallocWithAlarm                          1093     0.01   0.01
+sqlite3BtreeBeginTrans                   164      0.01   0.00
+sqlite3LockAndPrepare                    46       0.02   0.00
+sqlite3_prepare_v2                       46       0.02   0.00
+dbMallocRawFinish                        696      0.02   0.00
+sqlite3DbFree                            2509     0.02   0.00
+releaseMemArray                          607      0.02   0.00
+yy_reduce                                207      0.02   0.00
+sqlite3BtreeMovetoUnpacked               834      0.02   0.00
+sqlite3DbMallocRawNN                     1420     0.02   0.00
+sqlite3DbMallocRaw                       1326     0.02   0.00
+sqlite3_free                             2326     0.02   0.01
+sqlite3VdbeMemClearAndResize             746      0.02   0.00
+allocateCursor                           534      0.02   0.00
+pager_write                              235      0.02   0.00
+_gpgme_run_io_cb                         168      0.02   0.00
+sqlite3PagerWrite                        444      0.02   0.00
+_gpgme_engine_reset                      26       0.02   0.00
+sqlite3Malloc                            1093     0.02   0.00
+sqlite3VdbeReset                         374      0.02   0.00
+sqlite3BtreeDelete                       209      0.02   0.00
+sqlite3VdbeMemGrow                       1210     0.02   0.00
+closeAllCursors                          515      0.03   0.00
+sqlite3GetToken                          138      0.03   0.00
+sqlite3_reset                            328      0.03   0.00
+syncJournal                              24       0.03   0.00
+full_fsync                               96       0.03   0.03
+unixSync                                 72       0.03   0.00
+sqlite3OsSync                            72       0.03   0.00
+gpg_new                                  39       0.03   0.03
+_gpgme_engine_new                        39       0.03   0.00
+blacklist_is_listed                      46       0.03   0.00
+_gpgme_op_reset                          39       0.04   0.00
+sqlite3PagerCommitPhaseOne               24       0.04   0.00
+sqlite3BtreeCommitPhaseOne               94       0.04   0.00
+get_identity                             23       0.04   0.00
+sqlite3VdbeSerialGet                     650      0.05   0.00
+_gpgme_engine_op_encrypt_sign            1        0.05   0.00
+encrypt_sign_start                       1        0.05   0.00
+vdbeCommit                               94       0.06   0.00
+_gpgme_engine_op_export                  1        0.06   0.00
+export_start                             1        0.06   0.00
+gpgme_op_export                          1        0.06   0.00
+sqlite3_exec                             46       0.07   0.00
+sqlite3VdbeHalt                          515      0.09   0.00
+pgp_key_expired                          1        0.20   0.00
+key_expired                              1        0.20   0.00
+pgp_key_revoked                          1        0.20   0.00
+key_revoked                              1        0.20   0.00
+pgp_export_keydata                       1        0.22   0.00
+export_key                               1        0.22   0.00
+_attach_key                              1        0.22   0.00
+attach_own_key                           1        0.22   0.00
+sqlite3VdbeExec                          210      0.23   0.01
+sqlite3Step                              210      0.23   0.00
+sqlite3_step                             210      0.23   0.00
+set_identity                             23       0.23   0.00
+pgp_contains_priv_key                    1        0.31   0.00
+contains_priv_key                        1        0.31   0.00
+_has_usable_priv_key                     1        0.31   0.00
+find_single_key                          2        0.40   0.00
+_gpgme_io_read                           168      0.70   0.70
+_myself                                  1        0.73   0.00
+myself                                   1        0.73   0.00
+_gpgme_ath_waitpid                       52       0.95   0.95
+gpgme_op_encrypt_sign                    1        0.99   0.00
+_gpgme_get_program_version               13       1.41   0.00
+_gpgme_set_engine_info                   13       1.41   0.00
+_gpgme_engine_op_keylist                 37       2.01   0.00
+_gpgme_engine_set_colon_line_handler     37       2.01   0.00
+gpgme_op_keylist_start                   37       2.05   0.00
+start                                    39       2.12   0.00
+_gpgme_engine_set_status_handler         39       2.13   0.00
+_get_comm_type                           11       2.34   0.00
+_gpgme_io_spawn                          52       2.84   1.88
+gpgme_ctx_set_engine_info                13       4.05   0.00
+gpgme_set_protocol                       13       4.05   0.00
+gpgme_get_protocol                       13       4.05   0.00
+gpgme_get_key                            13       4.05   0.00
+pgp_get_key_rating                       22       4.44   0.00
+get_key_rating                           22       4.44   0.00
+update_identity                          22       4.72   0.00
+pgp_encrypt_and_sign                     1        4.73   0.00
+encrypt_and_sign                         1        4.73   0.00
+mime_encode_message                      1        4.73   0.00
+encrypt_PGP_MIME                         1        4.73   0.00
+gpgme_op_keylist_next                    50       5.43   0.00
+_gpgme_ath_select                        306      6.49   6.49
+_gpgme_io_select                         319      6.50   0.00
+_gpgme_wait_on_condition                 52       6.52   0.00
+encrypt_message                          1       10.40   0.00
