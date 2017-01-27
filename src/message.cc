@@ -291,13 +291,13 @@ namespace pEp {
         Message Message::encrypt()
         {
             list extra;
-            return encrypt_message(*this, extra, 4, 0);
+            return encrypt_message(*this, extra, PEP_enc_PGP_MIME, 0);
         }
 
         Message Message::_encrypt(list extra, int enc_format, int flags)
         {
             if (!enc_format)
-                enc_format = 4;
+                enc_format = PEP_enc_PGP_MIME;
             return encrypt_message(*this, extra, enc_format, flags);
         }
 
