@@ -230,7 +230,7 @@ def execute_order(order):
 
     res = None
     if func is not None:
-        printheader("Executing function " + func.__name__)
+        printheader("Executing instance function " + func.__name__)
         printi("args :", args)
         printi("kwargs :", kwargs)
         res = func(*args,**kwargs)
@@ -407,7 +407,14 @@ def run_instance_action(action):
 
 def run_manager_action(action):
     func, args, kwargs = action[0:] + (None, [], {})[len(action):]
-    return func(*args, **kwargs)
+    print("------------------------- Executing manager function -----------------------------")
+    print("function name :", func.__name__)
+    print("args :", args)
+    print("kwargs :", kwargs)
+    res = func(*args, **kwargs)
+    print("manager function " + func.__name__ + " returned :", res)
+    print("-" * 80)
+    return res
 
 def run_scenario(scenario):
     global pEp
