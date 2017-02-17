@@ -275,7 +275,8 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
             if signal in [
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
-                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP]:
+                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP,
+                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_MOVE_OUR_DEVICE]:
                 printheader("show HANDSHAKE dialog")
                 printi("handshake needed between " + repr(me) + " and " + repr(partner))
                 tw = pEp.trustwords(me, partner, 'en')

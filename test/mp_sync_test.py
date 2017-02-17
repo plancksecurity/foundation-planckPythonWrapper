@@ -123,7 +123,7 @@ def nokey_in_a_group_of_3_members():
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
         (flush_all_mails,),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(2)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(5)),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
