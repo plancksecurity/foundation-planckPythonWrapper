@@ -44,7 +44,7 @@ def group_on_keygen():
     enc_msg = yield from pre_existing_peers_with_encrypted_mail()
     for action in [
         ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
-        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(3)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 
     ] : yield action
 
@@ -56,7 +56,7 @@ def group_on_cannotdecrypt():
         ("GroupA2", [create_account, ["first@group.a", "GroupA First"]]),
         (flush_all_mails,),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(3)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
@@ -123,7 +123,7 @@ def nokey_in_a_group_of_3_members():
         ("GroupA1", [create_account, ["second@group.a", "GroupA Second"]]),
         (flush_all_mails,),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(5)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2", "GroupA3"], expect(3)),
         ("GroupA1", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
         ("GroupA2", [create_account, ["second@group.a", "GroupA Second"]]),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
@@ -159,7 +159,7 @@ def timeout_while_group_on_keygen():
         ("GroupA1", [enable_auto_handshake, []]),
         ("GroupA2", [enable_auto_handshake, []]),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(3)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 
     ] : yield action
 
