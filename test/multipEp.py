@@ -391,7 +391,7 @@ def stop_instance(iname):
 
 def purge_instances():
     global instances
-    for iname in instances.keys():
+    for iname in list(instances.keys()):
         stop_instance(iname)
 
 def run_instance_action(action):
