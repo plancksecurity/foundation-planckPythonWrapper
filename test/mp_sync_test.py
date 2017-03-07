@@ -146,8 +146,7 @@ def not_for_sync_in_a_group_of_3_members(pre_actions=[]):
 
 def timeout_while_group_on_keygen():
     for action in [
-        ("GroupA1", [disable_auto_handshake, []]),
-        ("GroupA2", [disable_auto_handshake, []])
+        (disable_auto_handshake,),
     ] : yield action
     enc_msg = yield from pre_existing_peers_with_encrypted_mail()
     for action in [
@@ -156,8 +155,7 @@ def timeout_while_group_on_keygen():
         ("GroupA1", [simulate_timeout, []]),
         ("GroupA2", [simulate_timeout, []]),
         (flush_all_mails,),
-        ("GroupA1", [enable_auto_handshake, []]),
-        ("GroupA2", [enable_auto_handshake, []]),
+        (enable_auto_handshake,),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
         (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 

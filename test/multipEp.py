@@ -18,9 +18,7 @@ sync_handler = None
 own_addresses = []
 indent = 0
 i_name = ""
-handshakes_pending = []
-handshakes_to_accept = []
-disable_handshake = False
+handshakes_pending = None
 pEp = None
 
 # manager globals
@@ -31,8 +29,8 @@ if(multiprocessing.current_process().name == "MainProcess"):
     pEp = importlib.import_module("pEp")
 
 # both side globals (managed by MP)
-handshakes_seen = []
-handshakes_validated = []
+handshakes_seen = None
+test_config = None
 msgs_folders = None
 
 # both side globals (not managed)
@@ -92,23 +90,11 @@ def decrypt_message(msgstr):
     printi("---")
     return rating
 
-def disable_auto_handshake():
-    global disable_handshake
-    disable_handshake = True
-
-def enable_auto_handshake():
-    global disable_handshake
-    disable_handshake = False
-    del handshakes_pending[:]
-    del handshakes_to_accept[:]
-    del handshakes_seen[:]
-    del handshakes_validated[:]
-
 def simulate_timeout():
     global sync_handler
     sync_handler.onTimeout()
 
-no_inbox_decrypt = [disable_auto_handshake, enable_auto_handshake, simulate_timeout]
+no_inbox_decrypt = [simulate_timeout]
 # ----------------------------------------------------------------------------
 #                               MANAGER ACTIONS
 # ----------------------------------------------------------------------------
@@ -138,6 +124,14 @@ def cycle_until_no_change(*instancelist, maxcycles=20):
 
         if count >= maxcycles:
             raise Exception("Too many cycles waiting for stability") 
+
+def disable_auto_handshake():
+    global test_config
+    test_config.disable_handshake = True
+
+def enable_auto_handshake():
+    global test_config
+    test_config.disable_handshake = False
 
 def expect(expectation):
     def _expect(res, action):
@@ -184,9 +178,8 @@ def printmsg(msg):
 # ----------------------------------------------------------------------------
 
 def execute_order(order):
-    global handshakes_pending, handshakes_to_accept, handshakes_seen
-    global handshakes_validated, msgs_folders, own_addresses, sync_handler
-    global disable_handshake
+    global handshakes_pending, hanshakes_seen
+    global test_config, msgs_folders, own_addresses, sync_handler
 
     func, args, kwargs, timeoff = order[0:] + [None, [], {}, 0][len(order):]
 
@@ -217,17 +210,6 @@ def execute_order(order):
                     printi("---")
     printheader()
 
-    if handshakes_pending and not disable_handshake:
-        printheader("check pending handshakes accepted on other device")
-        for tple in handshakes_pending:
-            tw, partner = tple 
-            if tw in handshakes_validated:
-                handshakes_validated.remove(tw)
-                handshakes_pending.remove(tple)
-                printi("ACCEPT pending handshake : "+ tw)
-                sync_handler.deliverHandshakeResult(partner, 0)
-        printheader()
-
     res = None
     if func is not None:
         printheader("Executing instance function " + func.__name__)
@@ -237,28 +219,30 @@ def execute_order(order):
         printi("function " + func.__name__ + " returned :", res)
         printheader()
 
-    if handshakes_to_accept and not disable_handshake:
-        printheader("apply to-accept-because-already-seen handshakes")
-        for tple in handshakes_to_accept:
-            tw, partner = tple 
-            printi("ACCEPT handshake : "+ tw)
-            handshakes_validated.append(tw)
-            handshakes_to_accept.remove(tple)
-            sync_handler.deliverHandshakeResult(partner, 0)
+    if handshakes_pending and not test_config.disable_handshake :
+        printheader("check pending handshakes accepted on other device")
+        tw, partner, nth_seen = handshakes_pending
+        if handshakes_seen[tw] >= test_config.handshake_count_to_accept :
+            if nth_seen in [1, test_config.handshake_count_to_accept]:
+                # equiv to close dialog 
+                handshakes_pending = None
+                printi("ACCEPT pending handshake : "+ tw)
+                sync_handler.deliverHandshakeResult(partner, 0)
+                # else dialog closed later by OVERTAKEN notification
         printheader()
 
     return res
 
-def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_seen, _handshakes_validated):
+def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_seen, _test_config):
     global pEp, sync_handler, own_addresses, i_name, msgs_folders
-    global handshakes_pending, handshakes_to_accept
-    global handshakes_seen, handshakes_validated
+    global handshakes_pending
+    global handshakes_seen, test_config
 
     # assign instance globals
     own_addresses = _own_addresses
     msgs_folders = _msgs_folders
     handshakes_seen = _handshakes_seen
-    handshakes_validated = _handshakes_validated
+    test_config = _test_config
     i_name = iname
 
     pEp = importlib.import_module("pEp")
@@ -272,27 +256,46 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
                 _send_message(rcpt.address, msg)
 
         def notifyHandshake(self, me, partner, signal):
+            global handshakes_pending
+            if test_config.disable_handshake :
+                printheader("HANDSHAKE disabled. Notification ignored")
+                printi(signal)
+                printheader()
+                return
+
             if signal in [
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP,
                  pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_MOVE_OUR_DEVICE]:
                 printheader("show HANDSHAKE dialog")
+                printi(signal)
                 printi("handshake needed between " + repr(me) + " and " + repr(partner))
                 tw = pEp.trustwords(me, partner, 'en')
                 printi(tw)
+
+                # This is an error from pEpEngine if asked to open handshake dialog twice
+                if handshakes_pending:
+                    raise Exception("Asked to open a second Sync Handshake Dialog !") 
+
                 if tw in handshakes_seen :
-                    handshakes_seen.remove(tw)
-                    handshakes_to_accept.append((tw,partner))
-                    printi("--> TO ACCEPT (already seen)")
+                    handshakes_seen[tw] += 1
                 else:
-                    handshakes_pending.append((tw,partner))
-                    handshakes_seen.append(tw)
+                    handshakes_seen[tw] = 1
+
+                handshakes_pending = (tw,partner,handshakes_seen[tw])
                 printheader()
+
+            elif signal == pEp.sync_handshake_signal.SYNC_NOTIFY_OVERTAKEN:
+                if handshakes_pending:
+                    tw, partner, nth_seen = handshakes_pending
+                    printi("ACCEPT pending handshake : "+ tw)
+                    handshakes_pending = None
+                else:
+                    raise Exception("Asked to close a non existing Sync Handshake Dialog !") 
             else :
-                printheader("other notification HANDSHAKE dialog")
+                printheader("other HANDSHAKE notification - ignored")
                 printi(signal)
-                #TODO
                 printheader()
 
         def setTimeout(self, timeout):
@@ -342,7 +345,7 @@ def start_debug(iname, proc):
     time.sleep(2)
 
 def start_instance(iname, tmpdir=None, instance_addresses = []):
-    global handshakes_seen, handshakes_validated, msgs_folders
+    global handshakes_seen, test_config, msgs_folders
 
     if tmpdir is None:
         tmpdir = tempfile.TemporaryDirectory()
@@ -353,7 +356,7 @@ def start_instance(iname, tmpdir=None, instance_addresses = []):
         target=pEp_instance_main,
         args=(iname, tmpdirname, instance_addresses,
               child_conn, msgs_folders, 
-              handshakes_seen, handshakes_validated))
+              handshakes_seen, test_config))
     proc.start()
 
     debug = False
@@ -426,12 +429,14 @@ def run_scenario(scenario):
             return
     print("RUNNING: " + scenario.__name__)
 
-    global handshakes_seen, handshakes_validated, msgs_folders, instances
+    global handshakes_seen, test_config, msgs_folders, instances
     instances = OrderedDict()
     with ctx.Manager() as manager:
         msgs_folders = manager.dict()
-        handshakes_seen = manager.list()
-        handshakes_validated = manager.list()
+        handshakes_seen = manager.dict()
+        test_config = manager.Namespace(
+            disable_handshake=False,
+            handshake_count_to_accept=2)
 
         sc = scenario()
         t = None
