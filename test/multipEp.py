@@ -94,7 +94,7 @@ def simulate_timeout():
     global sync_handler
     sync_handler.onTimeout()
 
-no_inbox_decrypt = [simulate_timeout]
+no_inbox_decrypt = [simulate_timeout, create_account]
 # ----------------------------------------------------------------------------
 #                               MANAGER ACTIONS
 # ----------------------------------------------------------------------------
@@ -166,7 +166,7 @@ def printmsg(msg):
     printi("short :", msg.shortmsg)
     printi("opt_fields :", msg.opt_fields)
     lng = msg.longmsg.splitlines()
-    lngcut = lng[:20]+["[...]"] if len(lng)>20 else lng
+    lngcut = lng[:40]+["[...]"] if len(lng)>40 else lng
     pfx = "long : "
     for l in lngcut :
         printi(pfx + l)
@@ -289,7 +289,7 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
             elif signal == pEp.sync_handshake_signal.SYNC_NOTIFY_OVERTAKEN:
                 if handshakes_pending:
                     tw, partner, nth_seen = handshakes_pending
-                    printi("ACCEPT pending handshake : "+ tw)
+                    printi("OVERTAKEN handshake : "+ tw)
                     handshakes_pending = None
                 else:
                     raise Exception("Asked to close a non existing Sync Handshake Dialog !") 
