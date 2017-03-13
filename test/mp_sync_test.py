@@ -161,7 +161,7 @@ def timeout_while_group_on_keygen():
         (flush_all_mails,),
         (enable_auto_handshake,),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_have_no_key)),
-        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(4)),
+        (cycle_until_no_change, ["GroupA1", "GroupA2"], expect(3)),
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)) 
     ] : yield action
 
