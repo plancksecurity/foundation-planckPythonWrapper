@@ -61,6 +61,19 @@ def group_on_cannotdecrypt():
         ("GroupA2", [decrypt_message, [enc_msg]], expect(pEp.PEP_rating.PEP_rating_reliable)),
     ] : yield action
 
+def group_gets_losing_key():
+    yield from group_on_keygen()
+
+    # device losing key election is the youngest one, last created, GroupA2
+    self_msg = yield ("GroupA2", [encrypted_message, ["first@group.a", 
+                             "first@group.a", 
+                             "GroupA First to GroupA First -- encrypted",
+                             "GroupA First to GroupA First -- long encrypted"]])
+    for action in [
+        (flush_all_mails,),
+        ("GroupA1", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized)),
+    ] : yield action
+
 def group_of_3_members():
     enc_msg = yield from group_on_keygen()
     for action in [
@@ -170,6 +183,7 @@ def timeout_while_group_on_keygen():
 if __name__ == "__main__":
     run_scenario(group_on_keygen)
     run_scenario(group_on_cannotdecrypt)
+    run_scenario(group_gets_losing_key)
     run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
     run_scenario(group_survives_restart)
