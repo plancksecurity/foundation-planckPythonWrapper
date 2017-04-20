@@ -303,6 +303,7 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
 
         def cancelTimeout(self):
            printi("CANCEL TIMEOUT") 
+           return 42
 
     if not disable_sync:
         sync_handler = Handler()
