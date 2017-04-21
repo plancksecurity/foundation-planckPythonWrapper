@@ -6,6 +6,14 @@
 
 namespace pEp {
     namespace PythonAdapter {
+
+        typedef enum _timeout_state_t {
+            timeout_stopped,
+            timeout_running,
+            timeout_canceling,
+            timeout_expiring 
+        } timeout_state_t;
+
         class SyncMixIn {
             public:
                 SyncMixIn() { }
@@ -34,7 +42,7 @@ namespace pEp {
                     throw runtime_error("override this method");
                 }
 
-                virtual void cancelTimeout(){
+                virtual time_t cancelTimeout(){
                     throw runtime_error("override this method");
                 }
 
@@ -46,9 +54,10 @@ namespace pEp {
                         pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
 
                 static jmp_buf env;
-                static bool running_timeout;
-                static bool expiring_timeout;
                 static void *_msg;
+                static timeout_state_t timeout_state;
+                static bool last_turn;
+                static time_t remaining_time;
                 static int inject_sync_msg(void *msg, void *management);
                 static void *retrieve_next_sync_msg(void *management, time_t *timeout);
         };
@@ -67,7 +76,7 @@ namespace pEp {
                     sync_handshake_signal signal);
 
                 void setTimeout(time_t timeout);
-                void cancelTimeout();
+                time_t cancelTimeout();
         };
     }
 }

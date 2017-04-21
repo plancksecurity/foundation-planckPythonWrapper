@@ -70,21 +70,30 @@ namespace pEp {
 
         jmp_buf SyncMixIn::env;
         void *SyncMixIn::_msg;
-        bool SyncMixIn::running_timeout = false;
-        bool SyncMixIn::expiring_timeout = false;
+
+        timeout_state_t SyncMixIn::timeout_state = timeout_stopped;
+        bool SyncMixIn::last_turn = false;
+        time_t SyncMixIn::remaining_time = 0;
 
         int SyncMixIn::inject_sync_msg(void *msg, void *management)
         {
+            assert(timeout_state != timeout_canceling);
+            if(timeout_state == timeout_canceling) return 0;
+
+            assert(timeout_state != timeout_expiring);
+            if(timeout_state == timeout_expiring) return 0;
+
             _msg = msg;
             int val = setjmp(env);
             if (!val){
-                if(running_timeout){
+                if(timeout_state == timeout_running){
                     // call python timeout timer cancel
                     auto that = dynamic_cast< SyncMixIn_callback * >(
                             static_cast< SyncMixIn * > (management));
-                    that->cancelTimeout();
-                    running_timeout = false;
+                    remaining_time = that->cancelTimeout();
+                    timeout_state = timeout_canceling;
                 }
+                last_turn = false;
                 do_sync_protocol(session, management);
             }
             return 0;
@@ -92,21 +101,39 @@ namespace pEp {
 
         void *SyncMixIn::retrieve_next_sync_msg(void *management, time_t *timeout)
         {
-            static int twice = 1;
-            twice = !twice;
+            if (!last_turn){
+                
+                assert(timeout_state != timeout_running);
+                if(timeout_state == timeout_running) return NULL;
 
-            if (!twice){
-                if (expiring_timeout){
+                switch(timeout_state){
+                  case timeout_canceling :
+                    *timeout = remaining_time;
+                    break;
+                  case timeout_expiring :
+                    // "1" is arbitrary value !=0, since we don't
+                    // have original timeout value anymore
                     *timeout = 1;
-                    expiring_timeout = true;
-                } else if (_msg != NULL && *timeout != 0){
+                    break;
+                }
+
+                timeout_state = timeout_stopped;
+
+                last_turn = true;
+                return (void *) _msg;
+
+            } else {
+
+                assert(timeout_state == timeout_stopped);
+                if(timeout_state != timeout_stopped) return NULL;
+
+                if (*timeout != 0) {
                     // call python timeout timer start
                     auto that = dynamic_cast< SyncMixIn_callback * >(
                             static_cast< SyncMixIn * > (management));
                     that->setTimeout(*timeout);
-                    running_timeout = true;
+                    timeout_state = timeout_running;
                 }
-                return (void *) _msg;
             }
             longjmp(env, 1);
             return (void *) 23;
@@ -114,12 +141,19 @@ namespace pEp {
 
         // to be called from python timeout timer - may GIL protect us
         void SyncMixIn::onTimeout(){
+            assert(timeout_state != timeout_canceling);
+            if(timeout_state == timeout_canceling) return;
+
+            assert(timeout_state != timeout_expiring);
+            if(timeout_state == timeout_expiring) return;
+
             _msg = NULL;
             int val = setjmp(env);
             if (!val){
-                expiring_timeout = true;
+                timeout_state = timeout_expiring;
+
+                last_turn = false;
                 do_sync_protocol(session, (void*)this);
-                running_timeout = false;
             }
         }
 
@@ -139,9 +173,9 @@ namespace pEp {
             call_method< void >(_self, "setTimeout", timeout);
         }
 
-        void SyncMixIn_callback::cancelTimeout()
+        time_t SyncMixIn_callback::cancelTimeout()
         {
-            call_method< void >(_self, "cancelTimeout");
+            return call_method< time_t >(_self, "cancelTimeout");
         }
     }
 }
