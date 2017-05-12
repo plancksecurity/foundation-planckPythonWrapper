@@ -1,11 +1,15 @@
 """
 tests for keysync scenario
 
-Launch it with something like :
-LC_ALL=en_US.UTF-8 \
-DYLD_LIBRARY_PATH=/Users/ed/lib/ \
-PYTHONPATH=`pwd`/../build/lib.macosx-10.11-x86_64-3.4 \
-python3.4 mp_sync_test.py
+* Launch it with latest built pEp Python Adapter (no install):
+PYTHONPATH=`pwd`/build/lib.macosx-10.12-x86_64-3.4 \
+python3.4 test/mp_sync_test.py 
+
+* With shared libs search path different for GroupA1 :
+DYLD_LIBRARY_PATH=$HOME/lib_gpg \
+PYTHONPATH=`pwd`/build/lib.macosx-10.12-x86_64-3.4 \
+python3.4 test/mp_sync_test.py \
+libs_GroupA1=$HOME/lib_netpgp
 
 """
 

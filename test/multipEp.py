@@ -325,6 +325,7 @@ def pEp_instance_main(iname, tmpdirname, *args):
     # run with a dispensable $HOME to get fresh DB and PGP keyrings
     print("Instance " + iname + " runs into " + tmpdirname)
     os.environ['HOME'] = tmpdirname
+
     pEp_instance_run(iname, *args)
     print(iname + " exiting")
 
@@ -348,17 +349,39 @@ def start_debug(iname, proc):
 def start_instance(iname, tmpdir=None, instance_addresses = []):
     global handshakes_seen, test_config, msgs_folders
 
+    given_libs = None
+    for a in sys.argv:
+        if a.startswith("libs_"+iname+"="):
+            given_libs = a.split("=")[1]
+            break
+
     if tmpdir is None:
         tmpdir = tempfile.TemporaryDirectory()
+        if given_libs is not None:
+            os.symlink(given_libs, os.path.join(tmpdir.name, "libs"))
 
-    tmpdirname = tmpdir.name
+    if sys.platform.startswith('darwin'):
+        ld_env_name = 'DYLD_LIBRARY_PATH'
+    else:
+        ld_env_name = 'LD_LIBRARY_PATH' 
+
+    orig_ld_env_val = None
+    if given_libs is not None:
+        orig_ld_env_val = os.environ.pop(ld_env_name, None)
+        os.environ[ld_env_name] = os.path.join(tmpdir.name, "libs")
+
     conn, child_conn = ctx.Pipe()
     proc = ctx.Process(
         target=pEp_instance_main,
-        args=(iname, tmpdirname, instance_addresses,
+        args=(iname, tmpdir.name, instance_addresses,
               child_conn, msgs_folders, 
               handshakes_seen, test_config))
     proc.start()
+
+    if orig_ld_env_val is not None:
+        os.environ[ld_env_name] = orig_ld_env_val
+    elif given_libs is not None:
+        os.environ.pop(ld_env_name)
 
     debug = False
     if "debug_"+iname in sys.argv :
