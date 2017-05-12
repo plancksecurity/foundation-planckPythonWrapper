@@ -1,15 +1,33 @@
 """
-tests for keysync scenario
+= Tests for keysync =
 
-* Launch it with latest built pEp Python Adapter (no install):
+ See multipEp.py for command line switches.
+
+* Example to launch with latest built pEp Python Adapter (no install):
+
 PYTHONPATH=`pwd`/build/lib.macosx-10.12-x86_64-3.4 \
 python3.4 test/mp_sync_test.py 
 
-* With shared libs search path different for GroupA1 :
-DYLD_LIBRARY_PATH=$HOME/lib_gpg \
+* Example to debug at a particular step in "group_of_3_members"
+
+python3.4 test/mp_sync_test.py only_group_of_3_members debug_GroupA3_3
+
+* Example test with both GPG and NetPGP :
+
+    In that example only GroupA1 is using NetPGP, others use GPG
+
+ - In pEpEngine :
+
+hg clean --all
+make install DEBUG=YES OPENPGP=GPG PREFIX=$HOME/pep_gpg
+hg clean --all
+make install DEBUG=YES OPENPGP=NETPGP PREFIX=$HOME/pep_netpgp
+
+ - In pEpPythonAdapter :
+
+DYLD_LIBRARY_PATH=$HOME/pep_gpg/lib \
 PYTHONPATH=`pwd`/build/lib.macosx-10.12-x86_64-3.4 \
-python3.4 test/mp_sync_test.py \
-libs_GroupA1=$HOME/lib_netpgp
+python3.4 test/mp_sync_test.py libs_GroupA1=$HOME/pep_netpgp/lib
 
 """
 

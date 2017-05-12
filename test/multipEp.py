@@ -1,3 +1,36 @@
+"""
+  multipEp.py : multiple process python testing framework for pEp
+
+  = Command line switches =
+
+  wait_for_debug
+    Block and ask if debugger should be attached each time an instance
+    is started
+
+  debug_${instance_name}
+    Launch lldb in another terminal, and attach it to given intsance
+    immediately after instance startup.
+
+  debug_${instance_name}_${execution_number}
+    Launch lldb in another terminal, and attach it to given intsance
+    when instance is at some particular step in the test.
+    ${execution_number} is found by reading test output.
+
+  only_${test_scenario_name}
+    Execute only given test scenario. Scenario with different name
+    are skipped.
+
+  libs_${instance_name}=/path/to/libs
+    Set LD_LIBRARY_PATH to given path before launching instance,
+    meant to allow selection of per-instance pEpEngines flavors
+
+  wait_for_cleanup
+    Block at the end of each test scenario, before deleting temporary
+    directory. It is meant to be able to examine keyring and DBs after
+    test finished or crashed.
+
+"""
+
 import os
 import sys
 import multiprocessing
