@@ -192,8 +192,8 @@ def printheader(blah=None):
                "-" * (39 - len(blah) + int(len(blah)/2)))
 
 def printmsg(msg):
-    printi("from :", msg.from_)
-    printi("to :", msg.to)
+    printi("from :", repr(msg.from_))
+    printi("to :", repr(msg.to))
     printi("recv :", msg.recv)
     printi("sent :", msg.sent)
     printi("short :", msg.shortmsg)
