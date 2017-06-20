@@ -36,6 +36,15 @@ from multipEp import *
 #("instance name", [instance_action_func, [args], {kwargs}], result_func),
 #(manager_action_func, [args], {kwargs}, result_func),
 
+def message_to_self():
+    yield ("GroupA1", [create_account, ["first@group.a", "GroupA First"]])
+
+    self_msg = yield ("GroupA1", [encrypted_message, ["first@group.a", 
+                             "first@group.a", 
+                             "GroupA First to GroupA First -- encrypted",
+                             "GroupA First to GroupA First -- long encrypted"]])
+    yield ("GroupA1", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized))
+
 def pre_existing_peers_with_encrypted_mail():
     for action in [
         ("GroupA1", [create_account, ["first@group.a", "GroupA First"]]),
@@ -72,6 +81,27 @@ def group_on_keygen():
     ] : yield action
 
     return enc_msg
+
+def message_to_self_after_sync():
+    yield from group_on_keygen()
+    yield (flush_all_mails,)
+    self_msg = yield ("GroupA2", [encrypted_message, ["first@group.a", 
+                             "first@group.a", 
+                             "GroupA First to GroupA First -- encrypted",
+                             "GroupA First to GroupA First -- long encrypted"]])
+    for action in [
+        ("GroupA1", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized)),
+        ("GroupA2", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized))
+    ] : yield action
+
+    self_msg = yield ("GroupA1", [encrypted_message, ["first@group.a", 
+                             "first@group.a", 
+                             "GroupA First to GroupA First -- encrypted",
+                             "GroupA First to GroupA First -- long encrypted"]])
+    for action in [
+        ("GroupA1", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized)),
+        ("GroupA2", [decrypt_message, [self_msg]], expect(pEp.PEP_rating.PEP_rating_trusted_and_anonymized))
+    ] : yield action
 
 def group_on_cannotdecrypt():
     enc_msg = yield from pre_existing_peers_with_encrypted_mail()
@@ -203,9 +233,11 @@ def timeout_while_group_on_keygen():
     return enc_msg
 
 if __name__ == "__main__":
+    run_scenario(message_to_self)
     run_scenario(group_on_keygen)
     run_scenario(group_on_cannotdecrypt)
     run_scenario(group_gets_losing_key)
+    run_scenario(message_to_self_after_sync)
     run_scenario(group_of_3_members)
     run_scenario(keygen_in_a_group_of_3_members)
     run_scenario(group_survives_restart)
