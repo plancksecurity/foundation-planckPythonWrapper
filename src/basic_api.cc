@@ -1,6 +1,7 @@
 #include "basic_api.hh"
 #include <sstream>
 #include <pEp/keymanagement.h>
+#include <pEp/message_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -44,24 +45,10 @@ namespace pEp {
 
             char *words = NULL;
             size_t size = 0;
-            PEP_STATUS status = trustwords(session, me.fpr().c_str(),
-                    lang.c_str(), &words, &size, 5);
+            PEP_STATUS status =  get_trustwords(session, me, partner,
+                                        lang.c_str(),&words, &size, true);
             _throw_status(status);
-            string my_words = words;
-
-            free(words);
-            words = NULL;
-            size = 0;
-            status = trustwords(session, partner.fpr().c_str(), lang.c_str(),
-                    &words, &size, 5);
-            _throw_status(status);
-            string partner_words = words;
-            free(words);
-
-            if (me.fpr() > partner.fpr())
-                return partner_words + my_words;
-            else
-                return my_words + partner_words;
+            return words;
         }
         
         void trust_personal_key(Identity ident)
