@@ -35,7 +35,7 @@ namespace pEp {
             _throw_status(status);
         }
 
-        string _trustwords(Identity me, Identity partner, string lang)
+        string _trustwords(Identity me, Identity partner, string lang, bool full)
         {
             if (me.fpr() == "" || partner.fpr() == "")
                 throw invalid_argument("fingerprint needed in Identities");
@@ -46,7 +46,7 @@ namespace pEp {
             char *words = NULL;
             size_t size = 0;
             PEP_STATUS status =  get_trustwords(session, me, partner,
-                                        lang.c_str(),&words, &size, true);
+                                        lang.c_str(),&words, &size, full);
             _throw_status(status);
             return words;
         }

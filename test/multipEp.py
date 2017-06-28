@@ -304,7 +304,7 @@ def pEp_instance_run(iname, _own_addresses, conn, _msgs_folders, _handshakes_see
                 printheader("show HANDSHAKE dialog")
                 printi(signal)
                 printi("handshake needed between " + repr(me) + " and " + repr(partner))
-                tw = pEp.trustwords(me, partner, 'en')
+                tw = pEp.trustwords(me, partner, 'en', True)
                 printi(tw)
 
                 # This is an error from pEpEngine if asked to open handshake dialog twice
