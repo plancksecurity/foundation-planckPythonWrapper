@@ -49,9 +49,6 @@ namespace pEp {
             std::string lang();
             void lang(std::string value);
 
-            bool me() { return _ident->me; }
-            void me(bool value) { _ident->me = value; }
-
             identity_flags_t flags() { return _ident->flags; }
             void flags(identity_flags_t flags) { _ident->flags = flags; }
 

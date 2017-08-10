@@ -108,9 +108,6 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("lang", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::lang,
                 (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::lang,
                 "ISO 639-1 language code")
-        .add_property("me", (bool(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::me,
-                (void(pEp::PythonAdapter::Identity::*)(bool)) &pEp::PythonAdapter::Identity::me,
-                 "true if own identity, false otherwise")
         .add_property("flags", (identity_flags_t(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::flags,
                 (void(pEp::PythonAdapter::Identity::*)(identity_flags_t)) &pEp::PythonAdapter::Identity::flags,
                 "flags (p≡p internal)")

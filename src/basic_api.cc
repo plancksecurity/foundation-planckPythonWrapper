@@ -9,8 +9,6 @@ namespace pEp {
         {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
-            if (ident.me())
-                throw runtime_error("update_identity: not for own identities");
             if (ident.user_id() == PEP_OWN_USERID)
                 throw runtime_error("update_identity: '" PEP_OWN_USERID
                         "' may only be used for own identities");
@@ -28,7 +26,6 @@ namespace pEp {
             if (!(ident.user_id() == "" || ident.user_id() == PEP_OWN_USERID))
                 throw invalid_argument("user_id must be empty or '" PEP_OWN_USERID "'");
 
-            ident.me(true);
             ident.user_id(PEP_OWN_USERID);
 
             PEP_STATUS status = myself(session, ident);
