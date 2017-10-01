@@ -7,6 +7,8 @@
 #include "message_api.hh"
 #include "sync_mixin.hh"
 
+#include <mutex>
+
 #include <pEp/message_api.h>
 #include <pEp/sync.h>
 
@@ -22,10 +24,13 @@ namespace pEp {
             return version;
         }
 
+        std::mutex init_mutex;
+        
         PEP_SESSION session = NULL;
 
         static void free_module(void *)
         {
+            std::lock_guard<std::mutex> lock(init_mutex);
             release(session);
         }
 
@@ -428,6 +433,7 @@ BOOST_PYTHON_MODULE(pEp)
     PyModuleDef * _def = PyModule_GetDef(scope().ptr());
     _def->m_free = free_module;
 
+    std::lock_guard<std::mutex> lock(init_mutex);
     PEP_STATUS status = ::init(&session);
     if (status != PEP_STATUS_OK) {
         stringstream ss;
@@ -437,4 +443,3 @@ BOOST_PYTHON_MODULE(pEp)
         throw runtime_error(s);
     }
 }
-
