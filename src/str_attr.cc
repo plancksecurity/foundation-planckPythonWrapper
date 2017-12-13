@@ -51,9 +51,9 @@ namespace pEp {
             ts = new_timestamp(value);
         }
 
-        list strlist_attr(stringlist_t *&sl)
+        boost::python::list strlist_attr(stringlist_t *&sl)
         {
-            list result;
+            boost::python::list result;
 
             for (stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s(_sl->value);
@@ -63,7 +63,7 @@ namespace pEp {
             return result;
         }
 
-        void strlist_attr(stringlist_t *&sl, list value)
+        void strlist_attr(stringlist_t *&sl, boost::python::list value)
         {
             stringlist_t *_sl = new_stringlist(NULL);
             if (!_sl)
@@ -140,7 +140,7 @@ namespace pEp {
             spl = _spl;
         }
 
-        stringlist_t *to_stringlist(list l)
+        stringlist_t *to_stringlist(boost::python::list l)
         {
             stringlist_t *result = new_stringlist(NULL);
             if (!result)
@@ -162,9 +162,9 @@ namespace pEp {
             return result;
         }
 
-        list from_stringlist(const stringlist_t *sl)
+        boost::python::list from_stringlist(const stringlist_t *sl)
         {
-            list result;
+            boost::python::list result;
             for (const stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s = _sl->value;
                 result.append(s);

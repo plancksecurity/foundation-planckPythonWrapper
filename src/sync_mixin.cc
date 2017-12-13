@@ -115,6 +115,8 @@ namespace pEp {
                     // have original timeout value anymore
                     *timeout = 1;
                     break;
+                  default:
+                    ;
                 }
 
                 timeout_state = timeout_stopped;

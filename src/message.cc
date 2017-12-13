@@ -241,7 +241,7 @@ namespace pEp {
 
         boost::python::tuple Message::attachments()
         {
-            list l;
+            boost::python::list l;
 
             for (bloblist_t *bl = _msg->attachments; bl && bl->value; bl =
                     bl->next) {
@@ -251,7 +251,7 @@ namespace pEp {
             return boost::python::tuple(l);
         }
 
-        void Message::attachments(list value)
+        void Message::attachments(boost::python::list value)
         {
             bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL);
             if (!bl)
@@ -290,11 +290,11 @@ namespace pEp {
 
         Message Message::encrypt()
         {
-            list extra;
+            boost::python::list extra;
             return encrypt_message(*this, extra, PEP_enc_PGP_MIME, 0);
         }
 
-        Message Message::_encrypt(list extra, int enc_format, int flags)
+        Message Message::_encrypt(boost::python::list extra, int enc_format, int flags)
         {
             if (!enc_format)
                 enc_format = PEP_enc_PGP_MIME;
@@ -355,7 +355,7 @@ namespace pEp {
             return object(ident);
         }
 
-        static list update(list il)
+        static boost::python::list update(boost::python::list il)
         {
             for (int i=0; i<len(il); i++) {
                 update(extract< Identity >(il[i]));

@@ -5,7 +5,7 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        Message encrypt_message(Message src, list extra, int enc_format,
+        Message encrypt_message(Message src, boost::python::list extra, int enc_format,
                 int flags)
         {
             Identity _from = src.from();
@@ -43,7 +43,7 @@ namespace pEp {
                     &_rating, &_flags);
             _throw_status(status);
 
-            list keylist;
+            boost::python::list keylist;
             if (_keylist) {
                 keylist = from_stringlist(_keylist);
                 free_stringlist(_keylist);

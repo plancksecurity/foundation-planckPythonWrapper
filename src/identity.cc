@@ -156,9 +156,9 @@ namespace pEp {
             ident = _dup;
         }
 
-        list identitylist_attr(identity_list *&il)
+        boost::python::list identitylist_attr(identity_list *&il)
         {
-            list result;
+            boost::python::list result;
 
             for (identity_list *_il = il; _il && _il->ident; _il = _il->next) {
                 pEp_identity *ident = ::identity_dup(_il->ident);
@@ -170,7 +170,7 @@ namespace pEp {
             return result;
         }
 
-        void identitylist_attr(identity_list *&il, list value)
+        void identitylist_attr(identity_list *&il, boost::python::list value)
         {
             identity_list *_il = new_identity_list(NULL);
             if (!_il)

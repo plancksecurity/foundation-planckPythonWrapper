@@ -193,7 +193,7 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(string)) &Message::longmsg_formatted,
                 "HTML body or fromatted long version of message")
         .add_property("attachments", (boost::python::tuple(Message::*)()) &Message::attachments,
-                (void(Message::*)(list)) &Message::attachments,
+                (void(Message::*)(boost::python::list)) &Message::attachments,
                 "tuple of Blobs with attachments; setting moves Blobs to attachment tuple")
         .add_property("sent", (time_t(Message::*)()) &Message::sent,
                 (void(Message::*)(time_t)) &Message::sent,
@@ -204,29 +204,29 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("from_", (pEp::PythonAdapter::Identity(Message::*)()) &Message::from,
                 (void(Message::*)(object)) &Message::from,
                 "identity where message is from")
-        .add_property("to", (list(Message::*)()) &Message::to,
-                (void(Message::*)(list)) &Message::to,
+        .add_property("to", (boost::python::list(Message::*)()) &Message::to,
+                (void(Message::*)(boost::python::list)) &Message::to,
                 "list of identities message is going to")
         .add_property("recv_by", (pEp::PythonAdapter::Identity(Message::*)()) &Message::recv_by,
                 (void(Message::*)(object)) &Message::recv_by,
                 "identity where message was received by")
-        .add_property("cc", (list(Message::*)()) &Message::cc,
-                (void(Message::*)(list)) &Message::cc,
+        .add_property("cc", (boost::python::list(Message::*)()) &Message::cc,
+                (void(Message::*)(boost::python::list)) &Message::cc,
                 "list of identities message is going cc")
-        .add_property("bcc", (list(Message::*)()) &Message::bcc,
-                (void(Message::*)(list)) &Message::bcc,
+        .add_property("bcc", (boost::python::list(Message::*)()) &Message::bcc,
+                (void(Message::*)(boost::python::list)) &Message::bcc,
                 "list of identities message is going bcc")
-        .add_property("reply_to", (list(Message::*)()) &Message::reply_to,
-                (void(Message::*)(list)) &Message::reply_to,
+        .add_property("reply_to", (boost::python::list(Message::*)()) &Message::reply_to,
+                (void(Message::*)(boost::python::list)) &Message::reply_to,
                 "list of identities where message will be replied to")
-        .add_property("in_reply_to", (list(Message::*)()) &Message::in_reply_to,
-                (void(Message::*)(list)) &Message::in_reply_to,
+        .add_property("in_reply_to", (boost::python::list(Message::*)()) &Message::in_reply_to,
+                (void(Message::*)(boost::python::list)) &Message::in_reply_to,
                 "in_reply_to list")
-        .add_property("references", (list(Message::*)()) &Message::references,
-                (void(Message::*)(list)) &Message::references,
+        .add_property("references", (boost::python::list(Message::*)()) &Message::references,
+                (void(Message::*)(boost::python::list)) &Message::references,
                 "message IDs of messages this one is referring to")
-        .add_property("keywords", (list(Message::*)()) &Message::keywords,
-                (void(Message::*)(list)) &Message::keywords,
+        .add_property("keywords", (boost::python::list(Message::*)()) &Message::keywords,
+                (void(Message::*)(boost::python::list)) &Message::keywords,
                 "keywords this message should be stored under")
         .add_property("comments", (string(Message::*)()) &Message::comments,
                 (void(Message::*)(string)) &Message::comments,
@@ -240,9 +240,9 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
         .def("encrypt", (Message(Message::*)())&Message::encrypt)
-        .def("encrypt", (Message(Message::*)(list))&Message::_encrypt)
-        .def("encrypt", (Message(Message::*)(list,int))&Message::_encrypt)
-        .def("encrypt", (Message(Message::*)(list,int,int))&Message::_encrypt,
+        .def("encrypt", (Message(Message::*)(boost::python::list))&Message::_encrypt)
+        .def("encrypt", (Message(Message::*)(boost::python::list,int))&Message::_encrypt)
+        .def("encrypt", (Message(Message::*)(boost::python::list,int,int))&Message::_encrypt,
     "msg2 = msg1.encrypt(extra_keys=[], enc_format='pEp', flags=0)\n"
     "\n"
     "encrypts a p≡p message and returns the encrypted message\n"

@@ -35,7 +35,7 @@ module_pEp = Extension('pEp',
         sources = glob('src/*.cc'),
         include_dirs = [OPTION_PREFIX+'/include', OPTION_BOOST+'/include',],
         library_dirs = [OPTION_PREFIX+'/lib', OPTION_BOOST+'/lib',],
-        libraries = ['pEpEngine', 'boost_python-mt', 'boost_locale-mt',],
+        libraries = ['pEpEngine', 'boost_python3-mt', 'boost_locale-mt',],
         extra_compile_args = ['-O0', '-UNDEBUG', '-std=c++14',],
     )
 

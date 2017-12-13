@@ -62,8 +62,8 @@ namespace pEp {
         Identity identity_attr(pEp_identity *&ident);
         void identity_attr(pEp_identity *&ident, object value);
 
-        list identitylist_attr(identity_list *&il);
-        void identitylist_attr(identity_list *&il, list value);
+        boost::python::list identitylist_attr(identity_list *&il);
+        void identitylist_attr(identity_list *&il, boost::python::list value);
     }
 }
 

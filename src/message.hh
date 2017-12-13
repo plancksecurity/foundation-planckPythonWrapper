@@ -79,7 +79,7 @@ namespace pEp {
             void longmsg_formatted(string value) { str_attr(_msg->longmsg_formatted, value); }
 
             boost::python::tuple attachments();
-            void attachments(list value);
+            void attachments(boost::python::list value);
 
             time_t sent() { return timestamp_attr(_msg->sent); }
             void sent(time_t value) { timestamp_attr(_msg->sent, value); }
@@ -90,29 +90,29 @@ namespace pEp {
             Identity from() { return identity_attr(_msg->from); }
             void from(object value) { identity_attr(_msg->from, value); }
 
-            list to() { return identitylist_attr(_msg->to); }
-            void to(list value) { identitylist_attr(_msg->to, value); }
+            boost::python::list to() { return identitylist_attr(_msg->to); }
+            void to(boost::python::list value) { identitylist_attr(_msg->to, value); }
 
             Identity recv_by() { return identity_attr(_msg->recv_by); }
             void recv_by(object value) { identity_attr(_msg->recv_by, value); }
 
-            list cc() { return identitylist_attr(_msg->cc); }
-            void cc(list value) { identitylist_attr(_msg->cc, value); }
+            boost::python::list cc() { return identitylist_attr(_msg->cc); }
+            void cc(boost::python::list value) { identitylist_attr(_msg->cc, value); }
 
-            list bcc() { return identitylist_attr(_msg->bcc); }
-            void bcc(list value) { identitylist_attr(_msg->bcc, value); }
+            boost::python::list bcc() { return identitylist_attr(_msg->bcc); }
+            void bcc(boost::python::list value) { identitylist_attr(_msg->bcc, value); }
 
-            list reply_to() { return identitylist_attr(_msg->reply_to); }
-            void reply_to(list value) { identitylist_attr(_msg->reply_to, value); }
+            boost::python::list reply_to() { return identitylist_attr(_msg->reply_to); }
+            void reply_to(boost::python::list value) { identitylist_attr(_msg->reply_to, value); }
 
-            list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
-            void in_reply_to(list value) { strlist_attr(_msg->in_reply_to, value); }
+            boost::python::list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
+            void in_reply_to(boost::python::list value) { strlist_attr(_msg->in_reply_to, value); }
 
-            list references() { return strlist_attr(_msg->references); }
-            void references(list value) { strlist_attr(_msg->references, value); }
+            boost::python::list references() { return strlist_attr(_msg->references); }
+            void references(boost::python::list value) { strlist_attr(_msg->references, value); }
 
-            list keywords() { return strlist_attr(_msg->keywords); }
-            void keywords(list value) { strlist_attr(_msg->keywords, value); }
+            boost::python::list keywords() { return strlist_attr(_msg->keywords); }
+            void keywords(boost::python::list value) { strlist_attr(_msg->keywords, value); }
 
             string comments() { return str_attr(_msg->comments); }
             void comments(string value) { str_attr(_msg->comments, value); }
@@ -124,7 +124,7 @@ namespace pEp {
             void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
 
             Message encrypt();
-            Message _encrypt(list extra, int enc_format=4, int flags=0);
+            Message _encrypt(boost::python::list extra, int enc_format=4, int flags=0);
 
             boost::python::tuple decrypt();
             int outgoing_rating();
