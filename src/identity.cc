@@ -13,11 +13,15 @@ namespace pEp {
 
         Identity::Identity(string address, string username, string user_id,
                 string fpr, int comm_type, string lang, identity_flags_t flags)
-            : _ident(new_identity(address.c_str(), fpr.c_str(),
-                        user_id.c_str(), username.c_str()), &::free_identity)
+            : _ident(new_identity(address.c_str(), fpr.c_str(), username.c_str(),
+                        user_id.c_str()), &::free_identity)
         {
             if (!_ident)
                 throw bad_alloc();
+            if (username.length() && username.length() < 5) {
+                _ident = nullptr;
+                throw length_error("username must be at least 5 characters");
+            }
             _ident->comm_type = (PEP_comm_type) comm_type;
             _ident->flags = (identity_flags_t) flags;
             this->lang(lang);
@@ -83,6 +87,14 @@ namespace pEp {
             if (!(_ident->username && _ident->username[0]))
                 return _ident->address;
             return string(_ident->username) + " <" + _ident->address + ">";
+        }
+
+        void Identity::username(string value)
+        {
+            if (value.length() && value.length() < 5)
+                throw length_error("username must be at least 5 characters");
+
+            str_attr(_ident->username, value);
         }
 
         void Identity::lang(string value)

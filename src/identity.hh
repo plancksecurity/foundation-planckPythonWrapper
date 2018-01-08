@@ -41,7 +41,7 @@ namespace pEp {
             void user_id(string value) { str_attr(_ident->user_id, value); }
 
             string username() { return str_attr(_ident->username); }
-            void username(string value) { str_attr(_ident->username, value); }
+            void username(string value);
 
             PEP_comm_type comm_type() { return _ident->comm_type; }
             void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
