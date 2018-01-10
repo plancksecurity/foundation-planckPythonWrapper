@@ -149,6 +149,11 @@ namespace pEp {
             update_identity(*this);
         }
 
+        void Identity::myself()
+        {
+            pEp::PythonAdapter::myself(*this);
+        }
+
         Identity identity_attr(pEp_identity *&ident)
         {
             if (!ident)

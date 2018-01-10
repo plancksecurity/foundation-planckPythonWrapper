@@ -59,6 +59,7 @@ namespace pEp {
             Identity deepcopy(dict& memo);
 
             void update();
+            void myself();
         };
 
         Identity identity_attr(pEp_identity *&ident);
