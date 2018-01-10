@@ -119,6 +119,7 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("rating", &pEp::PythonAdapter::Identity::rating, "rating of Identity")
         .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
+        .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
         .def("__copy__", &pEp::PythonAdapter::Identity::copy);
     
     identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";

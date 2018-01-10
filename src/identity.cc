@@ -1,5 +1,6 @@
 #include "identity.hh"
 #include "pEpmodule.hh"
+#include "basic_api.hh"
 #include "message_api.hh"
 #include <typeinfo>
 #include <sstream>
@@ -141,6 +142,11 @@ namespace pEp {
         Identity Identity::deepcopy(dict&)
         {
             return copy();
+        }
+
+        void Identity::update()
+        {
+            update_identity(*this);
         }
 
         Identity identity_attr(pEp_identity *&ident)
