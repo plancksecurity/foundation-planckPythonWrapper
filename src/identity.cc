@@ -1,3 +1,6 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #include "identity.hh"
 #include "pEpmodule.hh"
 #include "basic_api.hh"
@@ -19,10 +22,6 @@ namespace pEp {
         {
             if (!_ident)
                 throw bad_alloc();
-            if (username.length() && username.length() < 5) {
-                _ident = nullptr;
-                throw length_error("username must be at least 5 characters");
-            }
             _ident->comm_type = (PEP_comm_type) comm_type;
             _ident->flags = (identity_flags_t) flags;
             this->lang(lang);
@@ -149,7 +148,22 @@ namespace pEp {
             update_identity(*this);
         }
 
-        void Identity::myself()
+        Myself::Myself(string address, string username, string user_id, string lang)
+            : Identity(address, username, user_id, "", 0, lang)
+
+        {
+            if (!(address.length() && username.length()))
+                throw invalid_argument("address and username must be set");
+            if (lang.length() && lang.length() != 2)
+                throw length_error("lang must be an ISO 639-1 language code or empty");
+
+            // FIXME: should set .me
+            // _ident->me = true;
+            if (user_id.length())
+                throw runtime_error("user_id feature not yet implemented for Myself");
+        }
+
+        void Myself::update()
         {
             pEp::PythonAdapter::myself(*this);
         }

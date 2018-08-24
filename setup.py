@@ -1,49 +1,72 @@
 # -*- coding: utf-8 -*-
 
-import sys
-import os
-from distutils.core import setup, Extension
+# This file is under GNU Affero General Public License 3.0
+# see LICENSE.txt
+
+
+from setuptools import setup, Extension
 from glob import glob
-from distutils.errors import DistutilsOptionError
+from os import environ, uname
+from os.path import dirname, exists, join
+from sys import argv
 
-def option_value(name):
-    for index, option in enumerate(sys.argv):
-        if option == '--' + name:
-            if index+1 >= len(sys.argv):
-                raise DistutilsOptionError(
-                    'The option %s requires a value' % option)
-            value = sys.argv[index+1]
-            sys.argv[index:index+2] = []
-            return value
-        if option.startswith('--' + name + '='):
-            value = option[len(name)+3:]
-            sys.argv[index:index+1] = []
-            return value
-    env_val = os.getenv(name.upper().replace('-', '_'))
-    return env_val
 
-OPTION_PREFIX = option_value("prefix")
-OPTION_BOOST = option_value("boost")
+compile_args = ['-O0', '-g', '-UNDEBUG', '-std=c++14'] \
+        if '--debug' in argv or '-g' in argv else ['-std=c++14']
 
-if OPTION_PREFIX is None :
-    OPTION_PREFIX = os.environ["HOME"]
 
-if OPTION_BOOST is None :
-    OPTION_BOOST = '/opt/local'
+def find(file, pathlist):
+    for path in pathlist:
+        _file = join(path, file)
+        if exists(_file):
+            return dirname(_file)
+    raise FileNotFoundError(file)
+
+
+includes = [
+        join(environ['HOME'], 'include'),
+        '/usr/include',
+        '/usr/local/include',
+        '/opt/local/include',
+        join(environ['HOME'], 'share'),
+        '/usr/share',
+        '/usr/local/share',
+        '/opt/local/share',
+    ]
+
+
+libraries = [
+        join(environ['HOME'], 'lib'),
+        '/usr/lib',
+        '/usr/local/lib',
+        '/opt/local/lib',
+    ]
+
+
+libext = '.dylib' if uname().sysname == 'Darwin' else '.so'
+
+
+search_for_includes = 'pEp', 'boost', 'asn1c/asn_system.h'
+search_for_libraries = 'libpEpengine' + libext, 'libboost_python3-mt' + libext
+
 
 module_pEp = Extension('pEp',
         sources = glob('src/*.cc'),
-        include_dirs = [OPTION_PREFIX+'/include', OPTION_BOOST+'/include',],
-        library_dirs = [OPTION_PREFIX+'/lib', OPTION_BOOST+'/lib',],
         libraries = ['pEpEngine', 'boost_python3-mt', 'boost_locale-mt',],
-        extra_compile_args = ['-O0', '-UNDEBUG', '-std=c++14',],
+        extra_compile_args = compile_args,
+        include_dirs = set( [ find(file, includes) for file in
+            search_for_includes ] ),
+        library_dirs = set( [ find(file, libraries) for file in
+            search_for_libraries ] ),
     )
+
 
 setup(
         name='p≡p Python adapter',
-        version='1.0',
+        version='2.0',
         description='Provides a Python module giving access to p≡p engine',
         author="Volker Birk",
         author_email="vb@pep-project.org",
-        ext_modules=[module_pEp]
+        ext_modules=[module_pEp,],
     )
+

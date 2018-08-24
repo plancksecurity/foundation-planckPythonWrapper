@@ -1,7 +1,9 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #include "sync_mixin.hh"
-#include <pEp/sync.h>
 #ifndef NDEBUG
-#include <pEp/sync_fsm.h>
+#include <pEp/KeySync_fsm.h>
 #endif
 #include <assert.h>
 

@@ -1,3 +1,6 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #include "pEpmodule.hh"
 #include <boost/locale.hpp>
 #include <string>
@@ -10,13 +13,13 @@
 #include <mutex>
 
 #include <pEp/message_api.h>
-#include <pEp/sync.h>
+#include <pEp/sync_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        static const char *version_string = "p≡p Python adapter version 0.1";
+        static const char *version_string = "p≡p Python adapter version 0.2";
         static string about()
         {
             string version = string(version_string) + "\np≡p version "
@@ -120,7 +123,6 @@ BOOST_PYTHON_MODULE(pEp)
         .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
         .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
-        .def("myself", &pEp::PythonAdapter::Identity::myself, "mark as own Identity")
         .def("__copy__", &pEp::PythonAdapter::Identity::copy);
     
     identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";

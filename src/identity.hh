@@ -1,3 +1,6 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #pragma once
 
 #include <boost/python.hpp>
@@ -15,6 +18,7 @@ namespace pEp {
         // Identity is owning a pEp_identity
 
         class Identity {
+        protected:
             shared_ptr< pEp_identity > _ident;
 
         public:
@@ -24,7 +28,7 @@ namespace pEp {
 
             Identity(const Identity& second);
             Identity(pEp_identity *ident);
-            ~Identity();
+            virtual ~Identity();
             operator pEp_identity *();
             operator const pEp_identity *() const;
 
@@ -58,8 +62,13 @@ namespace pEp {
             Identity copy();
             Identity deepcopy(dict& memo);
 
-            void update();
-            void myself();
+            virtual void update();
+        };
+
+        class Myself : public Identity {
+        public:
+            Myself(string address, string username, string user_id="", string lang="");
+            virtual void update();
         };
 
         Identity identity_attr(pEp_identity *&ident);

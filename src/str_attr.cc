@@ -1,3 +1,6 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #include <boost/python.hpp>
 #include <boost/locale.hpp>
 #include "str_attr.hh"

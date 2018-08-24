@@ -1,8 +1,11 @@
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
 #pragma once
 
 #include "pEpmodule.hh"
 #include <setjmp.h> 
-#include <pEp/sync.h>
+#include <pEp/sync_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
