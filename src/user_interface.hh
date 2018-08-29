@@ -28,7 +28,7 @@ namespace pEp {
             protected:
                 static PEP_STATUS _notifyHandshake(void *obj, pEp_identity *me,
                         pEp_identity *partner, sync_handshake_signal signal);
-                static SYNC_EVENT retrieve_next_sync_event( void *management);
+                static SYNC_EVENT retrieve_next_sync_event(void *management, time_t threshold);
         };
 
         class UserInterface_callback : public UserInterface {

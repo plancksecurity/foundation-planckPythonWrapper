@@ -49,10 +49,19 @@ namespace pEp {
             _throw_status(status);
         }
 
-        SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management)
+        SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management, time_t threshold)
         {
-            while (adapter.queue().empty())
+            time_t started = time(nullptr);
+            while (adapter.queue().empty()) {
+                int i = 0;
+                ++i;
+                if (i > 10) {
+                    if (time(nullptr) > started + threshold)
+                        break;
+                    i = 0;
+                }
                 nanosleep((const struct timespec[]){{0, 100000000L}}, NULL);
+            }
             return adapter.queue().pop_front();
         }
 
