@@ -118,7 +118,7 @@ namespace pEp {
                 throw invalid_argument("address must be given");
 
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = ::identity_rating(session, _ident.get(), &rating);
+            PEP_STATUS status = ::identity_rating(adapter.session(), _ident.get(), &rating);
             _throw_status(status);
 
             return (int) rating;
@@ -187,7 +187,7 @@ namespace pEp {
             pEp_identity *_dup = ::identity_dup(_ident);
             if (!_dup)
                 throw bad_alloc();
-            PEP_STATUS status = update_identity(session, _dup);
+            PEP_STATUS status = update_identity(adapter.session(), _dup);
             _throw_status(status);
             free_identity(ident);
             ident = _dup;
@@ -225,7 +225,7 @@ namespace pEp {
                     free_identity_list(_il);
                     throw bad_alloc();
                 }
-                PEP_STATUS status = update_identity(session, _dup);
+                PEP_STATUS status = update_identity(adapter.session(), _dup);
                 if (status != PEP_STATUS_OK) {
                     free_identity_list(_il);
                     _throw_status(status);

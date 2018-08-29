@@ -313,15 +313,15 @@ namespace pEp {
             if (!(_msg && _msg->from))
                 throw invalid_argument("from must be a valid Identity()");
             if (_msg->dir == PEP_dir_outgoing)
-                myself(session, _msg->from);
+                myself(adapter.session(), _msg->from);
             else
-                update_identity(session, _msg->from);
+                update_identity(adapter.session(), _msg->from);
             if (!(_msg->dir == PEP_dir_outgoing && _msg->from->user_id &&
                         strcmp(_msg->from->user_id, PEP_OWN_USERID) == 0))
                 throw invalid_argument("Message.dir must be outgoing");
 
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = outgoing_message_rating(session, *this, &rating);
+            PEP_STATUS status = outgoing_message_rating(adapter.session(), *this, &rating);
             _throw_status(status);
 
             return (int) rating;
@@ -347,14 +347,14 @@ namespace pEp {
 
         Message outgoing_message(Identity me)
         {
-            ::myself(session, me);
+            ::myself(adapter.session(), me);
             auto m = Message(PEP_dir_outgoing, &me);
             return m;
         }
 
         static object update(Identity ident)
         {
-            update_identity(session, ident);
+            update_identity(adapter.session(), ident);
             return object(ident);
         }
 

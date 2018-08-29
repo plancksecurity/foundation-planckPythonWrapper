@@ -4,7 +4,8 @@
 #include "message_api.hh"
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
-#include <pEp/sync.h>
+#include <pEp/sync_api.h>
+#include <pEp/Sync_codec.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -23,7 +24,7 @@ namespace pEp {
             message *_dst = NULL;
 
             message *_src = src;
-            PEP_STATUS status = encrypt_message(session, _src, _extra, &_dst,
+            PEP_STATUS status = encrypt_message(adapter.session(), _src, _extra, &_dst,
                     _enc_format, _flags);
             free_stringlist(_extra);
             _throw_status(status);
@@ -42,7 +43,7 @@ namespace pEp {
             PEP_decrypt_flags_t _flags = 0;
             message *_src = src;
 
-            PEP_STATUS status = decrypt_message(session, _src, &_dst, &_keylist,
+            PEP_STATUS status = decrypt_message(adapter.session(), _src, &_dst, &_keylist,
                     &_rating, &_flags);
             _throw_status(status);
 
@@ -70,7 +71,7 @@ namespace pEp {
 
         void _config_keep_sync_msg(bool enabled)
         {
-            ::config_keep_sync_msg(session, enabled);
+            ::config_keep_sync_msg(adapter.session(), enabled);
         }
 
         boost::python::tuple sync_decode(object buffer)
@@ -81,7 +82,7 @@ namespace pEp {
                 throw invalid_argument("need a contiguous buffer to read");
 
             char *dst = NULL;
-            PEP_STATUS status = decode_sync_msg((char *) src.buf, src.len, &dst);
+            PEP_STATUS status = PER_to_XER_Sync_msg((char *) src.buf, src.len, &dst);
             PyBuffer_Release(&src);
             _throw_status(status);
 
@@ -94,7 +95,7 @@ namespace pEp {
         {
             char *data = NULL;
             size_t size = 0;
-            PEP_STATUS status = encode_sync_msg(text.c_str(), &data, &size);
+            PEP_STATUS status = XER_to_PER_Sync_msg(text.c_str(), &data, &size);
             _throw_status(status);
 
             PyObject *ba = PyBytes_FromStringAndSize(data, size);

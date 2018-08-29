@@ -16,7 +16,7 @@ namespace pEp {
                 throw runtime_error("update_identity: '" PEP_OWN_USERID
                         "' may only be used for own identities");
 
-            PEP_STATUS status = update_identity(session, ident);
+            PEP_STATUS status = update_identity(adapter.session(), ident);
             _throw_status(status);
         }
 
@@ -31,7 +31,7 @@ namespace pEp {
 
             ident.user_id(PEP_OWN_USERID);
 
-            PEP_STATUS status = myself(session, ident);
+            PEP_STATUS status = myself(adapter.session(), ident);
             _throw_status(status);
         }
 
@@ -45,7 +45,7 @@ namespace pEp {
 
             char *words = NULL;
             size_t size = 0;
-            PEP_STATUS status =  get_trustwords(session, me, partner,
+            PEP_STATUS status =  get_trustwords(adapter.session(), me, partner,
                                         lang.c_str(),&words, &size, full);
             _throw_status(status);
             return words;
@@ -58,7 +58,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id must be provided");
 
-            PEP_STATUS status = trust_personal_key(session, ident);
+            PEP_STATUS status = trust_personal_key(adapter.session(), ident);
             _throw_status(status);
         }
 
@@ -69,7 +69,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = set_identity_flags(session, ident, flags);
+            PEP_STATUS status = set_identity_flags(adapter.session(), ident, flags);
             _throw_status(status);
         }
 
@@ -80,7 +80,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = unset_identity_flags(session, ident, flags);
+            PEP_STATUS status = unset_identity_flags(adapter.session(), ident, flags);
             _throw_status(status);
         }
     }

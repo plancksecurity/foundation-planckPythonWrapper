@@ -8,7 +8,7 @@
 #include <iomanip>
 #include "basic_api.hh"
 #include "message_api.hh"
-#include "sync_mixin.hh"
+#include "user_interface.hh"
 
 #include <mutex>
 
@@ -19,6 +19,8 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
+        Adapter adapter;
+
         static const char *version_string = "p≡p Python adapter version 0.2";
         static string about()
         {
@@ -27,14 +29,9 @@ namespace pEp {
             return version;
         }
 
-        std::mutex init_mutex;
-        
-        PEP_SESSION session = NULL;
-
         static void free_module(void *)
         {
-            std::lock_guard<std::mutex> lock(init_mutex);
-            release(session);
+
         }
 
         void _throw_status(PEP_STATUS status)
@@ -365,9 +362,9 @@ BOOST_PYTHON_MODULE(pEp)
         .value("SYNC_NOTIFY_ACCEPTED_DEVICE_MOVED" , SYNC_NOTIFY_ACCEPTED_DEVICE_MOVED)
         .value("SYNC_NOTIFY_OVERTAKEN"             , SYNC_NOTIFY_OVERTAKEN);
 
-    auto sync_mixin_class = class_<SyncMixIn, SyncMixIn_callback, boost::noncopyable>(
-            "SyncMixIn",
-    "class MySyncHandler(SyncMixIn):\n"
+    auto sync_mixin_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
+            "UserInterface",
+    "class MySyncHandler(UserInterface):\n"
     "   def messageToSend(self, msg):\n"
     "       ...\n"
     "\n"
@@ -383,51 +380,27 @@ BOOST_PYTHON_MODULE(pEp)
     "p≡p Sync MixIn\n"
     "\n"
     "write a handler class to enable p≡p sync protocol\n")
-        .def("messageToSend", &SyncMixIn::messageToSend,
+        .def("messageToSend", &Adapter::messageToSend,
     "messageToSend(self, msg)"
     "\n"
     "   msg             p≡p message to send\n"
     "\n"
     "overwrite this method with code actually sending msg")
-        .def("notifyHandshake", &SyncMixIn::notifyHandshake,
+        .def("notifyHandshake", &UserInterface::notifyHandshake,
     "notifyHandshake(self, me, partner)\n"
     "\n"
     "   me              own identity\n"
     "   partner         identity of communication partner\n"
     "\n"
     "overwrite this method with code showing a trustwords dialog")
-#ifndef NDEBUG
-        .def("inject", &SyncMixIn::_inject,
-    "inject(self, event, partner, extra)\n"
-    "\n"
-    "   event           number of event to inject\n"
-    "   partner         identity of communication partner\n"
-    "   extra           optional extra data or None\n"
-    "\n"
-    "inject an event into the sync state machine (for debugging purposes only)")
-#endif
-        .def("deliverHandshakeResult", &SyncMixIn::deliverHandshakeResult,
+        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
     "deliverHandshakeResult(self, partber, result)\n"
     "\n"
     "   partner         identity of communication partner\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
     "\n"
     "call to deliver the handshake result")
-        .def("setTimeout", &SyncMixIn::setTimeout,
-    "setTimeout(self, timeout)\n"
-    "\n"
-    "   timeout         timeout to wait for\n"
-    "\n"
-    "overwrite this method with code setting timeout timer")
-        .def("cancelTimeout", &SyncMixIn::cancelTimeout,
-    "cancelTimeout(self)\n"
-    "\n"
-    "overwrite this method with code canceling timeout timer")
-        .def("onTimeout", &SyncMixIn::onTimeout,
-    "onTimeout(self)\n"
-    "\n"
-    "call this method when timeout occurs");
-
+    ;
     // codecs
 
     call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(sync_search));
@@ -436,14 +409,4 @@ BOOST_PYTHON_MODULE(pEp)
 
     PyModuleDef * _def = PyModule_GetDef(scope().ptr());
     _def->m_free = free_module;
-
-    std::lock_guard<std::mutex> lock(init_mutex);
-    PEP_STATUS status = ::init(&session);
-    if (status != PEP_STATUS_OK) {
-        stringstream ss;
-        ss << "init session failed with error " << status;
-        string s;
-        ss >> s;
-        throw runtime_error(s);
-    }
 }

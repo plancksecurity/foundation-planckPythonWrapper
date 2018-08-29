@@ -54,10 +54,10 @@ module_pEp = Extension('pEp',
         sources = glob('src/*.cc'),
         libraries = ['pEpEngine', 'boost_python3-mt', 'boost_locale-mt',],
         extra_compile_args = compile_args,
-        include_dirs = set( [ find(file, includes) for file in
-            search_for_includes ] ),
-        library_dirs = set( [ find(file, libraries) for file in
-            search_for_libraries ] ),
+        include_dirs = list(set( [ find(file, includes) for file in
+            search_for_includes ] )),
+        library_dirs = list(set( [ find(file, libraries) for file in
+            search_for_libraries ] )),
     )
 
 

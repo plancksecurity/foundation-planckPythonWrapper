@@ -7,11 +7,12 @@
 #include <boost/lexical_cast.hpp>
 #include <pEp/message.h>
 #include <string>
-#include "pEpmodule.hh"
+#include "str_attr.hh"
+#include "identity.hh"
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace utility;
+        using namespace std;
         using namespace boost::python;
         using boost::lexical_cast;
 
