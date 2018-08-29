@@ -1,7 +1,7 @@
 """
 >>> from pEp import *
->>> m = outgoing_message(Identity("vb@dingens.org", "Volker Birk"))
->>> m.to = [Identity("trischa@dingens.org", "Patricia Bednar")]
+>>> m = outgoing_message(Identity("vb@dingens.org", "23", "Volker Birk"))
+>>> m.to = [Identity("trischa@dingens.org", "42", "Patricia Bednar")]
 >>> m.shortmsg = "Hello"
 >>> m.longmsg = "Something\\n"
 >>> print(str(m).replace('\\r', ''))

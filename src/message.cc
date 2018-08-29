@@ -131,6 +131,7 @@ namespace pEp {
         {
             if (!_msg)
                 throw bad_alloc();
+
             if (from) {
                 _msg->from = ::identity_dup(*from);
                 if (!_msg->from)
@@ -147,14 +148,14 @@ namespace pEp {
                     mimetext.size(), &_cpy);
             switch (status) {
                 case PEP_STATUS_OK:
-                    if (_cpy) {
+                    if (_cpy)
                         _cpy->dir = PEP_dir_outgoing;
-                        _msg = shared_ptr< message >(_cpy);
-                        return;
-                    }
-                    _cpy = new_message(PEP_dir_outgoing);
+                    else
+                        _cpy = new_message(PEP_dir_outgoing);
+
                     if (!_cpy)
                         throw bad_alloc();
+
                     _msg = shared_ptr< message >(_cpy);
                     break;
                     

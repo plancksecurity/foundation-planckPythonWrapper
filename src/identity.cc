@@ -42,7 +42,7 @@ namespace pEp {
         Identity::~Identity()
         {
 
-        }
+       }
 
         Identity::operator pEp_identity *()
         {
