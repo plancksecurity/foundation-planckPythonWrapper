@@ -28,7 +28,11 @@ namespace pEp {
                 };
 
                 PEP_SESSION session(session_action action = none);
-                static ::utility::locked_queue< SYNC_EVENT > q;
+                static ::utility::locked_queue< SYNC_EVENT >& queue()
+                {
+                    static ::utility::locked_queue< SYNC_EVENT > q;
+                    return q;
+                }
 
             protected:
                 static PyObject *ui_object(PyObject *value = nullptr);
@@ -36,11 +40,11 @@ namespace pEp {
                 static int _inject_sync_event(SYNC_EVENT ev, void *management);
 
             private:
-                static mutex mtx;
-
-                // non copyable
-                Adapter(const Adapter&) = delete;
-                Adapter& operator= (const Adapter&) = delete;
+                static mutex& mtx()
+                {
+                    static mutex m;
+                    return m;
+                }
 
             friend class UserInterface_callback;
         };

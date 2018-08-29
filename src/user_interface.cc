@@ -51,9 +51,9 @@ namespace pEp {
 
         SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management)
         {
-            while (adapter.q.empty())
+            while (adapter.queue().empty())
                 nanosleep((const struct timespec[]){{0, 100000000L}}, NULL);
-            return adapter.q.pop_front();
+            return adapter.queue().pop_front();
         }
 
         void UserInterface_callback::notifyHandshake(

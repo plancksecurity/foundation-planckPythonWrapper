@@ -62,9 +62,9 @@ module_pEp = Extension('pEp',
 
 
 setup(
-        name='p≡p Python adapter',
+        name='pEp',
         version='2.0',
-        description='Provides a Python module giving access to p≡p engine',
+        description='p≡p for Python',
         author="Volker Birk",
         author_email="vb@pep-project.org",
         ext_modules=[module_pEp,],

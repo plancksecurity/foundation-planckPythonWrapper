@@ -1,8 +1,9 @@
 syntax: glob
 
 *.swp
-*.o
-*.so
 ws
 tags
 .DS_Store
+pEp.egg-info
+dist
+build

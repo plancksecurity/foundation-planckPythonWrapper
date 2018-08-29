@@ -9,6 +9,7 @@
 #include "basic_api.hh"
 #include "message_api.hh"
 #include "user_interface.hh"
+#include "adapter.hh"
 
 #include <mutex>
 

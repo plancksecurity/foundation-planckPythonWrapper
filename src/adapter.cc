@@ -18,7 +18,7 @@ namespace pEp {
 
         PEP_SESSION Adapter::session(session_action action)
         {
-            lock_guard<mutex> lock(mtx);
+            lock_guard<mutex> lock(mtx());
 
             thread_local static PEP_SESSION _session = nullptr;
             thread_local int booked = 0;
@@ -56,7 +56,7 @@ namespace pEp {
 
         PyObject *Adapter::ui_object(PyObject *value)
         {
-            lock_guard<mutex> lock(mtx);
+            lock_guard<mutex> lock(mtx());
             static PyObject *obj = nullptr;
             if (value)
                 obj = value;
@@ -80,7 +80,7 @@ namespace pEp {
             }
 
             try {
-                q.push_front(ev);
+                queue().push_front(ev);
             }
             catch (exception&) {
                 return 1;
