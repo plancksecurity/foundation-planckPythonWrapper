@@ -29,11 +29,6 @@ namespace pEp {
             return version;
         }
 
-        static void free_module(void *)
-        {
-
-        }
-
         void _throw_status(PEP_STATUS status)
         {
             if (status == PEP_STATUS_OK)
@@ -348,7 +343,7 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "configure if sync messages are being kept or automatically removed (default)");
 
-    // key sync API
+    // Sync API
 
     enum_<sync_handshake_signal>("sync_handshake_signal")
         .value("SYNC_NOTIFY_UNDEFINED"             , SYNC_NOTIFY_UNDEFINED)
@@ -362,51 +357,50 @@ BOOST_PYTHON_MODULE(pEp)
         .value("SYNC_NOTIFY_ACCEPTED_DEVICE_MOVED" , SYNC_NOTIFY_ACCEPTED_DEVICE_MOVED)
         .value("SYNC_NOTIFY_OVERTAKEN"             , SYNC_NOTIFY_OVERTAKEN);
 
-    auto sync_mixin_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
+    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
             "UserInterface",
-    "class MySyncHandler(UserInterface):\n"
-    "   def messageToSend(self, msg):\n"
-    "       ...\n"
-    "\n"
+    "class MyUserInterface(UserInterface):\n"
     "   def notifyHandshake(self, me, partner):\n"
     "       ...\n"
     "\n"
-    "   def setTimeout(self, timeout):\n"
-    "       ...\n"
-    "\n"
-    "   def cancelTimeout(self):\n"
-    "       ...\n"
-    "\n"
-    "p≡p Sync MixIn\n"
-    "\n"
-    "write a handler class to enable p≡p sync protocol\n")
-        .def("messageToSend", &Adapter::messageToSend,
-    "messageToSend(self, msg)"
-    "\n"
-    "   msg             p≡p message to send\n"
-    "\n"
-    "overwrite this method with code actually sending msg")
+    "p≡p User Interface class\n"
+    "To be used as a mixin\n"
+    )
         .def("notifyHandshake", &UserInterface::notifyHandshake,
     "notifyHandshake(self, me, partner)\n"
     "\n"
     "   me              own identity\n"
     "   partner         identity of communication partner\n"
     "\n"
-    "overwrite this method with code showing a trustwords dialog")
+    "overwrite this method with an implementation of a handshake dialog")
         .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
     "deliverHandshakeResult(self, partber, result)\n"
     "\n"
     "   partner         identity of communication partner\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
     "\n"
-    "call to deliver the handshake result")
+    "call to deliver the handshake result of the handshake dialog")
     ;
+
+    auto adapter_class = class_<pEp::PythonAdapter::Adapter, pEp::PythonAdapter::Adapter_callback, boost::noncopyable>(
+            "Adapter",
+    "class MyAdapter(Adapter):\n"
+    "   def messageToSend(self, Message msg):\n"
+    "       ...\n"
+    "\n"
+    "p≡p Adapter class\n"
+    "To be used as a mixin\n"
+    )
+        .def("messageToSend", &pEp::PythonAdapter::Adapter::messageToSend,
+    "messageToSend(self, msg):\n"
+    "\n"
+    "   msg             message, which has to be send out\n"
+    "\n"
+    "overwrite this method with an implementation, which is sending the message\n"
+    );
+
     // codecs
 
     call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(sync_search));
-
-    // init() and release()
-
-    PyModuleDef * _def = PyModule_GetDef(scope().ptr());
-    _def->m_free = free_module;
 }
+
