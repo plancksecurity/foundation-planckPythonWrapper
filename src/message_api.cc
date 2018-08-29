@@ -2,6 +2,7 @@
 // see LICENSE.txt
 
 #include "message_api.hh"
+#include "basic_api.hh"
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
@@ -17,6 +18,9 @@ namespace pEp {
                 throw invalid_argument("encrypt_message: src.from_.address empty");
             if (_from.username() == "")
                 throw invalid_argument("encrypt_message: src.from_.username empty");
+
+            if (_from.user_id() == "")
+                src.from().user_id(_from.address());
 
             stringlist_t *_extra = to_stringlist(extra);
             PEP_enc_format _enc_format = (PEP_enc_format) enc_format;
@@ -55,13 +59,9 @@ namespace pEp {
 
             int rating = (int) _rating;
             int flags = (int) _flags;
-            string sync_status = flags & PEP_decrypt_flag_ignore ?
-                                    "MESSAGE_IGNORE" :
-                                    flags & PEP_decrypt_flag_consume ?
-                                        "MESSAGE_CONSUME" : "";
 
             Message dst = _dst ? Message(_dst) : Message(src);
-            return boost::python::make_tuple(dst, keylist, rating, sync_status, flags);
+            return boost::python::make_tuple(dst, keylist, rating, flags);
         }
 
         int _color(int rating)

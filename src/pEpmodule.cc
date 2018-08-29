@@ -258,8 +258,7 @@ BOOST_PYTHON_MODULE(pEp)
     "   msg             the decrypted p≡p message\n"
     "   keys            a list of keys being used\n"
     "   rating          the rating of the message as integer\n"
-    "   consumed        boolean denoting message is consumed by sync\n"
-    "   flags           flags set while decryption (reserved)\n"
+    "   flags           flags set while decryption\n"
                 )
         .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
         .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have")

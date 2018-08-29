@@ -26,10 +26,9 @@ namespace pEp {
                 throw invalid_argument("address needed");
             if (ident.username() == "")
                 throw invalid_argument("username needed");
-            if (!(ident.user_id() == "" || ident.user_id() == PEP_OWN_USERID))
-                throw invalid_argument("user_id must be empty or '" PEP_OWN_USERID "'");
 
-            ident.user_id(PEP_OWN_USERID);
+            if (ident.user_id() == "")
+                ident.user_id(ident.address());
 
             PEP_STATUS status = myself(adapter.session(), ident);
             _throw_status(status);
