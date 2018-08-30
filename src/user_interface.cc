@@ -52,16 +52,24 @@ namespace pEp {
         SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management, time_t threshold)
         {
             time_t started = time(nullptr);
+            bool timeout = false;
+
             while (adapter.queue().empty()) {
                 int i = 0;
                 ++i;
                 if (i > 10) {
-                    if (time(nullptr) > started + threshold)
+                    if (time(nullptr) > started + threshold) {
+                        timeout = true;
                         break;
+                    }
                     i = 0;
                 }
                 nanosleep((const struct timespec[]){{0, 100000000L}}, NULL);
             }
+
+            if (timeout)
+                return new_sync_timeout_event();
+
             return adapter.queue().pop_front();
         }
 
