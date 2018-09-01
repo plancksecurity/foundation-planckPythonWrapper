@@ -1,21 +1,31 @@
 """
->>> from pEp import *
->>> m = outgoing_message(Identity("vb@dingens.org", "23", "Volker Birk"))
->>> m.to = [Identity("trischa@dingens.org", "42", "Patricia Bednar")]
->>> m.shortmsg = "Hello"
->>> m.longmsg = "Something\\n"
+>>> import pEp
+>>> me = pEp.Identity("alice.smith@peptest.ch", "23", "Alice Smith")
+>>> me.username
+'Alice Smith'
+>>> print(me)
+Alice Smith <alice.smith@peptest.ch>
+>>> you = pEp.Identity("bob.bourne@peptest.ch", "42", "Bob Bourne")
+>>> print(you)
+Bob Bourne <bob.bourne@peptest.ch>
+>>> m = pEp.outgoing_message(me)
+>>> m.to = [you]
+>>> m.shortmsg = "let's meet next week"
+>>> m.longmsg = "Please call me back"
 >>> print(str(m).replace('\\r', ''))
-From: Volker Birk <vb@dingens.org>
-To: Patricia Bednar <trischa@dingens.org>
-Subject: Hello
+From: Alice Smith <alice.smith@peptest.ch>
+To: Bob Bourne <bob.bourne@peptest.ch>
+Subject: let's meet next week
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline; filename="msg.txt"
 <BLANKLINE>
-Something
-<BLANKLINE>
->>>
+Please call me back
+>>> m2 = m.encrypt()
+>>> m3, keys, rating, flags = m2.decrypt()
+>>> rating
+6
 """
 
 if __name__ == "__main__":

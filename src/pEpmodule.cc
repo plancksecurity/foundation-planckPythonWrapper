@@ -251,7 +251,7 @@ BOOST_PYTHON_MODULE(pEp)
     "   flags           1 is force encryption\n"
                 )
         .def("decrypt", &Message::decrypt,
-    "msg2, keys, rating, consumed, flags = msg1.decrypt()\n"
+    "msg2, keys, rating, flags = msg1.decrypt()\n"
     "\n"
     "decrypts a p≡p message and returns a tuple with data\n"
     "\n"
