@@ -20,7 +20,7 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        Adapter adapter;
+        Adapter adapter(true);
 
         static const char *version_string = "p≡p Python adapter version 0.2";
         static string about()

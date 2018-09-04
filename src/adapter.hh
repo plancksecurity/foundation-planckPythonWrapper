@@ -13,8 +13,10 @@ namespace pEp {
         using Message = pEp::PythonAdapter::Message;
 
         class Adapter {
+                bool flag_unregister;
+
             public:
-                Adapter();
+                Adapter(bool unregister_this = false);
                 virtual ~Adapter();
 
                 virtual void messageToSend(Message msg) {
