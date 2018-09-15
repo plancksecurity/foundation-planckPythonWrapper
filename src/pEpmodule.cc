@@ -21,6 +21,7 @@ namespace pEp {
         using namespace std;
 
         Adapter adapter(true);
+        scope *_scope = NULL;
 
         static const char *version_string = "p≡p Python adapter version 0.2";
         static string about()
@@ -45,6 +46,24 @@ namespace pEp {
             build << setfill('0') << "p≡p 0x" << setw(4) << hex << status;
             throw runtime_error(build.str());
         }
+
+        PEP_STATUS _messageToSend(::message *msg)
+        {
+            if (!_scope)
+                return PEP_SEND_FUNCTION_NOT_REGISTERED;
+
+            try {
+                object m = _scope->attr("messageToSend");
+                call< void >(m.ptr(), Message(msg));
+            }
+            catch (exception& e) { }
+
+            return PEP_STATUS_OK;
+        }
+
+        void messageToSend(Message msg) {
+            throw runtime_error("implement pEp.messageToSend(msg)");
+        }
     }
 }
 
@@ -58,6 +77,7 @@ BOOST_PYTHON_MODULE(pEp)
 
     generator gen;
     std::locale::global(gen(""));
+    _scope = new scope();
 
     scope().attr("about") = about();
     
@@ -343,6 +363,14 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "configure if sync messages are being kept or automatically removed (default)");
 
+    // messageToSend()
+
+    def("messageToSend", &pEp::PythonAdapter::messageToSend,
+    "messageToSend(msg)\n"
+    "\n"
+    "override pEp.messageToSend(msg) with your own implementation\n"
+    "this callback is being called when a p≡p management message needs to be sent");
+
     // Sync API
 
     enum_<sync_handshake_signal>("sync_handshake_signal")
@@ -381,23 +409,6 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "call to deliver the handshake result of the handshake dialog")
     ;
-
-    auto adapter_class = class_<pEp::PythonAdapter::Adapter, pEp::PythonAdapter::Adapter_callback, boost::noncopyable>(
-            "Adapter",
-    "class MyAdapter(Adapter):\n"
-    "   def messageToSend(self, Message msg):\n"
-    "       ...\n"
-    "\n"
-    "p≡p Adapter class\n"
-    "To be used as a mixin\n"
-    )
-        .def("messageToSend", &pEp::PythonAdapter::Adapter::messageToSend,
-    "messageToSend(self, msg):\n"
-    "\n"
-    "   msg             message, which has to be send out\n"
-    "\n"
-    "overwrite this method with an implementation, which is sending the message\n"
-    );
 
     // codecs
 

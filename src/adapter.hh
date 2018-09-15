@@ -19,10 +19,6 @@ namespace pEp {
                 Adapter(bool unregister_this = false);
                 virtual ~Adapter();
 
-                virtual void messageToSend(Message msg) {
-                    throw runtime_error("override this method");
-                }
-
                 enum session_action {
                     none = 0,
                     init,
@@ -38,7 +34,6 @@ namespace pEp {
 
             protected:
                 static PyObject *ui_object(PyObject *value = nullptr);
-                static PEP_STATUS _messageToSend(struct _message *msg);
                 static int _inject_sync_event(SYNC_EVENT ev, void *management);
 
             private:
@@ -49,19 +44,6 @@ namespace pEp {
                 }
 
             friend class UserInterface_callback;
-        };
-
-        class Adapter_callback : public Adapter {
-            PyObject *_self;
-            public:
-                Adapter_callback(PyObject *self) : _self(self) { }
-                ~Adapter_callback() { }
-
-                void messageToSend(Message msg);
-
-                // non copyable
-                Adapter_callback(const Adapter_callback&) = delete;
-                Adapter_callback& operator= (const Adapter_callback&) = delete;
         };
     }
 }

@@ -70,15 +70,6 @@ namespace pEp {
             return obj;
         }
 
-        PEP_STATUS Adapter::_messageToSend(struct _message *msg)
-        {
-            if (!msg)
-                return PEP_ILLEGAL_VALUE;
-
-            adapter.messageToSend(Message(msg));
-            return PEP_STATUS_OK;
-        }
-
         int Adapter::_inject_sync_event(SYNC_EVENT ev, void *management)
         {
             if (is_sync_thread(adapter.session())) {
@@ -93,10 +84,6 @@ namespace pEp {
                 return 1;
             }
             return 0;
-        }
-
-        void Adapter_callback::messageToSend(Message msg) {
-            call_method< void >(_self, "messageToSend", msg);
         }
     }
 }
