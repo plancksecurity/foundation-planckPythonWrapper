@@ -25,7 +25,7 @@ Please call me back
 >>> m2 = m.encrypt()
 >>> m3, keys, rating, flags = m2.decrypt()
 >>> rating
-6
+3
 """
 
 if __name__ == "__main__":

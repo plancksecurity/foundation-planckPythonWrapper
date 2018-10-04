@@ -6,7 +6,7 @@
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
-#include <pEp/Sync_codec.h>
+#include <pEp/sync_codec.h>
 
 namespace pEp {
     namespace PythonAdapter {

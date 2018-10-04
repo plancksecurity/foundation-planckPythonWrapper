@@ -15,12 +15,6 @@ namespace pEp {
         Adapter::~Adapter()
         {
             session(release);
-            if (flag_unregister) {
-                while (!queue().empty()) {
-                    SYNC_EVENT ev = queue().pop_front();
-                    free_Sync_event(ev);
-                }
-            }
         }
 
         PEP_SESSION Adapter::session(session_action action)
