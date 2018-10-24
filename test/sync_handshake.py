@@ -13,6 +13,7 @@ def messageToSend(msg):
     # this is assuming that msg is unencrypted; only true for beacons
     print("<!-- " + str(msg.from_) + " -->\n" + msg.attachments[0].decode())
 
+
 pEp.messageToSend = messageToSend
 
 
