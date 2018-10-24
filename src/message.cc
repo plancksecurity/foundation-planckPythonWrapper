@@ -311,18 +311,19 @@ namespace pEp {
 
         int Message::outgoing_rating()
         {
-            if (!(_msg && _msg->from))
-                throw invalid_argument("from must be a valid Identity()");
-            if (_msg->dir == PEP_dir_outgoing)
-                myself(adapter.session(), _msg->from);
-            else
-                update_identity(adapter.session(), _msg->from);
-            if (!(_msg->dir == PEP_dir_outgoing && _msg->from->user_id &&
-                        strcmp(_msg->from->user_id, PEP_OWN_USERID) == 0))
+            if (_msg->dir != PEP_dir_outgoing)
                 throw invalid_argument("Message.dir must be outgoing");
 
+            if (from().address() == "")
+                throw invalid_argument("address needed");
+            if (from().username() == "")
+                throw invalid_argument("username needed");
+            
+            PEP_STATUS status = myself(adapter.session(), _msg->from);
+            _throw_status(status);
+
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = outgoing_message_rating(adapter.session(), *this, &rating);
+            status = outgoing_message_rating(adapter.session(), *this, &rating);
             _throw_status(status);
 
             return (int) rating;
