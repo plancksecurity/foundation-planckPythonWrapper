@@ -10,9 +10,10 @@
 namespace pEp {
     namespace PythonAdapter {
         class UserInterface {
+                static UserInterface *_ui;
             public:
-                UserInterface() { }
-                virtual ~UserInterface() { }
+                UserInterface();
+                virtual ~UserInterface();
 
                 virtual void notifyHandshake(
                     pEp::PythonAdapter::Identity me,
@@ -26,14 +27,13 @@ namespace pEp {
                     pEp::PythonAdapter::Identity partner, int result);
 
             protected:
-                static PEP_STATUS _notifyHandshake(void *obj, pEp_identity *me,
+                static PEP_STATUS _notifyHandshake(pEp_identity *me,
                         pEp_identity *partner, sync_handshake_signal signal);
                 static SYNC_EVENT retrieve_next_sync_event(void *management, time_t threshold);
         };
 
         class UserInterface_callback : public UserInterface {
-            PyObject *_self;
-
+                PyObject *_self;
             public:
                 UserInterface_callback(PyObject *self);
                 ~UserInterface_callback();

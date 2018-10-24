@@ -7,8 +7,22 @@
 
 namespace pEp {
     namespace PythonAdapter {
+        UserInterface *UserInterface::_ui = nullptr;
+        
+        UserInterface::UserInterface()
+        {
+            if (_ui)
+                throw runtime_error("only one UserInterface thread allowed");
+            _ui = this;
+        }
+
+        UserInterface::~UserInterface()
+        {
+            _ui = nullptr;
+        }
+
         UserInterface_callback::UserInterface_callback(PyObject *self) :
-            _self(self)
+            UserInterface(), _self(self)
         {
             adapter.ui_object(self);
             PEP_STATUS status = ::register_sync_callbacks(adapter.session(),
@@ -23,19 +37,15 @@ namespace pEp {
             ::unregister_sync_callbacks(adapter.session());
         }
 
-        PEP_STATUS UserInterface::_notifyHandshake(void *obj,
+        PEP_STATUS UserInterface::_notifyHandshake(
                 pEp_identity *me, pEp_identity *partner,
                 sync_handshake_signal signal
             )
         {
-            if (!obj)
-                return PEP_SEND_FUNCTION_NOT_REGISTERED;
-
             if (!(me && partner))
                 return PEP_ILLEGAL_VALUE;
 
-            auto that = dynamic_cast< UserInterface_callback * >(
-                    static_cast< UserInterface * > (obj));
+            auto that = dynamic_cast< UserInterface_callback * >(_ui);
             that->notifyHandshake(Identity(me), Identity(partner), signal);
 
             return PEP_STATUS_OK;
