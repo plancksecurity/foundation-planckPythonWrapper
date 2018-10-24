@@ -348,6 +348,9 @@ namespace pEp {
 
         Message outgoing_message(Identity me)
         {
+            if (me.address().empty() || me.user_id().empty())
+                throw runtime_error("at least address and user_id of own user needed");
+
             ::myself(adapter.session(), me);
             auto m = Message(PEP_dir_outgoing, &me);
             return m;
