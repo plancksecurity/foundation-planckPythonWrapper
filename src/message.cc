@@ -358,6 +358,8 @@ namespace pEp {
 
         static object update(Identity ident)
         {
+            if (ident.address().empty())
+                throw runtime_error("at least address needed");
             update_identity(adapter.session(), ident);
             return object(ident);
         }

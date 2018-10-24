@@ -1,11 +1,11 @@
 """
 >>> import pEp
->>> me = pEp.Identity("alice.smith@peptest.ch", "23", "Alice Smith")
+>>> me = pEp.Identity("alice.smith@peptest.ch", "Alice Smith", "23")
 >>> me.username
 'Alice Smith'
 >>> print(me)
 Alice Smith <alice.smith@peptest.ch>
->>> you = pEp.Identity("bob.bourne@peptest.ch", "42", "Bob Bourne")
+>>> you = pEp.Identity("bob.bourne@peptest.ch", "Bob Bourne", "42")
 >>> print(you)
 Bob Bourne <bob.bourne@peptest.ch>
 >>> m = pEp.outgoing_message(me)
