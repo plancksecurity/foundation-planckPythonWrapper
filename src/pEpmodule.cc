@@ -23,7 +23,7 @@ namespace pEp {
         Adapter adapter(true);
         scope *_scope = NULL;
 
-        static const char *version_string = "p≡p Python adapter version 0.2";
+        static const char *version_string = "p≡p Python adapter version 0.3";
         static string about()
         {
             string version = string(version_string) + "\np≡p version "
