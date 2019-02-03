@@ -59,7 +59,17 @@ namespace pEp {
             _throw_status(status);
         }
 
-        SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management, time_t threshold)
+        PEP_rating UserInterface::get_key_rating_for_user(string user_id, string fpr)
+        {
+            PEP_rating result;
+            PEP_STATUS status =
+                ::get_key_rating_for_user(adapter.session(),
+                        user_id.c_str(), fpr.c_str(), &result);
+            _throw_status(status);
+            return result;
+        }
+
+        SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management, unsigned threshold)
         {
             time_t started = time(nullptr);
             bool timeout = false;

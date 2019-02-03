@@ -6,6 +6,7 @@
 #include "pEpmodule.hh"
 #include <setjmp.h> 
 #include <pEp/sync_api.h>
+#include <pEp/message_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -26,10 +27,12 @@ namespace pEp {
                 virtual void deliverHandshakeResult(
                     pEp::PythonAdapter::Identity partner, int result);
 
+                PEP_rating get_key_rating_for_user(string user_id, string fpr);
+
             protected:
                 static PEP_STATUS _notifyHandshake(pEp_identity *me,
                         pEp_identity *partner, sync_handshake_signal signal);
-                static SYNC_EVENT retrieve_next_sync_event(void *management, time_t threshold);
+                static SYNC_EVENT retrieve_next_sync_event(void *management, unsigned threshold);
         };
 
         class UserInterface_callback : public UserInterface {
