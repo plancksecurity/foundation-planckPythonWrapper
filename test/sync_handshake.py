@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
 # Sync test 2.0
-# Copyleft 2018, Volker Birk
+# Copyleft 2018, 2019, p≡p foundation
 
 # this file is under GNU General Public License 3.0
 
