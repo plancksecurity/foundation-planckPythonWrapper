@@ -10,7 +10,6 @@
 
 import os, pathlib, sys
 from optparse import OptionParser
-from sync_handshake import run
 
 
 def test_for(path):
@@ -19,6 +18,7 @@ def test_for(path):
     os.environ["HOME"] = os.getcwd()
 
     print("running tests for " + path);
+    from sync_handshake import run
     run()
 
     os.chdir(cwd)
