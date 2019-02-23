@@ -76,10 +76,12 @@ optParser.add_option("-c", "--clean", action="store_true", dest="clean")
 (options, args) = optParser.parse_args()
 
 if options.clean:
+    rmrf("TestInbox")
     rmrf("Alice")
     rmrf("Bob")
 
 else:
+    os.makedirs("TestInbox", exist_ok=True)
     setup("Alice")
     setup("Bob")
 
