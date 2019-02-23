@@ -7,11 +7,13 @@
 
 
 import pEp
+import minimail
 
 
 def messageToSend(msg):
     # this is assuming that msg is unencrypted; only true for beacons
     print("<!-- " + str(msg.from_) + " -->\n" + msg.attachments[0].decode())
+    minimail.send(msg)
 
 
 class UserInterface(pEp.UserInterface):
@@ -20,7 +22,7 @@ class UserInterface(pEp.UserInterface):
 
 
 def run(path):
-    me = pEp.Identity(path + "@peptest.ch", path + " Neuman")
+    me = pEp.Identity("alice@peptest.ch", path + " Neuman")
     pEp.myself(me)
     pEp.messageToSend = messageToSend
     ui = UserInterface()

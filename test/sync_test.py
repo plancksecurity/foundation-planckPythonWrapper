@@ -78,21 +78,21 @@ optParser.add_option("-c", "--clean", action="store_true", dest="clean")
 if options.clean:
     rmrf("TestInbox")
     rmrf("Alice")
-    rmrf("Bob")
+    rmrf("Barbara")
 
 else:
     os.makedirs("TestInbox", exist_ok=True)
     setup("Alice")
-    setup("Bob")
+    setup("Barbara")
 
     Alice = os.fork()
     if Alice == 0:
         test_for("Alice")
     else:
-        Bob = os.fork()
-        if Bob == 0:
-            test_for("Bob")
+        Barbara = os.fork()
+        if Barbara == 0:
+            test_for("Barbara")
         else:
             waitpid(Alice)
-            waitpid(Bob)
+            waitpid(Barbara)
 
