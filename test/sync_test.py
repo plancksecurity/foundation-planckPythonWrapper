@@ -19,7 +19,7 @@ def test_for(path):
 
     print("running tests for " + path);
     from sync_handshake import run
-    run()
+    run(path)
 
     os.chdir(cwd)
 
@@ -76,21 +76,21 @@ optParser.add_option("-c", "--clean", action="store_true", dest="clean")
 (options, args) = optParser.parse_args()
 
 if options.clean:
-    rmrf("alice")
-    rmrf("bob")
+    rmrf("Alice")
+    rmrf("Bob")
 
 else:
-    setup("alice")
-    setup("bob")
+    setup("Alice")
+    setup("Bob")
 
-    alice = os.fork()
-    if alice == 0:
-        test_for("alice")
+    Alice = os.fork()
+    if Alice == 0:
+        test_for("Alice")
     else:
-        bob = os.fork()
-        if bob == 0:
-            test_for("bob")
+        Bob = os.fork()
+        if Bob == 0:
+            test_for("Bob")
         else:
-            waitpid(alice)
-            waitpid(bob)
+            waitpid(Alice)
+            waitpid(Bob)
 

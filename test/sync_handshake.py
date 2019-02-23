@@ -19,7 +19,9 @@ class UserInterface(pEp.UserInterface):
         print("signal " + str(signal) + " for identities " + str(me) + " " + str(partner))
 
 
-def run():
+def run(path):
+    me = pEp.Identity(path + "@peptest.ch", path + " Neuman")
+    pEp.myself(me)
     pEp.messageToSend = messageToSend
     ui = UserInterface()
 
