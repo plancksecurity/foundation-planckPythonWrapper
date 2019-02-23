@@ -14,13 +14,12 @@ def messageToSend(msg):
     print("<!-- " + str(msg.from_) + " -->\n" + msg.attachments[0].decode())
 
 
-pEp.messageToSend = messageToSend
-
-
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
         print("signal " + str(signal) + " for identities " + str(me) + " " + str(partner))
 
 
-ui = UserInterface()
+def run():
+    pEp.messageToSend = messageToSend
+    ui = UserInterface()
 
