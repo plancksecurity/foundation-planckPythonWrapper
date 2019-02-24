@@ -41,7 +41,7 @@ def send(inbox, msg):
             f.write(str(msg).encode())
 
 
-def newer(file1, file2):
+def newer(file1, file2=None):
     if not file1.is_file():
         return False
     elif not file2.is_file():
