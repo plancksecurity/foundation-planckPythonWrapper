@@ -8,7 +8,7 @@
 # this test is only running on POSIX systems
 
 
-import os, pathlib, sys
+import os, pathlib
 
 
 def test_for(path):
@@ -59,19 +59,9 @@ def rmrf(path):
 EINTR = 4
 
 
-def waitpid(pid):
-    e = EINTR
-    while e == EINTR:
-        try:
-            pid, r = os.waitpid(pid, 0)
-            if r:
-                e = os.errno()
-        except ChildProcessError:
-            return
-
-
 if __name__ == "__main__":
     from optparse import OptionParser
+    from multiprocessing import Process
 
     optParser = OptionParser()
     optParser.add_option("-c", "--clean", action="store_true", dest="clean",
@@ -88,14 +78,12 @@ if __name__ == "__main__":
         setup("Alice")
         setup("Barbara")
 
-        Alice = os.fork()
-        if Alice == 0:
-            test_for("Alice")
-        else:
-            Barbara = os.fork()
-            if Barbara == 0:
-                test_for("Barbara")
-            else:
-                waitpid(Alice)
-                waitpid(Barbara)
+        Alice = Process(target=test_for, args=("Alice",))
+        Barbara = Process(target=test_for, args=("Barbara",))
+
+        Alice.start()
+        Barbara.start()
+
+        Alice.join()
+        Barbara.join()
 
