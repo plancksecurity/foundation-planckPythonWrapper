@@ -53,14 +53,17 @@ def newer(file1, file2=None):
 
 
 def recv_all(inbox, marker):
-    with Lock(inbox):
-        r = []
-        while not r:
-            for f in compress(inbox.glob("*.eml"), partial(newer, file2=marker)):
-                t = f.readall()
-                r.append(t)
-            if not r:
-                sleep(1)
-        marker.touch(exist_ok=True)
+    r = []
+    while not r:
+        for f in compress(inbox.glob("*.eml"), partial(newer, file2=marker)):
+            with Lock(inbox):
+                try:
+                    t = f.readall()
+                    r.append(t)
+                except:
+                    pass
+        if not r:
+            sleep(1)
+    marker.touch(exist_ok=True)
     return r
 
