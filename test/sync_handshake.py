@@ -18,12 +18,24 @@ def messageToSend(msg):
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        print("signal " + str(signal) + " for identities " + str(me) + " " + str(partner))
+        print("signal " + str(signal) + " for identities " + str(me) + " " +
+                str(partner))
 
 
-def run(path):
-    me = pEp.Identity("alice@peptest.ch", path + " Neuman")
+def run(name):
+    me = pEp.Identity("alice@peptest.ch", name + " Neuman")
     pEp.myself(me)
     pEp.messageToSend = messageToSend
     ui = UserInterface()
+
+
+if __name__=="__main__":
+    from optparse import OptionParser
+
+    optParser = OptionParser()
+    optParser.add_option("-e", "--exec-for", action="store", type="string",
+            dest="exec_for", help="execute for name")
+    options, args = optParser.parse_args()
+
+    run(options.exec_for)
 

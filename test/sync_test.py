@@ -9,7 +9,6 @@
 
 
 import os, pathlib, sys
-from optparse import OptionParser
 
 
 def test_for(path):
@@ -71,28 +70,32 @@ def waitpid(pid):
             return
 
 
-optParser = OptionParser()
-optParser.add_option("-c", "--clean", action="store_true", dest="clean")
-(options, args) = optParser.parse_args()
+if __name__ == "__main__":
+    from optparse import OptionParser
 
-if options.clean:
-    rmrf("TestInbox")
-    rmrf("Alice")
-    rmrf("Barbara")
+    optParser = OptionParser()
+    optParser.add_option("-c", "--clean", action="store_true", dest="clean",
+            help="remove all generated files")
+    options, args = optParser.parse_args()
 
-else:
-    os.makedirs("TestInbox", exist_ok=True)
-    setup("Alice")
-    setup("Barbara")
+    if options.clean:
+        rmrf("TestInbox")
+        rmrf("Alice")
+        rmrf("Barbara")
 
-    Alice = os.fork()
-    if Alice == 0:
-        test_for("Alice")
     else:
-        Barbara = os.fork()
-        if Barbara == 0:
-            test_for("Barbara")
+        os.makedirs("TestInbox", exist_ok=True)
+        setup("Alice")
+        setup("Barbara")
+
+        Alice = os.fork()
+        if Alice == 0:
+            test_for("Alice")
         else:
-            waitpid(Alice)
-            waitpid(Barbara)
+            Barbara = os.fork()
+            if Barbara == 0:
+                test_for("Barbara")
+            else:
+                waitpid(Alice)
+                waitpid(Barbara)
 
