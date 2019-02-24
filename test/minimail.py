@@ -42,21 +42,21 @@ def send(inbox, msg):
 
 
 def newer(file1, file2):
-    if not file2.is_file():
+    if not file1.is_file():
         return False
-    elif not file1.is_file():
+    elif not file2.is_file():
         return True
 
     stat1 = file1.stat()
     stat2 = file2.stat()
-    return stat2.st_mtime > stat1.st_mtime
+    return stat1.st_mtime > stat2.st_mtime
 
 
 def recv_all(inbox, marker):
     with Lock(inbox):
         r = []
         while not r:
-            for f in compress(inbox.glob("*.eml"), partial(newer, file1=marker)):
+            for f in compress(inbox.glob("*.eml"), partial(newer, file2=marker)):
                 t = f.readall()
                 r.append(t)
             if not r:
