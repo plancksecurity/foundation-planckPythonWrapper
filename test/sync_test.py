@@ -5,10 +5,9 @@
 
 # this file is under GNU General Public License 3.0
 
-# this test is only running on POSIX systems
 
-
-import os, pathlib
+import os
+import pathlib
 
 
 def test_for(path):

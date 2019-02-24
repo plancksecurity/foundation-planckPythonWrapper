@@ -6,13 +6,15 @@
 # this file is under GNU General Public License 3.0
 
 
+import pathlib
 import pEp
 from secrets import token_urlsafe
 
 
 def send(msg):
     name = token_urlsafe(16) + ".eml"
-    with open("../TestInbox/" + name, "wb") as f:
+    parent = pathlib.Path("..")
+    with open(parent / "TestInbox" / name, "wb") as f:
         f.write(str(msg).encode())
 
 
