@@ -32,17 +32,21 @@ def run(name):
     pEp.messageToSend = messageToSend
     ui = UserInterface()
 
-    while True:
-        l = minimail.recv_all(inbox, name)
-        for m in l:
-            msg = pEp.Message(m)
-            msg.decrypt()
+    try:
+        while True:
+            l = minimail.recv_all(inbox, name)
+            for m in l:
+                msg = pEp.Message(m)
+                msg.decrypt()
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__=="__main__":
     from optparse import OptionParser
 
     optParser = OptionParser()
+    optParser.description = "do not run this manually"
     optParser.add_option("-e", "--exec-for", action="store", type="string",
             dest="exec_for", help="execute for name")
     options, args = optParser.parse_args()

@@ -62,6 +62,7 @@ if __name__ == "__main__":
     from optparse import OptionParser
 
     optParser = OptionParser()
+    optParser.description = "test runner for sync tests"
     optParser.add_option("-c", "--clean", action="store_true", dest="clean",
             help="remove all generated files")
     options, args = optParser.parse_args()
