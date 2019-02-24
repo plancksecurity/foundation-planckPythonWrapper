@@ -32,6 +32,12 @@ def run(name):
     pEp.messageToSend = messageToSend
     ui = UserInterface()
 
+    while True:
+        l = minimail.recv_all(inbox, name)
+        for m in l:
+            msg = pEp.Message(m)
+            msg.decrypt()
+
 
 if __name__=="__main__":
     from optparse import OptionParser
