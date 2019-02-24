@@ -60,7 +60,6 @@ EINTR = 4
 
 if __name__ == "__main__":
     from optparse import OptionParser
-    from multiprocessing import Process
 
     optParser = OptionParser()
     optParser.add_option("-c", "--clean", action="store_true", dest="clean",
@@ -68,11 +67,16 @@ if __name__ == "__main__":
     options, args = optParser.parse_args()
 
     if options.clean:
+        from minimail import unlock
+
         rmrf("TestInbox")
+        unlock(pathlib.Path("TestInbox"))
         rmrf("Alice")
         rmrf("Barbara")
 
     else:
+        from multiprocessing import Process
+
         os.makedirs("TestInbox", exist_ok=True)
         setup("Alice")
         setup("Barbara")
