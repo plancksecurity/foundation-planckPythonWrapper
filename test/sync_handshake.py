@@ -27,7 +27,7 @@ class UserInterface(pEp.UserInterface):
 
 
 def run(name):
-    me = pEp.Identity("alice@peptest.ch", name + " Neuman")
+    me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman")
     pEp.myself(me)
     pEp.messageToSend = messageToSend
     ui = UserInterface()

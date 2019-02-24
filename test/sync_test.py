@@ -71,22 +71,22 @@ if __name__ == "__main__":
 
         rmrf("TestInbox")
         unlock(pathlib.Path("TestInbox"))
-        rmrf("Alice")
-        rmrf("Barbara")
+        rmrf("Phone")
+        rmrf("Laptop")
 
     else:
         from multiprocessing import Process
 
         os.makedirs("TestInbox", exist_ok=True)
-        setup("Alice")
-        setup("Barbara")
+        setup("Phone")
+        setup("Laptop")
 
-        Alice = Process(target=test_for, args=("Alice",))
-        Barbara = Process(target=test_for, args=("Barbara",))
+        Phone = Process(target=test_for, args=("Phone",))
+        Laptop = Process(target=test_for, args=("Laptop",))
 
-        Alice.start()
-        Barbara.start()
+        Phone.start()
+        Laptop.start()
 
-        Alice.join()
-        Barbara.join()
+        Phone.join()
+        Laptop.join()
 
