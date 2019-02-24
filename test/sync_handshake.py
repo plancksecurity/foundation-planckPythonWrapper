@@ -6,14 +6,18 @@
 # this file is under GNU General Public License 3.0
 
 
+import pathlib
 import pEp
 import minimail
+
+
+inbox = pathlib.Path("..") / "TestInbox"
 
 
 def messageToSend(msg):
     # this is assuming that msg is unencrypted; only true for beacons
     print("<!-- " + str(msg.from_) + " -->\n" + msg.attachments[0].decode())
-    minimail.send(msg)
+    minimail.send(inbox, msg)
 
 
 class UserInterface(pEp.UserInterface):
