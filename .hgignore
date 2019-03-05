@@ -7,3 +7,14 @@ tags
 pEp.egg-info
 dist
 build
+test/.gnupg
+test/.lldb
+test/.pEp_management.db*
+test/.python_history
+test/Laptop
+test/Library
+test/Phone
+test/TestInbox
+test/__pycache__
+test/lib
+
