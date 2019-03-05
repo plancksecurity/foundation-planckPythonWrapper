@@ -82,6 +82,18 @@ namespace pEp {
             PEP_STATUS status = unset_identity_flags(adapter.session(), ident, flags);
             _throw_status(status);
         }
+        
+        void key_reset_trust(Identity ident) {
+            if (ident.fpr() == "")
+                throw invalid_argument("address needed");
+            if (ident.address() == "")
+                throw invalid_argument("address needed");
+            if (ident.user_id() == "")
+                throw invalid_argument("address needed");
+
+            PEP_STATUS status = key_reset_trust(adapter.session(), ident);
+            _throw_status(status);
+        }
     }
 }
 

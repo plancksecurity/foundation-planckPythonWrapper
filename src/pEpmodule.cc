@@ -322,6 +322,13 @@ BOOST_PYTHON_MODULE(pEp)
     "unset identity flags\n"
             );
 
+    def("key_reset_trust", &pEp::PythonAdapter::key_reset_trust,
+            "key_reset_trust(ident)\n"
+            "\n"
+            "reset trust bit or explicitly mistrusted status for an identity and "
+            "its accompanying key/user_id pair\n"
+        );
+
     // message API
 
     enum_<PEP_rating>("PEP_rating")

@@ -5,6 +5,10 @@
 
 #include "pEpmodule.hh"
 
+DYNAMIC_API PEP_STATUS key_reset_trust(
+        PEP_SESSION session,
+        pEp_identity *ident
+    );
 namespace pEp {
     namespace PythonAdapter {
         void update_identity(Identity& ident);
@@ -14,6 +18,8 @@ namespace pEp {
 
         void set_identity_flags(Identity ident, identity_flags_t flags);
         void unset_identity_flags(Identity ident, identity_flags_t flags);
+
+        void key_reset_trust(Identity ident);
     }
 }
 
