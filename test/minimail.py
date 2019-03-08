@@ -2,7 +2,8 @@
 
 """provide a trivial way to send messages between processes
 
-messages are being sent to an inbox using a filename as a marker
+messages are being sent as files to an inbox, which is a directory, using a
+filename as a marker
 
 recv_all() is delivering all messages, which are newer than the marker file
 after completion reading is touching the marker file
