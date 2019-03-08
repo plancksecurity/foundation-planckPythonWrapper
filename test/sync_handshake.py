@@ -1,5 +1,12 @@
 # vim: set fileencoding=utf-8 :
 
+"""start a handshake test for one simulated device
+
+this is being started once per device by sync_test.py
+you can use this manually for debugging purposes
+
+"""
+
 # Sync test 2.0
 # Copyleft 2018, 2019, p≡p foundation
 
