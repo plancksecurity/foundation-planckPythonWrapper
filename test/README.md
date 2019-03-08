@@ -9,3 +9,15 @@ $ HOME=$PWD python3 basic_doctest.py -v
 $ python3 sync_test.py
     start two processes representing two devices and do a sync test
 
+Once started sync_handshake.py is creating a trace of all sent messages in
+TestInbox. There's a file named Laptop or Phone, respectively, which is working
+as a marker; the modification date of this file is showing the mails being
+considered as “already received”. If you delete the file and start i.e.
+
+$ cd Phone
+$ rm ../TestInbox/Phone
+$ HOME=$PWD lldb python3 --  ../sync_handshake.py -e Phone
+
+Then this side is doing a replay in the debugger.  Using touch to set a
+different date on the marker will only partly replay.
+
