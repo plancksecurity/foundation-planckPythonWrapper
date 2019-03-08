@@ -1,5 +1,17 @@
 # vim: set fileencoding=utf-8 :
 
+"""provide a trivial way to send messages between processes
+
+messages are being sent to an inbox using a filename as a marker
+
+recv_all() is delivering all messages, which are newer than the marker file
+after completion reading is touching the marker file
+
+to re-read messages touch the marker file with an older timestamp or just
+delete the marker file to re-read all messages
+
+"""
+
 # Minimail
 # Copyleft 2019, p≡p foundation
 
@@ -13,6 +25,8 @@ from time import sleep
 
 
 def unlock(inbox):
+    "clear the inbox from lockfile"
+
     lockfile = inbox / "lock"
     try:
         lockfile.unlink()
@@ -21,6 +35,8 @@ def unlock(inbox):
 
 
 class Lock:
+    "lock inbox context to be used by with statement"
+
     def __init__(self, inbox):
         self.inbox = inbox
 
@@ -35,6 +51,8 @@ class Lock:
 
 
 def send(inbox, msg):
+    "send msg to inbox in MIME format"
+
     with Lock(inbox):
         name = token_urlsafe(16) + ".eml"
         with open(inbox / name, "wb") as f:
@@ -42,6 +60,8 @@ def send(inbox, msg):
 
 
 def newer(file1, file2=None):
+    "return True if file1 is newer than file2"
+
     if not file1.is_file():
         return False
     elif not file2.is_file():
@@ -53,6 +73,9 @@ def newer(file1, file2=None):
 
 
 def recv_all(inbox, marker):
+    """receive a list of new MIME messages from inbox, which are newer than the
+    marker file"""
+
     r = []
     while not r:
         for p in inbox.glob("*.eml"):

@@ -46,10 +46,15 @@ if __name__=="__main__":
     from optparse import OptionParser
 
     optParser = OptionParser()
-    optParser.description = "do not run this manually"
+    optParser.description = "For debugging try: $ cd $DEV && lldb python3 -- " \
+            + "sync_handshake.py -e $DEV"
+
     optParser.add_option("-e", "--exec-for", action="store", type="string",
-            dest="exec_for", help="execute for name")
+            dest="exec_for", help="execute for name of simulated device")
     options, args = optParser.parse_args()
+
+    if not options.exec_for:
+        raise SyntaxError("--exec-for is mandatory, try --help")
 
     run(options.exec_for)
 
