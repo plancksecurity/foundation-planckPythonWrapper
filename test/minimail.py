@@ -19,8 +19,6 @@ delete the marker file to re-read all messages
 
 
 from secrets import token_urlsafe
-from itertools import compress
-from functools import partial
 from time import sleep
 
 
