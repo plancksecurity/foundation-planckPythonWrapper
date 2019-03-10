@@ -1,5 +1,13 @@
 # vim: set fileencoding=utf-8 :
 
+"""test runner for sync tests
+
+Start this with:
+
+$ python3 sync_test.py
+
+"""
+
 # Sync test 2.0
 # Copyleft 2018, 2019, p≡p foundation
 
@@ -62,7 +70,7 @@ if __name__ == "__main__":
     from optparse import OptionParser
 
     optParser = OptionParser()
-    optParser.description = "test runner for sync tests"
+    optParser.description = __doc__
     optParser.add_option("-c", "--clean", action="store_true", dest="clean",
             help="remove all generated files")
     options, args = optParser.parse_args()

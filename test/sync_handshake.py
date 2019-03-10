@@ -5,6 +5,10 @@
 this is being started once per device by sync_test.py
 you can use this manually for debugging purposes
 
+For debugging try:
+
+$ cd $DEV && lldb python3 -- sync_handshake.py -e $DEV
+
 """
 
 # Sync test 2.0
@@ -53,8 +57,7 @@ if __name__=="__main__":
     from optparse import OptionParser
 
     optParser = OptionParser()
-    optParser.description = "For debugging try: $ cd $DEV && lldb python3 -- " \
-            + "sync_handshake.py -e $DEV"
+    optParser.description = __doc__
 
     optParser.add_option("-e", "--exec-for", action="store", type="string",
             dest="exec_for", help="execute for name of simulated device")
