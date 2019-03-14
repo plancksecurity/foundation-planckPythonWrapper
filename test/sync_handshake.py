@@ -7,7 +7,7 @@ you can use this manually for debugging purposes
 
 For debugging try:
 
-$ cd $DEV && lldb python3 -- sync_handshake.py -e $DEV
+$ cd $DEV && HOME=$PWD lldb python3 -- ../sync_handshake.py -e $DEV
 
 """
 
