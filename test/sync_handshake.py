@@ -26,8 +26,11 @@ inbox = pathlib.Path("..") / "TestInbox"
 
 
 def messageToSend(msg):
-    # this is assuming that msg is unencrypted; only true for beacons
-    print("<!-- " + str(msg.from_) + " -->\n" + msg.attachments[0].decode())
+    if msg.enc_format:
+        m, keys, rating, flags = msg.decrypt()
+    else:
+        m = msg
+    print("<!-- " + str(m.from_) + " -->\n" + m.attachments[0].decode())
     minimail.send(inbox, msg)
 
 
