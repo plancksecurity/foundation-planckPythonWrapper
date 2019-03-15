@@ -18,6 +18,7 @@ $ cd $DEV && HOME=$PWD lldb python3 -- ../sync_handshake.py -e $DEV
 
 
 import pathlib
+import os
 import pEp
 import minimail
 
@@ -63,11 +64,12 @@ if __name__=="__main__":
     optParser.description = __doc__
 
     optParser.add_option("-e", "--exec-for", action="store", type="string",
-            dest="exec_for", help="execute for name of simulated device")
+            dest="exec_for", help="execute for name of simulated device " +
+                    "(default: name of actual directory)")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
-        raise SyntaxError("--exec-for is mandatory, try --help")
+        options.exec_for = os.path.basename(os.getcwd())
 
     run(options.exec_for)
 
