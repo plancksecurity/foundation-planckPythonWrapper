@@ -86,10 +86,7 @@ if __name__ == "__main__":
         options.clean = True
 
     if options.clean:
-        from minimail import unlock
-
         rmrf("TestInbox")
-        unlock(pathlib.Path("TestInbox"))
         rmrf("Phone")
         rmrf("Laptop")
 
@@ -97,10 +94,7 @@ if __name__ == "__main__":
             rmrf("Backup")
 
     elif options.backup:
-        from minimail import unlock
-
         rmrf("Backup")
-        unlock(pathlib.Path("TestInbox"))
 
         try:
             os.mkdir("Backup")
@@ -112,10 +106,7 @@ if __name__ == "__main__":
         shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
 
     elif options.restore:
-        from minimail import unlock
-
         rmrf("TestInbox")
-        unlock(pathlib.Path("TestInbox"))
         rmrf("Phone")
         rmrf("Laptop")
 
