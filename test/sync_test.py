@@ -15,6 +15,7 @@ $ python3 sync_test.py
 
 
 import os
+import shutil
 import pathlib
 
 
@@ -73,7 +74,16 @@ if __name__ == "__main__":
     optParser.description = __doc__
     optParser.add_option("-c", "--clean", action="store_true", dest="clean",
             help="remove all generated files")
+    optParser.add_option("-b", "--backup", action="store_true", dest="backup",
+            help="make a backup of all generated files (old backup will be overwritten)")
+    optParser.add_option("-r", "--restore", action="store_true", dest="restore",
+            help="restore generated files from backup")
+    optParser.add_option("-C", "--clean-all", action="store_true", dest="cleanall",
+            help="remove all generated files including backup files")
     options, args = optParser.parse_args()
+
+    if options.cleanall:
+        options.clean = True
 
     if options.clean:
         from minimail import unlock
@@ -82,6 +92,36 @@ if __name__ == "__main__":
         unlock(pathlib.Path("TestInbox"))
         rmrf("Phone")
         rmrf("Laptop")
+
+        if options.cleanall:
+            rmrf("Backup")
+
+    elif options.backup:
+        from minimail import unlock
+
+        rmrf("Backup")
+        unlock(pathlib.Path("TestInbox"))
+
+        try:
+            os.mkdir("Backup")
+        except FileExistsError:
+            pass
+
+        shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
+
+    elif options.restore:
+        from minimail import unlock
+
+        rmrf("TestInbox")
+        unlock(pathlib.Path("TestInbox"))
+        rmrf("Phone")
+        rmrf("Laptop")
+
+        shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
 
     else:
         from multiprocessing import Process
