@@ -51,11 +51,10 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        void UserInterface::deliverHandshakeResult(Identity partner,
-                int result)
+        void UserInterface::deliverHandshakeResult(int result)
         {
             PEP_STATUS status = ::deliverHandshakeResult(adapter.session(),
-                    partner, (sync_handshake_result) result);
+                    (sync_handshake_result) result);
             _throw_status(status);
         }
 

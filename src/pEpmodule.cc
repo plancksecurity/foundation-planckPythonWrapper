@@ -405,9 +405,8 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "overwrite this method with an implementation of a handshake dialog")
         .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
-    "deliverHandshakeResult(self, partber, result)\n"
+    "deliverHandshakeResult(self, result)\n"
     "\n"
-    "   partner         identity of communication partner\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
     "\n"
     "call to deliver the handshake result of the handshake dialog")

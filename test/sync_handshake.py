@@ -37,6 +37,7 @@ device_name = ""
 output = print
 
 DONT_TRIGGER_SYNC = 0x200
+SYNC_HANDSHAKE_ACCEPTED = 0
 
 
 def print_msg(p):
@@ -70,6 +71,8 @@ class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
         output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
+
+        self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
 
 
 def run(name, color=None):

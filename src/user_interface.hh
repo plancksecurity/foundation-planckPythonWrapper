@@ -24,8 +24,7 @@ namespace pEp {
                     throw runtime_error("override this method");
                 }
 
-                virtual void deliverHandshakeResult(
-                    pEp::PythonAdapter::Identity partner, int result);
+                virtual void deliverHandshakeResult(int result);
 
                 PEP_rating get_key_rating_for_user(string user_id, string fpr);
 
