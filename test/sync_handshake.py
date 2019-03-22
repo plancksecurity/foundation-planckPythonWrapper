@@ -41,7 +41,9 @@ def messageToSend(msg):
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
         m = msg
-    output("<!-- " + device_name + " -->\n" + m.attachments[0].decode())
+    text = "<!-- " + device_name + " -->\n" + m.attachments[0].decode()
+    output(text)
+    msg.opt_fields = { "pEp.sync": text }
     minimail.send(inbox, msg, device_name)
 
 

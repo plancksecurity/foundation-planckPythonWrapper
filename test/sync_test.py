@@ -80,6 +80,10 @@ if __name__ == "__main__":
             help="restore generated files from backup")
     optParser.add_option("-C", "--clean-all", action="store_true", dest="cleanall",
             help="remove all generated files including backup files")
+    optParser.add_option("-s", "--setup", action="store_true", dest="setup_only",
+            help="setup environment, then stop")
+    optParser.add_option("-p", "--print", action="store_true", dest="print",
+            help="print sync message trace in inbox")
     options, args = optParser.parse_args()
 
     if options.cleanall:
@@ -114,6 +118,21 @@ if __name__ == "__main__":
         shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
         shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
 
+    elif options.print:
+        import pEp
+        import re
+        from datetime import datetime
+        
+        inbox = pathlib.Path("TestInbox")
+        for p in reversed([ path for path in inbox.glob("*.eml") ]):
+            with open(p, "rb") as f:
+                t = f.read(-1)
+                msg = pEp.Message(t)
+                print("\n" + str(p))
+                print(datetime.fromtimestamp(p.stat().st_mtime))
+                m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
+                print(m.group(1))
+        
     else:
         from multiprocessing import Process
 
@@ -121,12 +140,13 @@ if __name__ == "__main__":
         setup("Phone")
         setup("Laptop")
 
-        Phone = Process(target=test_for, args=("Phone", "red"))
-        Laptop = Process(target=test_for, args=("Laptop", "green"))
+        if not options.setup_only:
+            Phone = Process(target=test_for, args=("Phone", "red"))
+            Laptop = Process(target=test_for, args=("Laptop", "green"))
 
-        Phone.start()
-        Laptop.start()
+            Phone.start()
+            Laptop.start()
 
-        Phone.join()
-        Laptop.join()
+            Phone.join()
+            Laptop.join()
 
