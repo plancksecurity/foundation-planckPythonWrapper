@@ -21,3 +21,7 @@ $ HOME=$PWD lldb python3 --  ../sync_handshake.py -e Phone
 Then this side is doing a replay in the debugger.  Using touch to set a
 different timestamp on the marker will only partly replay.
 
+= Hint =
+
+installing termcolor can be helpful
+

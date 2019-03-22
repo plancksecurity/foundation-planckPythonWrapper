@@ -19,14 +19,14 @@ import shutil
 import pathlib
 
 
-def test_for(path):
+def test_for(path, color=None):
     cwd = os.getcwd();
     os.chdir(path)
     os.environ["HOME"] = os.getcwd()
 
-    print("running tests for " + path);
+    print("running tests for " + path)
     from sync_handshake import run
-    run(path)
+    run(path, color)
 
     os.chdir(cwd)
 
@@ -121,8 +121,8 @@ if __name__ == "__main__":
         setup("Phone")
         setup("Laptop")
 
-        Phone = Process(target=test_for, args=("Phone",))
-        Laptop = Process(target=test_for, args=("Laptop",))
+        Phone = Process(target=test_for, args=("Phone", "red"))
+        Laptop = Process(target=test_for, args=("Laptop", "green"))
 
         Phone.start()
         Laptop.start()

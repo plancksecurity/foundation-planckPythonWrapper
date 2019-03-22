@@ -22,9 +22,15 @@ import os
 import pEp
 import minimail
 
+try:
+    from termcolor import colored
+except:
+    colored = lambda x, y: x
+
 
 inbox = pathlib.Path("..") / "TestInbox"
 device_name = ""
+output = print
 
 
 def messageToSend(msg):
@@ -32,19 +38,24 @@ def messageToSend(msg):
         m, keys, rating, flags = msg.decrypt()
     else:
         m = msg
-    print("<!-- " + str(m.from_) + " -->\n" + m.attachments[0].decode())
+    output("<!-- " + str(m.from_) + " -->\n" + m.attachments[0].decode())
     minimail.send(inbox, msg, device_name)
 
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        print("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
+        output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
 
 
-def run(name):
+def run(name, color=None):
     global device_name
     device_name = name
+
+    if color:
+        global output
+        output = lambda x: print(colored(x, color))
+
     me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman")
     pEp.myself(me)
     pEp.messageToSend = messageToSend
@@ -69,10 +80,12 @@ if __name__=="__main__":
     optParser.add_option("-e", "--exec-for", action="store", type="string",
             dest="exec_for", help="execute for name of simulated device " +
                     "(default: name of actual directory)")
+    optParser.add_option("--color", action="store", type="string",
+            desct="color", help="print debug output in this color")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
         options.exec_for = os.path.basename(os.getcwd())
 
-    run(options.exec_for)
+    run(options.exec_for, options.color)
 
