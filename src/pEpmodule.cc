@@ -365,10 +365,6 @@ BOOST_PYTHON_MODULE(pEp)
     "text = trustwords(ident_own, ident_partner)\n"
     "\n"
     "calculate trustwords for two Identities");
-    def("config_keep_sync_msg", &_config_keep_sync_msg,
-    "config_keep_sync_msg(enabled)\n"
-    "\n"
-    "configure if sync messages are being kept or automatically removed (default)");
 
     // messageToSend()
 

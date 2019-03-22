@@ -66,11 +66,6 @@ namespace pEp {
             return (int) ::color_from_rating((PEP_rating) rating);
         }
 
-        void _config_keep_sync_msg(bool enabled)
-        {
-            ::config_keep_sync_msg(adapter.session(), enabled);
-        }
-
         boost::python::tuple sync_decode(object buffer)
         {
             Py_buffer src;
