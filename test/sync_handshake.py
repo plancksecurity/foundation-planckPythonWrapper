@@ -38,7 +38,7 @@ def messageToSend(msg):
         m, keys, rating, flags = msg.decrypt()
     else:
         m = msg
-    output("<!-- " + str(m.from_) + " -->\n" + m.attachments[0].decode())
+    output("<!-- " + device_name + " -->\n" + m.attachments[0].decode())
     minimail.send(inbox, msg, device_name)
 
 
@@ -56,7 +56,7 @@ def run(name, color=None):
         global output
         output = lambda x: print(colored(x, color))
 
-    me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman")
+    me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
     pEp.myself(me)
     pEp.messageToSend = messageToSend
     ui = UserInterface()
