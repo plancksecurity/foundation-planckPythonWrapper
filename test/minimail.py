@@ -49,11 +49,11 @@ class Lock:
         lockfile.touch()
 
 
-def send(inbox, msg):
+def send(inbox, msg, marker):
     "send msg to inbox in MIME format"
 
     with Lock(inbox):
-        name = token_urlsafe(16) + ".eml"
+        name = marker + "_" + token_urlsafe(16) + ".eml"
         with open(inbox / name, "wb") as f:
             f.write(str(msg).encode())
 

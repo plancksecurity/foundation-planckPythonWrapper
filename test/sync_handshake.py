@@ -24,7 +24,7 @@ import minimail
 
 
 inbox = pathlib.Path("..") / "TestInbox"
-device = ""
+device_name = ""
 
 
 def messageToSend(msg):
@@ -33,18 +33,18 @@ def messageToSend(msg):
     else:
         m = msg
     print("<!-- " + str(m.from_) + " -->\n" + m.attachments[0].decode())
-    minimail.send(inbox, msg)
+    minimail.send(inbox, msg, device_name)
 
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        print("on " + device + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
+        print("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
 
 
 def run(name):
-    global device
-    device = name
+    global device_name
+    device_name = name
     me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman")
     pEp.myself(me)
     pEp.messageToSend = messageToSend
