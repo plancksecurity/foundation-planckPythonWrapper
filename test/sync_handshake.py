@@ -20,8 +20,11 @@ $ cd $DEV && HOME=$PWD lldb python3 -- ../sync_handshake.py -e $DEV
 import pathlib
 import os
 import sys
+import re
 import pEp
 import minimail
+
+from datetime import datetime
 
 try:
     from termcolor import colored
@@ -36,12 +39,28 @@ output = print
 DONT_TRIGGER_SYNC = 0x200
 
 
+def print_msg(p):
+    if p.name[:5] == "Phone":
+        color = "red"
+    elif p.name[:6] == "Laptop":
+        color = "green"
+    else:
+        color = None
+    with open(p, "r") as f:
+        t = f.read(-1)
+    msg = pEp.Message(t)
+    print("\n" + colored(str(p), color))
+    print(datetime.fromtimestamp(p.stat().st_mtime))
+    m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
+    print(m.group(1))
+
+
 def messageToSend(msg):
     if msg.enc_format:
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
         m = msg
-    text = "<!-- " + device_name + " -->\n" + m.attachments[0].decode()
+    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
     output(text)
     msg.opt_fields = { "pEp.sync": text }
     minimail.send(inbox, msg, device_name)
@@ -71,7 +90,10 @@ def run(name, color=None):
             l = minimail.recv_all(inbox, name)
             for m in l:
                 msg = pEp.Message(m)
-                msg.decrypt()
+                msg2, keys, rating, flags = msg.decrypt()
+                #text = "<!-- receiving on " + device_name + " -->\n" + msg2.attachments[0].decode()
+                #output(text)
+
     except KeyboardInterrupt:
         pass
 

@@ -119,29 +119,11 @@ if __name__ == "__main__":
         shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
 
     elif options.print:
-        import pEp
-        import re
-        from datetime import datetime
-        try:
-            from termcolor import colored
-        except:
-            colored = lambda x, y: x
-                
+        from sync_handshake import print_msg
+
         inbox = pathlib.Path("TestInbox")
         for p in reversed([ path for path in inbox.glob("*.eml") ]):
-            with open(p, "rb") as f:
-                if p.name[:5] == "Phone":
-                    color = "red"
-                elif p.name[:6] == "Laptop":
-                    color = "green"
-                else:
-                    color = None
-                t = f.read(-1)
-                msg = pEp.Message(t)
-                print("\n" + colored(str(p), color))
-                print(datetime.fromtimestamp(p.stat().st_mtime))
-                m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
-                print(m.group(1))
+            print_msg(p)
         
     else:
         from multiprocessing import Process
