@@ -122,13 +122,23 @@ if __name__ == "__main__":
         import pEp
         import re
         from datetime import datetime
-        
+        try:
+            from termcolor import colored
+        except:
+            colored = lambda x, y: x
+                
         inbox = pathlib.Path("TestInbox")
         for p in reversed([ path for path in inbox.glob("*.eml") ]):
             with open(p, "rb") as f:
+                if p.name[:5] == "Phone":
+                    color = "red"
+                elif p.name[:6] == "Laptop":
+                    color = "green"
+                else:
+                    color = None
                 t = f.read(-1)
                 msg = pEp.Message(t)
-                print("\n" + str(p))
+                print("\n" + colored(str(p), color))
                 print(datetime.fromtimestamp(p.stat().st_mtime))
                 m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
                 print(m.group(1))
