@@ -19,6 +19,7 @@ $ cd $DEV && HOME=$PWD lldb python3 -- ../sync_handshake.py -e $DEV
 
 import pathlib
 import os
+import sys
 import pEp
 import minimail
 
@@ -32,10 +33,12 @@ inbox = pathlib.Path("..") / "TestInbox"
 device_name = ""
 output = print
 
+DONT_TRIGGER_SYNC = 0x200
+
 
 def messageToSend(msg):
     if msg.enc_format:
-        m, keys, rating, flags = msg.decrypt()
+        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
         m = msg
     output("<!-- " + device_name + " -->\n" + m.attachments[0].decode())
@@ -81,7 +84,7 @@ if __name__=="__main__":
             dest="exec_for", help="execute for name of simulated device " +
                     "(default: name of actual directory)")
     optParser.add_option("--color", action="store", type="string",
-            desct="color", help="print debug output in this color")
+            dest="color", help="print debug output in this color", default=None)
     options, args = optParser.parse_args()
 
     if not options.exec_for:

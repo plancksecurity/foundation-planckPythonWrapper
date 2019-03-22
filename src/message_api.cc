@@ -39,12 +39,12 @@ namespace pEp {
             return Message(_dst);
         }
 
-        boost::python::tuple decrypt_message(Message src)
+        boost::python::tuple decrypt_message(Message src, int flags)
         {
             message *_dst = NULL;
             stringlist_t *_keylist = NULL;
             PEP_rating _rating = PEP_rating_undefined;
-            PEP_decrypt_flags_t _flags = 0;
+            PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t) flags;
             message *_src = src;
 
             PEP_STATUS status = decrypt_message(adapter.session(), _src, &_dst, &_keylist,
@@ -57,11 +57,8 @@ namespace pEp {
                 free_stringlist(_keylist);
             }
 
-            int rating = (int) _rating;
-            int flags = (int) _flags;
-
             Message dst = _dst ? Message(_dst) : Message(src);
-            return boost::python::make_tuple(dst, keylist, rating, flags);
+            return boost::python::make_tuple(dst, keylist, _rating, _flags);
         }
 
         int _color(int rating)

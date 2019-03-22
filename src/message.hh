@@ -130,7 +130,7 @@ namespace pEp {
             Message encrypt();
             Message _encrypt(boost::python::list extra, int enc_format=4, int flags=0);
 
-            boost::python::tuple decrypt();
+            boost::python::tuple decrypt(int flags=0);
             int outgoing_rating();
             int outgoing_color();
             Message deepcopy(dict& memo);
