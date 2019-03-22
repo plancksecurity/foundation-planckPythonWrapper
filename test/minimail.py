@@ -77,15 +77,15 @@ def recv_all(inbox, marker):
 
     r = []
     while not r:
-        for p in reversed([ path for path in inbox.glob("*.eml") ]):
-            if newer(p, inbox / marker):
-                with Lock(inbox):
+        with Lock(inbox):
+            for p in reversed([ path for path in inbox.glob("*.eml") ]):
+                if newer(p, inbox / marker):
                     with open(p, "rb") as f:
                         t = f.read(-1)
                         r.append(t)
+            (inbox / marker).touch(exist_ok=True)
         if not r:
             sleep(1)
 
-    (inbox / marker).touch(exist_ok=True)
     return r
 
