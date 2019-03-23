@@ -51,9 +51,9 @@ def print_msg(p):
         t = f.read(-1)
     msg = pEp.Message(t)
     print("\n" + colored(p.name, color))
-    print(datetime.fromtimestamp(p.stat().st_mtime))
+    print(colored(datetime.fromtimestamp(p.stat().st_mtime), color))
     m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
-    print(m.group(1))
+    print(m.group(1).strip())
 
 
 def messageToSend(msg):
