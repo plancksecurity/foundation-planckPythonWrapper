@@ -50,7 +50,7 @@ def print_msg(p):
     with open(p, "r") as f:
         t = f.read(-1)
     msg = pEp.Message(t)
-    print("\n" + colored(str(p), color))
+    print("\n" + colored(p.name, color))
     print(datetime.fromtimestamp(p.stat().st_mtime))
     m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
     print(m.group(1))

@@ -122,7 +122,9 @@ if __name__ == "__main__":
         from sync_handshake import print_msg
 
         inbox = pathlib.Path("TestInbox")
-        for p in reversed([ path for path in inbox.glob("*.eml") ]):
+        l = [ path for path in inbox.glob("*.eml") ]
+        l.sort(key=(lambda p: p.stat().st_mtime))
+        for p in l:
             print_msg(p)
         
     else:
