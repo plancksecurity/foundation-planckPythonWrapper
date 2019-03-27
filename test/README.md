@@ -23,5 +23,5 @@ different timestamp on the marker will only partly replay.
 
 = Hint =
 
-installing termcolor can be helpful
+installing termcolor and lxml will beautify the output
 
