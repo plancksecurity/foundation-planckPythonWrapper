@@ -51,10 +51,32 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        void UserInterface::deliverHandshakeResult(int result)
+        void UserInterface::deliverHandshakeResult(int result, object identities)
         {
+            identity_list *shared_identities = nullptr;
+            if (identities != boost::python::api::object()) {
+                shared_identities = new_identity_list(nullptr);
+                if (!shared_identities)
+                    throw bad_alloc();
+
+                try {
+                    identity_list *si = shared_identities;
+                    for (int i=0; i < boost::python::len(identities); ++i) {
+                        Identity ident = extract< Identity >(identities[i]);
+                        si = identity_list_add(si, ident);
+                        if (!si)
+                            throw bad_alloc();
+                    }
+                }
+                catch (exception& ex) {
+                    free_identity_list(shared_identities);
+                    throw ex;
+                }
+            }
+
             PEP_STATUS status = ::deliverHandshakeResult(adapter.session(),
-                    (sync_handshake_result) result);
+                    (sync_handshake_result) result, shared_identities);
+            free_identity_list(shared_identities);
             _throw_status(status);
         }
 

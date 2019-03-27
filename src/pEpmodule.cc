@@ -405,9 +405,11 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "overwrite this method with an implementation of a handshake dialog")
         .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
-    "deliverHandshakeResult(self, result)\n"
+                boost::python::arg("identities")=object(),
+    "deliverHandshakeResult(self, result, identities=None)\n"
     "\n"
     "   result          -1: cancel, 0: accepted, 1: rejected\n"
+    "   identities      list of identities to share or None for all\n"
     "\n"
     "call to deliver the handshake result of the handshake dialog")
     ;
