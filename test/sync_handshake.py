@@ -52,9 +52,12 @@ def print_msg(p):
     msg = pEp.Message(t)
     print("\n" + colored(p.name, color))
     print(colored(str(datetime.fromtimestamp(p.stat().st_mtime)), color))
-    m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"])
+    m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
-        print(m.group(1).strip())
+        text = m.group(1).replace("\r", "").strip()
+        while text.count("  "):
+            text = text.replace("  ", " ")
+        print(text)
 
 
 def messageToSend(msg):
