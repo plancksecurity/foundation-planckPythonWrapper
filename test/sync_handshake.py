@@ -31,6 +31,12 @@ try:
 except:
     colored = lambda x, y: x
 
+try:
+    from lxml import etree
+    from lxml import objectify
+except:
+    etree = None
+
 
 inbox = pathlib.Path("..") / "TestInbox"
 device_name = ""
@@ -54,9 +60,13 @@ def print_msg(p):
     print(colored(str(datetime.fromtimestamp(p.stat().st_mtime)), color))
     m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
-        text = m.group(1).replace("\r", "").strip()
-        while text.count("  "):
-            text = text.replace("  ", " ")
+        if etree:
+            tree = objectify.fromstring(m.group(1).replace("\r", ""))
+            text = etree.tostring(tree, pretty_print=True, encoding="unicode")
+        else:
+            text = m.group(1).replace("\r", "").strip()
+            while text.count("  "):
+                text = text.replace("  ", " ")
         print(text)
 
 
