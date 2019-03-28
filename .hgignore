@@ -8,14 +8,14 @@ pEp.egg-info
 dist
 build
 .pythonhist
-test/.gnupg
-test/.lldb
-test/.pEp_management.db*
-test/.python_history
+.gnupg
+.lldb
+.pEp_management.db*
+.python_history
+__pycache__
 test/Laptop
 test/Library
 test/Phone
 test/TestInbox
-test/__pycache__
 test/lib
 
