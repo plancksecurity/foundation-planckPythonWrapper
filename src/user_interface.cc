@@ -54,7 +54,8 @@ namespace pEp {
         void UserInterface::deliverHandshakeResult(int result, object identities)
         {
             identity_list *shared_identities = nullptr;
-            if (identities != boost::python::api::object()) {
+            if (identities != boost::python::api::object() &&
+                    boost::python::len(identities)) {
                 shared_identities = new_identity_list(nullptr);
                 if (!shared_identities)
                     throw bad_alloc();
