@@ -14,8 +14,6 @@ namespace pEp {
 
         class Adapter {
                 bool flag_unregister;
-                bool passive_mode;
-                bool unencrypted_subject;
 
             public:
                 Adapter(bool unregister_this = false);
@@ -33,9 +31,6 @@ namespace pEp {
                     static ::utility::locked_queue< SYNC_EVENT > q;
                     return q;
                 }
-
-                void config_passive_mode(bool enable);
-                void config_unencrypted_subject(bool enable);
 
             protected:
                 static PyObject *ui_object(PyObject *value = nullptr);

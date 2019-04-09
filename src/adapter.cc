@@ -7,8 +7,7 @@
 namespace pEp {
     namespace PythonAdapter {
         Adapter::Adapter(bool unregister_this)
-            : flag_unregister(unregister_this), passive_mode(false),
-                    unencrypted_subject(false)
+            : flag_unregister(unregister_this)
         {
             session(init);
         }
@@ -42,13 +41,8 @@ namespace pEp {
 
                 case init:
                     ++booked;
-                    if (!_session) {
+                    if (!_session)
                         status = ::init(&_session, _messageToSend, _inject_sync_event);
-                        if (!status) {
-                            ::config_passive_mode(_session, passive_mode);
-                            ::config_unencrypted_subject(_session, unencrypted_subject);
-                        }
-                    }
                     break;
 
                 default:
@@ -59,16 +53,6 @@ namespace pEp {
                 _throw_status(status);
 
             return _session;
-        }
-
-        void Adapter::config_passive_mode(bool enable)
-        {
-            ::config_passive_mode(session(), enable);
-        }
-
-        void Adapter::config_unencrypted_subject(bool enable)
-        {
-            ::config_unencrypted_subject(session(), enable);
         }
 
         PyObject *Adapter::ui_object(PyObject *value)
