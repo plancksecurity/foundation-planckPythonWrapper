@@ -82,7 +82,7 @@ def recv_all(inbox, marker):
                 if newer(p, inbox / marker):
                     with open(p, "rb") as f:
                         t = f.read(-1)
-                        r.append(t)
+                        r.append((p, t))
             (inbox / marker).touch(exist_ok=True)
         if not r:
             sleep(1)

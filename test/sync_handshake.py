@@ -44,6 +44,7 @@ output = print
 
 DONT_TRIGGER_SYNC = 0x200
 SYNC_HANDSHAKE_ACCEPTED = 0
+SYNC_HANDSHAKE_REJECTED = 1
 
 
 def print_msg(p):
@@ -85,8 +86,13 @@ class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
         output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
-
-        self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+        try:
+            if options.reject:
+                self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
+            else:
+                self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+        except NameError:
+            self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
 
 
 def run(name, color=None):
@@ -105,11 +111,9 @@ def run(name, color=None):
     try:
         while True:
             l = minimail.recv_all(inbox, name)
-            for m in l:
+            for n, m in l:
                 msg = pEp.Message(m)
                 msg2, keys, rating, flags = msg.decrypt()
-                #text = "<!-- receiving on " + device_name + " -->\n" + msg2.attachments[0].decode()
-                #output(text)
 
     except KeyboardInterrupt:
         pass
@@ -126,6 +130,10 @@ if __name__=="__main__":
                     "(default: name of actual directory)")
     optParser.add_option("--color", action="store", type="string",
             dest="color", help="print debug output in this color", default=None)
+    optParser.add_option("--reject", action="store_true", dest="reject",
+            help="reject device group")
+    optParser.add_option("--accept", action="store_false", dest="reject",
+            help="accept device group (default)")
     options, args = optParser.parse_args()
 
     if not options.exec_for:

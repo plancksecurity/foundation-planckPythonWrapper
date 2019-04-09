@@ -21,6 +21,17 @@ namespace pEp {
         using namespace std;
 
         Adapter adapter(true);
+
+        void config_passive_mode(bool enable)
+        {
+            adapter.config_passive_mode(enable);
+        }
+
+        void config_unencrypted_subject(bool enable)
+        {
+            adapter.config_unencrypted_subject(enable);
+        }
+
         scope *_scope = NULL;
 
         static const char *version_string = "p≡p Python adapter version 0.3";
@@ -81,6 +92,12 @@ BOOST_PYTHON_MODULE(pEp)
 
     scope().attr("about") = about();
     
+    def("config_passive_mode", pEp::PythonAdapter::config_passive_mode,
+            "do not attach pub keys to all messages");
+
+    def("config_unencrypted_subject", pEp::PythonAdapter::config_unencrypted_subject,
+            "do not encrypt the subject of messages");
+
     auto identity_class = class_<pEp::PythonAdapter::Identity>("Identity",
     "Identity(address, username, user_id='', fpr='', comm_type=0, lang='en')\n"
     "\n"
