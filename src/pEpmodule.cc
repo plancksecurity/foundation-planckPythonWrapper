@@ -13,6 +13,7 @@
 
 #include <mutex>
 
+#include <pEp/key_reset.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 
@@ -30,6 +31,27 @@ namespace pEp {
         void config_unencrypted_subject(bool enable)
         {
             ::config_unencrypted_subject(adapter.session(), enable);
+        }
+
+        void key_reset_user(string user_id, string fpr)
+        {
+            if (user_id == "")
+                throw invalid_argument("user_id required");
+
+            PEP_STATUS status = ::key_reset_user(adapter.session(),
+                    user_id.c_str(), fpr != "" ?  fpr.c_str() : nullptr);
+            _throw_status(status);
+        }
+
+        void key_reset_user2(string user_id)
+        {
+            key_reset_user(user_id, "");
+        }
+
+        void key_reset_all_own_keys()
+        {
+            PEP_STATUS status = ::key_reset_all_own_keys(adapter.session());
+            _throw_status(status);
         }
 
         scope *_scope = NULL;
@@ -98,6 +120,23 @@ BOOST_PYTHON_MODULE(pEp)
     def("unencrypted_subject", pEp::PythonAdapter::config_unencrypted_subject,
             "do not encrypt the subject of messages");
 
+    def("key_reset", pEp::PythonAdapter::key_reset_user,
+            "reset the default database status for the user / keypair provided\n"
+            "This will effectively perform key_reset on each identity\n"
+            "associated with the key and user_id, if a key is provided, and for\n"
+            "each key (and all of their identities) if an fpr is not.");
+
+    def("key_reset", pEp::PythonAdapter::key_reset_user2,
+            "reset the default database status for the user / keypair provided\n"
+            "This will effectively perform key_reset on each identity\n"
+            "associated with the key and user_id, if a key is provided, and for\n"
+            "each key (and all of their identities) if an fpr is not.");
+
+    def("key_reset_all_own_keys", pEp::PythonAdapter::key_reset_all_own_keys,
+            "revoke and mistrust all own keys, generate new keys for all\n"
+            "own identities, and opportunistically communicate key reset\n"
+            "information to people we have recently contacted.");
+
     auto identity_class = class_<pEp::PythonAdapter::Identity>("Identity",
     "Identity(address, username, user_id='', fpr='', comm_type=0, lang='en')\n"
     "\n"
@@ -123,9 +162,17 @@ BOOST_PYTHON_MODULE(pEp)
         .def(boost::python::init<string, string, string, string, int, string>())
         .def("__repr__", &pEp::PythonAdapter::Identity::_repr)
         .def("__str__", &pEp::PythonAdapter::Identity::_str,
-    "string representation of this identity\n"
-    "following the pattern 'username < address >'\n"
+            "string representation of this identity\n"
+            "following the pattern 'username < address >'\n"
                 )
+        .def("key_reset", &pEp::PythonAdapter::Identity::key_reset,
+                boost::python::arg("fpr")=object(""),
+            "reset the default database status for the identity / keypair provided. If this\n"
+            "corresponds to the own user and a private key, also revoke the key, generate a\n"
+            "new one, and communicate the reset to recently contacted pEp partners for this\n"
+            "identity. If it does not, remove the key from the keyring; the key's status is\n"
+            "completely fresh on next contact from the partner.")
+
         .add_property("address", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::address,
                 (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::address,
                 "email address or URI")

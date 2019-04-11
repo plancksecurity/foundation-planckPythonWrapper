@@ -9,6 +9,7 @@
 #include <sstream>
 #include <pEp/identity_list.h>
 #include <pEp/keymanagement.h>
+#include <pEp/key_reset.h>
 #include <pEp/message_api.h>
 
 namespace pEp {
@@ -146,6 +147,13 @@ namespace pEp {
         void Identity::update()
         {
             update_identity(*this);
+        }
+
+        void Identity::key_reset(string fpr)
+        {
+            PEP_STATUS status = ::key_reset_identity(adapter.session(), *this,
+                    fpr != "" ? fpr.c_str() : nullptr);
+            _throw_status(status);
         }
 
         Myself::Myself(string address, string username, string user_id, string lang)

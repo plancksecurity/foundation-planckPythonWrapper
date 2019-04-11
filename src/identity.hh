@@ -63,6 +63,8 @@ namespace pEp {
             Identity deepcopy(dict& memo);
 
             virtual void update();
+
+            void key_reset(string fpr="");
         };
 
         class Myself : public Identity {
