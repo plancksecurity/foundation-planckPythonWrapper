@@ -15,6 +15,7 @@ $ python3 sync_test.py
 
 
 import os
+import sys
 import shutil
 import pathlib
 
@@ -90,6 +91,9 @@ if __name__ == "__main__":
         options.clean = True
 
     if options.clean:
+        if sys.platform == "darwin" or sys.platform == "linux":
+            print("shutting down gpg-agent", file=sys.stderr)
+            os.system("killall gpg-agent")
         rmrf("TestInbox")
         rmrf("Phone")
         rmrf("Laptop")
