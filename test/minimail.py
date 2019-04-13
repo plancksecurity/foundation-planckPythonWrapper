@@ -19,6 +19,7 @@ delete the marker file to re-read all messages
 # this file is under GNU General Public License 3.0
 
 
+import os
 from secrets import token_urlsafe
 from time import sleep
 
@@ -78,12 +79,18 @@ def recv_all(inbox, marker):
     r = []
     while not r:
         with Lock(inbox):
+            newest = 0
             for p in reversed([ path for path in inbox.glob("*.eml") ]):
                 if newer(p, inbox / marker):
                     with open(p, "rb") as f:
                         t = f.read(-1)
                         r.append((p, t))
+                    t = p.stat().st_mtime
+                    if t > newest:
+                        newest = t
             (inbox / marker).touch(exist_ok=True)
+            os.utime(str(inbox / marker), (newest, newest))
+
         if not r:
             sleep(1)
 

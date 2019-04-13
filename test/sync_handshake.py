@@ -53,13 +53,13 @@ def print_msg(p):
     elif p.name[:6] == "Laptop":
         color = "green"
     else:
-        color = None
+        color = "lightblue"
     with open(p, "r") as f:
         t = f.read(-1)
     msg = pEp.Message(t)
     print("\n" + colored(p.name, color))
     print(colored(str(datetime.fromtimestamp(p.stat().st_mtime)), color))
-    m = re.search("<payload>(.*)</payload>", msg.opt_fields["pEp.sync"].replace("\n", " "))
+    m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
         if etree:
             tree = objectify.fromstring(m.group(1).replace("\r", ""))
