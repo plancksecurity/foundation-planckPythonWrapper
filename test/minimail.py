@@ -88,8 +88,9 @@ def recv_all(inbox, marker):
                     t = p.stat().st_mtime
                     if t > newest:
                         newest = t
-            (inbox / marker).touch(exist_ok=True)
-            os.utime(str(inbox / marker), (newest, newest))
+            if newest:
+                (inbox / marker).touch(exist_ok=True)
+                os.utime(str(inbox / marker), (newest, newest))
 
         if not r:
             sleep(1)
