@@ -93,13 +93,19 @@ class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
         output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
-        try:
-            if options.reject:
-                self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
-            else:
+        if signal in (
+                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
+                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
+                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
+            ):
+            try:
+                if options.reject:
+                    self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
+                else:
+                    self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+
+            except NameError:
                 self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
-        except NameError:
-            self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
 
 
 def run(name, color=None):
