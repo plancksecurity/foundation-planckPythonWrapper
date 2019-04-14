@@ -20,14 +20,16 @@ import shutil
 import pathlib
 
 
-def test_for(path, color=None):
+def test_for(path, color=None, end_on=None):
     cwd = os.getcwd();
     os.chdir(path)
     os.environ["HOME"] = os.getcwd()
 
     print("running tests for " + path)
-    from sync_handshake import run
-    run(path, color)
+    import sync_handshake
+    if end_on:
+        sync_handshake.end_on = end_on
+    sync_handshake.run(path, color)
 
     os.chdir(cwd)
 
@@ -85,6 +87,8 @@ if __name__ == "__main__":
             help="setup environment, then stop")
     optParser.add_option("-p", "--print", action="store_true", dest="print",
             help="print sync message trace in inbox")
+    optParser.add_option("-E", "--end-on", dest="notifications",
+            help="end on these notifications")
     options, args = optParser.parse_args()
 
     if options.cleanall:
@@ -139,8 +143,14 @@ if __name__ == "__main__":
         setup("Laptop")
 
         if not options.setup_only:
-            Phone = Process(target=test_for, args=("Phone", "red"))
-            Laptop = Process(target=test_for, args=("Laptop", "green"))
+            end_on = None
+            if options.notifications:
+                end_on = eval(options.notifications)
+                try: None in end_on
+                except TypeError:
+                    end_on = (end_on,)
+            Phone = Process(target=test_for, args=("Phone", "red", end_on))
+            Laptop = Process(target=test_for, args=("Laptop", "green", end_on))
 
             Phone.start()
             Laptop.start()

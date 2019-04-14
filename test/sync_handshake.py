@@ -47,6 +47,10 @@ SYNC_HANDSHAKE_ACCEPTED = 0
 SYNC_HANDSHAKE_REJECTED = 1
 
 the_end = False
+end_on = (
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED,
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED
+    )
 
 
 def print_msg(p):
@@ -108,10 +112,7 @@ class UserInterface(pEp.UserInterface):
 
             except NameError:
                 self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
-        elif signal in (
-                pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED,
-                pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED
-            ):
+        if signal in end_on:
             global the_end
             the_end = True
 
@@ -157,10 +158,18 @@ if __name__=="__main__":
             help="reject device group")
     optParser.add_option("--accept", action="store_false", dest="reject",
             help="accept device group (default)")
+    optParser.add_option("-E", "--end-on", dest="notifications",
+            help="end on these notifications")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
         options.exec_for = os.path.basename(os.getcwd())
+
+    if options.notifications:
+        end_on = eval(options.notifications)
+        try: None in end_on
+        except TypeError:
+            end_on = (end_on,)
 
     run(options.exec_for, options.color)
 
