@@ -46,6 +46,8 @@ DONT_TRIGGER_SYNC = 0x200
 SYNC_HANDSHAKE_ACCEPTED = 0
 SYNC_HANDSHAKE_REJECTED = 1
 
+the_end = False
+
 
 def print_msg(p):
     if isinstance(p, pathlib.Path):
@@ -106,6 +108,12 @@ class UserInterface(pEp.UserInterface):
 
             except NameError:
                 self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+        elif signal in (
+                pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED,
+                pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED
+            ):
+            global the_end
+            the_end = True
 
 
 def run(name, color=None):
@@ -122,7 +130,7 @@ def run(name, color=None):
     ui = UserInterface()
 
     try:
-        while True:
+        while not the_end:
             l = minimail.recv_all(inbox, name)
             for n, m in l:
                 msg = pEp.Message(m)
