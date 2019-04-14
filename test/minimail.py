@@ -53,6 +53,7 @@ class Lock:
 def send(inbox, msg, marker):
     "send msg to inbox in MIME format"
 
+    sleep(1)
     with Lock(inbox):
         name = marker + "_" + token_urlsafe(16) + ".eml"
         with open(inbox / name, "wb") as f:

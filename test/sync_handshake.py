@@ -48,17 +48,24 @@ SYNC_HANDSHAKE_REJECTED = 1
 
 
 def print_msg(p):
-    if p.name[:5] == "Phone":
-        color = "red"
-    elif p.name[:6] == "Laptop":
-        color = "green"
+    if isinstance(p, pathlib.Path):
+        if p.name[:5] == "Phone":
+            color = "red"
+        elif p.name[:6] == "Laptop":
+            color = "green"
+        else:
+            color = "lightblue"
+        with open(p, "r") as f:
+            t = f.read(-1)
+        msg = pEp.Message(t)
+        print("\n" + colored(p.name, color))
+        print(colored(str(datetime.fromtimestamp(p.stat().st_mtime)), color))
+    elif isinstance(p, pEp.Message):
+        msg = p
     else:
-        color = "lightblue"
-    with open(p, "r") as f:
-        t = f.read(-1)
-    msg = pEp.Message(t)
-    print("\n" + colored(p.name, color))
-    print(colored(str(datetime.fromtimestamp(p.stat().st_mtime)), color))
+        raise TypeError("print_msg(): pathlib.Path and pEp.Message supported, but "
+                + str(type(p)) + " delivered")
+
     m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
         if etree:
@@ -113,6 +120,8 @@ def run(name, color=None):
             l = minimail.recv_all(inbox, name)
             for n, m in l:
                 msg = pEp.Message(m)
+                print(colored("*** Reading", color))
+                print_msg(msg)
                 msg2, keys, rating, flags = msg.decrypt()
 
     except KeyboardInterrupt:
