@@ -448,7 +448,9 @@ BOOST_PYTHON_MODULE(pEp)
         .value("SYNC_NOTIFY_TIMEOUT"               , SYNC_NOTIFY_TIMEOUT)
         .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED" , SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED)
         .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", SYNC_NOTIFY_ACCEPTED_GROUP_CREATED)
-        .value("SYNC_NOTIFY_OVERTAKEN"             , SYNC_NOTIFY_OVERTAKEN);
+        .value("SYNC_NOTIFY_OVERTAKEN"             , SYNC_NOTIFY_OVERTAKEN)
+        .value("SYNC_NOTIFY_SOLE"                  , SYNC_NOTIFY_SOLE)
+        .value("SYNC_NOTIFY_IN_GROUP"              , SYNC_NOTIFY_IN_GROUP);
 
     auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
             "UserInterface",
