@@ -159,7 +159,7 @@ if __name__=="__main__":
     optParser.add_option("--accept", action="store_false", dest="reject",
             help="accept device group (default)")
     optParser.add_option("-E", "--end-on", dest="notifications",
-            help="end on these notifications")
+            help="end test on these notifications")
     options, args = optParser.parse_args()
 
     if not options.exec_for:

@@ -88,7 +88,7 @@ if __name__ == "__main__":
     optParser.add_option("-p", "--print", action="store_true", dest="print",
             help="print sync message trace in inbox")
     optParser.add_option("-E", "--end-on", dest="notifications",
-            help="end on these notifications")
+            help="end test on these notifications")
     options, args = optParser.parse_args()
 
     if options.cleanall:
