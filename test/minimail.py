@@ -24,6 +24,9 @@ from secrets import token_urlsafe
 from time import sleep
 
 
+timing = .3
+
+
 def unlock(inbox):
     "clear the inbox from lockfile"
 
@@ -46,14 +49,14 @@ class Lock:
     def __enter__(self):
         lockfile = self.inbox / "lock"
         while lockfile.is_file():
-            sleep(1)
+            sleep(timing)
         lockfile.touch()
 
 
 def send(inbox, msg, marker):
     "send msg to inbox in MIME format"
 
-    sleep(1)
+    sleep(timing)
     with Lock(inbox):
         name = marker + "_" + token_urlsafe(16) + ".eml"
         with open(inbox / name, "wb") as f:
@@ -94,7 +97,7 @@ def recv_all(inbox, marker):
                 os.utime(str(inbox / marker), (newest, newest))
 
         if not r:
-            sleep(1)
+            sleep(timing)
 
     return r
 
