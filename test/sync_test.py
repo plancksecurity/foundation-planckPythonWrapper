@@ -89,6 +89,8 @@ if __name__ == "__main__":
             help="print sync message trace in inbox")
     optParser.add_option("-E", "--end-on", dest="notifications",
             help="end test on these notifications")
+    optParser.add_option("-3", "--third-device", action="store_true", dest="third",
+            help="start Pad as third device")
     options, args = optParser.parse_args()
 
     if options.cleanall:
@@ -98,6 +100,7 @@ if __name__ == "__main__":
         rmrf("TestInbox")
         rmrf("Phone")
         rmrf("Laptop")
+        rmrf("Pad")
 
         if options.cleanall:
             rmrf("Backup")
@@ -112,15 +115,18 @@ if __name__ == "__main__":
 
         shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
         shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("Pad", "Backup/Pad", symlinks=True, copy_function=shutil.copy2)
         shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
 
     elif options.restore:
         rmrf("TestInbox")
         rmrf("Phone")
         rmrf("Laptop")
+        rmrf("Pad")
 
         shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
         shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
+        shutil.copytree("Backup/Pad", "Pad", symlinks=True, copy_function=shutil.copy2)
         shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
 
     elif options.print:
@@ -138,6 +144,8 @@ if __name__ == "__main__":
         os.makedirs("TestInbox", exist_ok=True)
         setup("Phone")
         setup("Laptop")
+        if options.third:
+            setup("Pad")
 
         if not options.setup_only:
             end_on = None
@@ -148,10 +156,16 @@ if __name__ == "__main__":
                     end_on = (end_on,)
             Phone = Process(target=test_for, args=("Phone", "red", end_on))
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on))
+            if options.third:
+                Pad = Process(target=test_for, args=("Pad", "cyan", end_on))
 
             Phone.start()
             Laptop.start()
+            if options.third:
+                Pad.start()
 
             Phone.join()
             Laptop.join()
+            if options.third:
+                Pad.join()
 

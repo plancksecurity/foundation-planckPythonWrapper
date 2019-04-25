@@ -60,7 +60,7 @@ def print_msg(p):
         elif p.name[:6] == "Laptop":
             color = "green"
         else:
-            color = "lightblue"
+            color = "cyan"
         with open(p, "r") as f:
             t = f.read(-1)
         msg = pEp.Message(t)
