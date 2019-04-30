@@ -24,7 +24,7 @@ from secrets import token_urlsafe
 from time import sleep
 
 
-timing = 2
+timing = 0
 
 
 def unlock(inbox):
