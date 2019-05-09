@@ -112,6 +112,7 @@ namespace pEp {
                 il = il->next;
             }
 
+            free_identitiy_list(private_keys);
             return result;
         }
     }
