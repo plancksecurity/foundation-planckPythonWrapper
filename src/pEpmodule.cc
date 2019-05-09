@@ -16,6 +16,7 @@
 #include <pEp/key_reset.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
+#include <pEp/status_to_string.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -75,9 +76,14 @@ namespace pEp {
             if (status == PEP_ILLEGAL_VALUE)
                 throw invalid_argument("illegal value");
 
-            stringstream build;
-            build << setfill('0') << "p≡p 0x" << setw(4) << hex << status;
-            throw runtime_error(build.str());
+            if (string(pEp_status_to_string(status)) == "unknown status code") {
+                stringstream build;
+                build << setfill('0') << "p≡p 0x" << setw(4) << hex << status;
+                throw runtime_error(build.str());
+            }
+            else {
+                throw runtime_error(pEp_status_to_string(status));
+            }
         }
 
         PEP_STATUS _messageToSend(::message *msg)
