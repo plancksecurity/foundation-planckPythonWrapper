@@ -20,6 +20,8 @@ namespace pEp {
         void unset_identity_flags(Identity ident, identity_flags_t flags);
 
         void key_reset_trust(Identity ident);
+
+        boost::python::list import_key(string key_data);
     }
 }
 

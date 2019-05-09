@@ -83,7 +83,8 @@ namespace pEp {
             _throw_status(status);
         }
         
-        void key_reset_trust(Identity ident) {
+        void key_reset_trust(Identity ident)
+        {
             if (ident.fpr() == "")
                 throw invalid_argument("address needed");
             if (ident.address() == "")
@@ -93,6 +94,25 @@ namespace pEp {
 
             PEP_STATUS status = key_reset_trust(adapter.session(), ident);
             _throw_status(status);
+        }
+
+        boost::python::list import_key(string key_data)
+        {
+            ::identity_list *private_keys = NULL;
+            PEP_STATUS status = ::import_key(adapter.session(), key_data.c_str(), key_data.size(), &private_keys);
+            if (status && status != PEP_KEY_IMPORTED)
+                _throw_status(status);
+
+            auto result = boost::python::list();
+            for (::identity_list *il = private_keys; il && il->ident; il=il->next) {
+                ::pEp_identity *ident = ::identity_dup(il->ident);
+                if (!ident)
+                    throw bad_alloc();
+                result.append(Identity(ident));
+                il = il->next;
+            }
+
+            return result;
         }
     }
 }

@@ -393,6 +393,12 @@ BOOST_PYTHON_MODULE(pEp)
             "its accompanying key/user_id pair\n"
         );
 
+    def("import_key", &pEp::PythonAdapter::import_key,
+            "private_key_list = import_key(key_data)\n"
+            "\n"
+            "import key(s) from key_data\n"
+        );
+
     // message API
 
     enum_<PEP_rating>("PEP_rating")
