@@ -109,7 +109,6 @@ namespace pEp {
                 if (!ident)
                     throw bad_alloc();
                 result.append(Identity(ident));
-                il = il->next;
             }
 
             free_identity_list(private_keys);
