@@ -106,8 +106,10 @@ namespace pEp {
             auto result = boost::python::list();
             for (::identity_list *il = private_keys; il && il->ident; il=il->next) {
                 ::pEp_identity *ident = ::identity_dup(il->ident);
-                if (!ident)
+                if (!ident) {
+                    free_identity_list(private_keys);
                     throw bad_alloc();
+                }
                 result.append(Identity(ident));
             }
 
