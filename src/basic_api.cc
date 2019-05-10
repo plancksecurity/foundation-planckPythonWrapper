@@ -86,11 +86,11 @@ namespace pEp {
         void key_reset_trust(Identity ident)
         {
             if (ident.fpr() == "")
-                throw invalid_argument("address needed");
+                throw invalid_argument("fpr needed");
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == "")
-                throw invalid_argument("address needed");
+                throw invalid_argument("user_id needed");
 
             PEP_STATUS status = key_reset_trust(adapter.session(), ident);
             _throw_status(status);
