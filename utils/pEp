@@ -3,8 +3,8 @@
 
 
 """
-p≡p command line version 1.0
-Copyleft 2016, p≡p foundation
+p≡p command line version 1.1
+Copyleft 2016-2019, p≡p foundation
 written by Volker Birk
 
 """
@@ -24,6 +24,8 @@ parser.add_argument('--encrypt', '-e', help='encrypt p≡p message',
         action='store_true', dest='encrypt')
 parser.add_argument('--decrypt', '-d', help='decrypt p≡p message',
         action='store_true', dest='decrypt')
+parser.add_argument('--import', '-i', help='import key data in PGP format',
+        action='store_true', dest='keyimport')
 parser.add_argument('--version', '-V', help='show program version',
         action='store_true', dest='version')
 parser.add_argument('files', metavar='FILE', nargs='*',
@@ -31,8 +33,8 @@ parser.add_argument('files', metavar='FILE', nargs='*',
 
 args = parser.parse_args()
 
-if not(args.encrypt) and not(args.decrypt) and not(args.version):
-    print('use either --encrypt or --decrypt', file=sys.stderr)
+if not(args.encrypt) and not(args.decrypt) and not (args.keyimport) and not(args.version):
+    print('use either --encrypt, --decrypt or --import', file=sys.stderr)
     sys.exit(2)
 
 if args.version:
@@ -51,25 +53,37 @@ try:
         args.files = ['-']
 
     for filename in args.files:
-        text = ''
-        if filename == '-':
-            for line in sys.stdin.readlines():
-                text += line
-        else:
-            with open(filename, "r") as f:
-                for line in f:
+        if args.decrypt or args.encrypt:
+            text = ''
+            if filename == '-':
+                for line in sys.stdin.readlines():
                     text += line
+            else:
+                with open(filename, "r") as f:
+                    for line in f:
+                        text += line
 
-        src = Message(text)
+            src = Message(text)
 
-        if args.encrypt:
-            src.dir = 1
-            dst = src.encrypt()
-        else:
-            src.dir = 0
-            dst, keys, rating, consumed, flags = src.decrypt()
+            if args.encrypt:
+                src.dir = 1
+                dst = src.encrypt()
+            else:
+                src.dir = 0
+                dst, keys, rating, consumed, flags = src.decrypt()
 
-        print(str(dst))
+            print(str(dst))
+
+        elif args.keyimport:
+            if filename == '-':
+                text = sys.stdin.read()
+            else:
+                with open(filename, "rb") as f:
+                    text = f.read()
+            try:
+                import_key(text)
+            except RuntimeError:
+                print("error importing key(s)", file=sys.stderr)
 
 except KeyboardInterrupt:
     print('\n', file=sys.stderr)
