@@ -99,6 +99,9 @@ class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
         output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
                 str(partner.fpr))
+        if me.fpr and partner.fpr:
+            assert me.fpr != partner.fpr
+
         if signal in (
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
