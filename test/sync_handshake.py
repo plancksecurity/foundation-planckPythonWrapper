@@ -72,7 +72,7 @@ def print_msg(p):
         raise TypeError("print_msg(): pathlib.Path and pEp.Message supported, but "
                 + str(type(p)) + " delivered")
 
-    m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp-sync"].replace("\n", " "))
+    m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
         if etree:
             tree = objectify.fromstring(m.group(1).replace("\r", ""))
@@ -91,7 +91,7 @@ def messageToSend(msg):
         m = msg
     text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
     output(text)
-    msg.opt_fields = { "pEp-sync": text }
+    msg.opt_fields = { "pEp.sync": text }
     minimail.send(inbox, msg, device_name)
 
 
