@@ -138,10 +138,10 @@ def run(name, color=None):
         def sync_thread():
             ui = UserInterface()
             pEp.do_sync_protocol()
-        ui_thread = Thread(target=sync_thread)
+        sync = Thread(target=sync_thread)
         ui_thread.start()
     else:
-        ui_thread = None
+        sync = None
         ui = UserInterface()
 
     try:
