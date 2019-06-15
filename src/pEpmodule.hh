@@ -16,6 +16,7 @@ namespace pEp {
         void _throw_status(PEP_STATUS status);
         void messageToSend(Message msg);
         PEP_STATUS _messageToSend(::message *msg);
+        void do_sync_protocol();
         extern Adapter adapter;
     }
 }

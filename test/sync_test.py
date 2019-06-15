@@ -20,7 +20,7 @@ import shutil
 import pathlib
 
 
-def test_for(path, color=None, end_on=None):
+def test_for(path, color=None, end_on=None, mt=False):
     cwd = os.getcwd();
     os.chdir(path)
     os.environ["HOME"] = os.getcwd()
@@ -29,6 +29,7 @@ def test_for(path, color=None, end_on=None):
     import sync_handshake
     if end_on:
         sync_handshake.end_on = end_on
+    sync_handshake.multithreaded = mt
     sync_handshake.run(path, color)
 
     os.chdir(cwd)
@@ -91,6 +92,9 @@ if __name__ == "__main__":
             help="end test on these notifications")
     optParser.add_option("-3", "--third-device", action="store_true", dest="third",
             help="start Pad as third device")
+    optParser.add_option("-j", "--multi-threaded", action="store_true",
+            dest="multithreaded",
+            help="use multithreaded instead of single threaded implementation")
     options, args = optParser.parse_args()
 
     if options.cleanall:
@@ -154,10 +158,13 @@ if __name__ == "__main__":
                 try: None in end_on
                 except TypeError:
                     end_on = (end_on,)
-            Phone = Process(target=test_for, args=("Phone", "red", end_on))
-            Laptop = Process(target=test_for, args=("Laptop", "green", end_on))
+            Phone = Process(target=test_for, args=("Phone", "red", end_on,
+                options.multithreaded))
+            Laptop = Process(target=test_for, args=("Laptop", "green", end_on,
+                options.multithreaded))
             if options.third:
-                Pad = Process(target=test_for, args=("Pad", "cyan", end_on))
+                Pad = Process(target=test_for, args=("Pad", "cyan", end_on,
+                    options.multithreaded))
 
             Phone.start()
             Laptop.start()

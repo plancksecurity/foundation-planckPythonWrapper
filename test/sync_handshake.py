@@ -41,6 +41,7 @@ except:
 inbox = pathlib.Path("..") / "TestInbox"
 device_name = ""
 output = print
+multithreaded = False
 
 DONT_TRIGGER_SYNC = 0x200
 SYNC_HANDSHAKE_ACCEPTED = 0
@@ -131,7 +132,17 @@ def run(name, color=None):
     me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
     pEp.myself(me)
     pEp.messageToSend = messageToSend
-    ui = UserInterface()
+
+    if multithreaded:
+        from threading import Thread
+        def sync_thread():
+            ui = UserInterface()
+            pEp.do_sync_protocol()
+        ui_thread = Thread(target=sync_thread)
+        ui_thread.start()
+    else:
+        ui_thread = None
+        ui = UserInterface()
 
     try:
         while not the_end:
@@ -163,6 +174,9 @@ if __name__=="__main__":
             help="accept device group (default)")
     optParser.add_option("-E", "--end-on", dest="notifications",
             help="end test on these notifications")
+    optParser.add_option("-j", "--multi-threaded", action="store_true",
+            dest="multithreaded",
+            help="use multithreaded instead of single threaded implementation")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -174,5 +188,6 @@ if __name__=="__main__":
         except TypeError:
             end_on = (end_on,)
 
+    multithreaded = options.multithreaded
     run(options.exec_for, options.color)
 

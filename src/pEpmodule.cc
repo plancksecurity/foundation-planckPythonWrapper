@@ -103,6 +103,11 @@ namespace pEp {
         void messageToSend(Message msg) {
             throw runtime_error("implement pEp.messageToSend(msg)");
         }
+
+        void do_sync_protocol()
+        {
+            ::do_sync_protocol(adapter.session(), nullptr);
+        }
     }
 }
 
@@ -489,6 +494,13 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "call to deliver the handshake result of the handshake dialog")
     ;
+
+    def("do_sync_protocol", &pEp::PythonAdapter::do_sync_protocol,
+        "do_sync_protocol()\n"
+        "\n"
+        "in case of an explicit sync thread instead of a single threaded\n"
+        "implementation call this function in your sync thread\n"
+    );
 
     // codecs
 
