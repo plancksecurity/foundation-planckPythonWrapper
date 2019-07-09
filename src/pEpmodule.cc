@@ -108,6 +108,11 @@ namespace pEp {
         {
             ::do_sync_protocol(adapter.session(), nullptr);
         }
+
+        void shutdown_sync()
+        {
+            adapter.shutdown_sync();
+        }
     }
 }
 
@@ -501,6 +506,12 @@ BOOST_PYTHON_MODULE(pEp)
         "in case of an explicit sync thread instead of a single threaded\n"
         "implementation call this function in your sync thread\n"
     );
+
+    def("shutdown_sync", &pEp::PythonAdapter::shutdown_sync,
+            "shutdown_sync()\n"
+            "\n"
+            "call this from another thread to shut down the sync thread\n"
+       );
 
     // codecs
 

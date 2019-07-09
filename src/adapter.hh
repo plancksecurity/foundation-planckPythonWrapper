@@ -32,6 +32,8 @@ namespace pEp {
                     return q;
                 }
 
+                void shutdown_sync() { queue().push_front(nullptr); }
+
             protected:
                 static PyObject *ui_object(PyObject *value = nullptr);
                 static int _inject_sync_event(SYNC_EVENT ev, void *management);

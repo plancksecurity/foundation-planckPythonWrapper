@@ -30,6 +30,7 @@ def test_for(path, color=None, end_on=None, mt=False):
     if end_on:
         sync_handshake.end_on = end_on
     sync_handshake.multithreaded = mt
+
     sync_handshake.run(path, color)
 
     os.chdir(cwd)

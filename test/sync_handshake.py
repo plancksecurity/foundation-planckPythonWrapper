@@ -121,6 +121,10 @@ class UserInterface(pEp.UserInterface):
             the_end = True
 
 
+def shutdown_sync():
+    pEp.shutdown_sync()
+
+
 def run(name, color=None):
     global device_name
     device_name = name
@@ -142,7 +146,6 @@ def run(name, color=None):
             pEp.do_sync_protocol()
             print(colored("********* ", "yellow") + colored("leaving sync_thread", color))
         sync = Thread(target=sync_thread)
-        sync.daemon = True
         sync.start()
     else:
         sync = None
@@ -158,7 +161,8 @@ def run(name, color=None):
                 msg2, keys, rating, flags = msg.decrypt()
 
     except KeyboardInterrupt:
-        pass
+        shutdown_sync()
+        sys.exit()
 
 
 if __name__=="__main__":
