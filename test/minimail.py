@@ -13,7 +13,7 @@ delete the marker file to re-read all messages
 
 """
 
-# Minimail
+# Minimail 1.1
 # Copyleft 2019, p≡p foundation
 
 # this file is under GNU General Public License 3.0
@@ -63,17 +63,17 @@ def send(inbox, msg, marker):
             f.write(str(msg).encode())
 
 
-def newer(file1, file2):
-    "return True if file1 is newer than file2"
+def newer(file, stamp):
+    "return True if file is newer than timestamp stamp"
 
-    if not file1.is_file():
+    if not file.is_file():
         return False
-    elif not file2.is_file():
+    
+    if stamp is None:
         return True
 
-    stat1 = file1.stat()
-    stat2 = file2.stat()
-    return stat1.st_mtime > stat2.st_mtime
+    stat = file.stat()
+    return stat.st_mtime > stamp.st_mtime
 
 
 def recv_all(inbox, marker):
@@ -83,19 +83,17 @@ def recv_all(inbox, marker):
     r = []
     while not r:
         with Lock(inbox):
-            newest = 0
-            for p in reversed([ path for path in inbox.glob("*.eml") ]):
-                if newer(p, inbox / marker):
+            try:
+                stamp = (inbox / marker).stat()
+            except:
+                stamp = None
+            l = [ path for path in inbox.glob("*.eml") ]
+            (inbox / marker).touch(exist_ok=True)
+            for p in reversed(l):
+                if newer(p, stamp):
                     with open(p, "rb") as f:
-                        t = f.read(-1)
-                        r.append((p, t))
-                    t = p.stat().st_mtime
-                    if t > newest:
-                        newest = t
-            if newest:
-                (inbox / marker).touch(exist_ok=True)
-                os.utime(str(inbox / marker), (newest, newest))
-
+                        txt = f.read(-1)
+                        r.append((p, txt))
         if not r:
             sleep(timing)
 
