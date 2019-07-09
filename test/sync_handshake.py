@@ -136,9 +136,13 @@ def run(name, color=None):
     if multithreaded:
         from threading import Thread
         def sync_thread():
+            print(colored("********* ", "yellow") + colored("sync_thread entered", color))
             ui = UserInterface()
+            print(colored("********* ", "yellow") + colored("UserInterface object created", color))
             pEp.do_sync_protocol()
+            print(colored("********* ", "yellow") + colored("leaving sync_thread", color))
         sync = Thread(target=sync_thread)
+        sync.daemon = True
         sync.start()
     else:
         sync = None
@@ -149,7 +153,7 @@ def run(name, color=None):
             l = minimail.recv_all(inbox, name)
             for n, m in l:
                 msg = pEp.Message(m)
-                print(colored("*** Reading", color))
+                output("*** Reading")
                 print_msg(msg)
                 msg2, keys, rating, flags = msg.decrypt()
 
