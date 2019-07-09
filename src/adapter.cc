@@ -72,7 +72,7 @@ namespace pEp {
             }
 
             try {
-                queue().push_front(ev);
+                queue().push_back(ev);
             }
             catch (exception&) {
                 return 1;
