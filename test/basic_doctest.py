@@ -25,7 +25,7 @@ Please call me back
 >>> m2 = m.encrypt()
 >>> m3, keys, rating, flags = m2.decrypt()
 >>> rating
-3
+pEp.PEP_rating.PEP_rating_reliable
 """
 
 if __name__ == "__main__":
