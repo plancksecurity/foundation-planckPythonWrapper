@@ -23,6 +23,9 @@ import sys
 import re
 import pEp
 import minimail
+import miniimap
+
+import sync_settings as settings
 
 from datetime import datetime
 
@@ -72,8 +75,12 @@ def print_msg(p):
     else:
         raise TypeError("print_msg(): pathlib.Path and pEp.Message supported, but "
                 + str(type(p)) + " delivered")
+    
+    m = False
 
-    m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
+    if msg.opt_fields.get("pEp.sync"):
+        m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
+    
     if m:
         if etree:
             tree = objectify.fromstring(m.group(1).replace("\r", ""))
@@ -82,6 +89,7 @@ def print_msg(p):
             text = m.group(1).replace("\r", "").strip()
             while text.count("  "):
                 text = text.replace("  ", " ")
+        print('-- BEACON --')
         print(text)
 
 
@@ -95,6 +103,25 @@ def messageToSend(msg):
     msg.opt_fields = { "pEp.sync": text }
     minimail.send(inbox, msg, device_name)
 
+def messageImapToSend(msg):
+    if msg.enc_format:
+        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
+    else:
+        m = msg
+    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
+    output(text)
+    msg.opt_fields = { "pEp.sync": text }
+    miniimap.send(inbox, msg)
+
+def getMessageToSend(msg):
+    if msg.enc_format:
+        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
+    else:
+        m = msg
+    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
+    output(text)
+    msg.opt_fields = { "pEp.sync": text }
+    return msg
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
@@ -125,7 +152,7 @@ def shutdown_sync():
     pEp.shutdown_sync()
 
 
-def run(name, color=None):
+def run(name, color=None, imap=False):
     global device_name
     device_name = name
 
@@ -133,9 +160,16 @@ def run(name, color=None):
         global output
         output = lambda x: print(colored(x, color))
 
-    me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
-    pEp.myself(me)
-    pEp.messageToSend = messageToSend
+    if imap:
+        me = pEp.Identity(settings.IMAP_EMAIL, name + " of " + settings.IMAP_USER, name)
+        pEp.myself(me)
+        pEp.messageToSend = messageImapToSend
+    else:
+        me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
+        pEp.myself(me)
+        pEp.messageToSend = messageToSend
+    
+
 
     if multithreaded:
         from threading import Thread
@@ -153,7 +187,10 @@ def run(name, color=None):
 
     try:
         while not the_end:
-            l = minimail.recv_all(inbox, name)
+            if imap:
+                l = miniimap.recv_all(inbox, 'start_time')
+            else:
+                l = minimail.recv_all(inbox, name)
             for n, m in l:
                 msg = pEp.Message(m)
                 output("*** Reading")

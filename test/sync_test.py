@@ -19,8 +19,9 @@ import sys
 import shutil
 import pathlib
 
+import miniimap
 
-def test_for(path, color=None, end_on=None, mt=False):
+def test_for(path, color=None, end_on=None, mt=False, imap=False):
     cwd = os.getcwd();
     os.chdir(path)
     os.environ["HOME"] = os.getcwd()
@@ -31,7 +32,7 @@ def test_for(path, color=None, end_on=None, mt=False):
         sync_handshake.end_on = end_on
     sync_handshake.multithreaded = mt
 
-    sync_handshake.run(path, color)
+    sync_handshake.run(path, color, imap)
 
     os.chdir(cwd)
 
@@ -96,6 +97,9 @@ if __name__ == "__main__":
     optParser.add_option("-j", "--multi-threaded", action="store_true",
             dest="multithreaded",
             help="use multithreaded instead of single threaded implementation")
+    optParser.add_option("-i", "--imap", action="store_true",
+            dest="imap",
+            help="use imap instead of minimail")
     options, args = optParser.parse_args()
 
     if options.cleanall:
@@ -106,6 +110,10 @@ if __name__ == "__main__":
         rmrf("Phone")
         rmrf("Laptop")
         rmrf("Pad")
+        try:
+            miniimap.clean_inbox()
+        except:
+            pass
 
         if options.cleanall:
             rmrf("Backup")
@@ -160,12 +168,12 @@ if __name__ == "__main__":
                 except TypeError:
                     end_on = (end_on,)
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
-                options.multithreaded))
+                options.multithreaded, options.imap))
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,
-                options.multithreaded))
+                options.multithreaded, options.imap))
             if options.third:
                 Pad = Process(target=test_for, args=("Pad", "cyan", end_on,
-                    options.multithreaded))
+                    options.multithreaded, options.imap))
 
             Phone.start()
             Laptop.start()
