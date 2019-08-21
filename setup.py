@@ -6,9 +6,9 @@
 
 from setuptools import setup, Extension
 from glob import glob
-from os import environ, uname
-from os.path import dirname, exists, join
-from sys import argv
+from os import environ
+from os.path import dirname, exists, join, abspath
+from sys import argv, platform
 
 
 compile_args = ['-O0', '-g', '-UNDEBUG', '-std=c++14'] \
@@ -43,7 +43,7 @@ libraries = [
     ]
 
 
-libext = '.dylib' if uname().sysname == 'Darwin' else '.so'
+libext = '.dll' if platform == 'win32' else '.dylib' if platform == 'darwin' else '.so'
 
 
 search_for_includes = 'pEp', 'boost', 'asn1c/asn_system.h'
