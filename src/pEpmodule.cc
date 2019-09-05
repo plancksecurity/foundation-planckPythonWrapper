@@ -218,6 +218,7 @@ BOOST_PYTHON_MODULE(pEp)
                 "flags (p≡p internal)")
         .add_property("rating", &pEp::PythonAdapter::Identity::rating, "rating of Identity")
         .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
+        .add_property("is_pEp_user", &pEp::PythonAdapter::Identity::is_pEp_user, "True if this is an identity of a pEp user")
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
         .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
         .def("__copy__", &pEp::PythonAdapter::Identity::copy);

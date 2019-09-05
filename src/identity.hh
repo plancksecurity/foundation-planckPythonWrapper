@@ -65,6 +65,8 @@ namespace pEp {
             virtual void update();
 
             void key_reset(string fpr="");
+
+            bool is_pEp_user();
         };
 
         class Myself : public Identity {
