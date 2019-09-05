@@ -129,6 +129,10 @@ BOOST_PYTHON_MODULE(pEp)
     _scope = new scope();
 
     scope().attr("about") = about();
+    scope().attr("per_user_directory") = per_user_directory();
+    scope().attr("per_machine_directory") = per_machine_directory();
+    scope().attr("engine_version") = get_engine_version();
+    scope().attr("protocol_version") = get_protocol_version();
     
     def("passive_mode", pEp::PythonAdapter::config_passive_mode,
             "do not attach pub keys to all messages");
