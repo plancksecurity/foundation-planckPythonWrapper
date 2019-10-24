@@ -129,6 +129,10 @@ BOOST_PYTHON_MODULE(pEp)
     _scope = new scope();
 
     scope().attr("about") = about();
+    scope().attr("per_user_directory") = per_user_directory();
+    scope().attr("per_machine_directory") = per_machine_directory();
+    scope().attr("engine_version") = get_engine_version();
+    scope().attr("protocol_version") = get_protocol_version();
     
     def("passive_mode", pEp::PythonAdapter::config_passive_mode,
             "do not attach pub keys to all messages");
@@ -214,6 +218,7 @@ BOOST_PYTHON_MODULE(pEp)
                 "flags (p≡p internal)")
         .add_property("rating", &pEp::PythonAdapter::Identity::rating, "rating of Identity")
         .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
+        .add_property("is_pEp_user", &pEp::PythonAdapter::Identity::is_pEp_user, "True if this is an identity of a pEp user")
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
         .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
         .def("__copy__", &pEp::PythonAdapter::Identity::copy);

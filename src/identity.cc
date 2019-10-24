@@ -156,6 +156,14 @@ namespace pEp {
             _throw_status(status);
         }
 
+        bool Identity::is_pEp_user()
+        {
+            bool result;
+            PEP_STATUS status = ::is_pEp_user(adapter.session(), *this, &result);
+            _throw_status(status);
+            return result;
+        }
+
         Myself::Myself(string address, string username, string user_id, string lang)
             : Identity(address, username, user_id, "", 0, lang)
 
