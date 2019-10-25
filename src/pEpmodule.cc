@@ -113,6 +113,11 @@ namespace pEp {
         {
             adapter.shutdown_sync();
         }
+
+        void debug_color(int ansi_color)
+        {
+            ::set_debug_color(adapter.session(), ansi_color);
+        }
     }
 }
 
@@ -370,7 +375,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def("__deepcopy__", &Message::deepcopy)
         .def("__copy__", &Message::copy);
 
-    // basic API
+    // basic API and key management API
 
     def("update_identity", &pEp::PythonAdapter::update_identity,
     "update_identity(ident)\n"
@@ -517,6 +522,9 @@ BOOST_PYTHON_MODULE(pEp)
             "\n"
             "call this from another thread to shut down the sync thread\n"
        );
+
+    def("debug_color", &pEp::PythonAdapter::debug_color,
+            "for debug builds set ANSI color value");
 
     // codecs
 

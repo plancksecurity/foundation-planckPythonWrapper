@@ -132,6 +132,12 @@ def run(name, color=None):
     if color:
         global output
         output = lambda x: print(colored(x, color))
+        if color == "red":
+            pEp.debug_color(31)
+        elif color == "green":
+            pEp.debug_color(32)
+        elif color == "cyan":
+            pEp.debug_color(36)
 
     me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
     pEp.myself(me)
