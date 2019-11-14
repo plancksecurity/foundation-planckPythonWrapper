@@ -110,10 +110,11 @@ class UserInterface(pEp.UserInterface):
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
             ):
-            end_on.extend([
-                    pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
-                    pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
-                ])
+            if isinstance(end_on, list):
+                end_on.extend([
+                        pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
+                        pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
+                    ])
             try:
                 if options.reject:
                     self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
@@ -197,6 +198,8 @@ if __name__=="__main__":
     optParser.add_option("-j", "--multi-threaded", action="store_true",
             dest="multithreaded",
             help="use multithreaded instead of single threaded implementation")
+    optParser.add_option("-n", "--noend", action="store_true",
+            dest="noend", help="do not end")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -207,6 +210,9 @@ if __name__=="__main__":
         try: None in end_on
         except TypeError:
             end_on = (end_on,)
+
+    if options.noend:
+        end_on = (None,)
 
     multithreaded = options.multithreaded
     run(options.exec_for, options.color)
