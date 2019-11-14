@@ -48,10 +48,11 @@ SYNC_HANDSHAKE_ACCEPTED = 0
 SYNC_HANDSHAKE_REJECTED = 1
 
 the_end = False
-end_on = (
+end_on = [
         pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED,
-        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED
-    )
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED,
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED,
+    ]
 
 
 def print_msg(p):
@@ -109,6 +110,10 @@ class UserInterface(pEp.UserInterface):
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
             ):
+            end_on.extend([
+                    pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
+                    pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
+                ])
             try:
                 if options.reject:
                     self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)

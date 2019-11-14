@@ -110,6 +110,14 @@ if __name__ == "__main__":
         if options.cleanall:
             rmrf("Backup")
 
+        if options.setup_only:
+            os.makedirs("TestInbox", exist_ok=True)
+            setup("Phone")
+            setup("Laptop")
+            if options.third:
+                setup("Pad")
+
+
     elif options.backup:
         rmrf("Backup")
 
