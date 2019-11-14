@@ -98,8 +98,9 @@ def messageToSend(msg):
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
-                str(partner.fpr))
+        print(colored(str(signal), "yellow"), end=" ")
+        output("on " + device_name + "" if not me.fpr else
+                "for identities " + str(me.fpr) + " " + str(partner.fpr))
         if me.fpr and partner.fpr:
             assert me.fpr != partner.fpr
 
