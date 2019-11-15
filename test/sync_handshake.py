@@ -51,10 +51,11 @@ SYNC_HANDSHAKE_ACCEPTED = 0
 SYNC_HANDSHAKE_REJECTED = 1
 
 the_end = False
-end_on = (
+end_on = [
         pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED,
-        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED
-    )
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_GROUP_CREATED,
+        pEp.sync_handshake_signal.SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED,
+    ]
 
 
 def print_msg(p):
@@ -125,8 +126,9 @@ def getMessageToSend(msg):
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        output("on " + device_name + " signal " + str(signal) + " for identities " + str(me.fpr) + " " +
-                str(partner.fpr))
+        print(colored(str(signal), "yellow"), end=" ")
+        output("on " + device_name + "" if not me.fpr else
+                "for identities " + str(me.fpr) + " " + str(partner.fpr))
         if me.fpr and partner.fpr:
             assert me.fpr != partner.fpr
 
@@ -135,6 +137,11 @@ class UserInterface(pEp.UserInterface):
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
                 pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
             ):
+            if isinstance(end_on, list):
+                end_on.extend([
+                        pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
+                        pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
+                    ])
             try:
                 if options.reject:
                     self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
@@ -159,6 +166,12 @@ def run(name, color=None, imap=False):
     if color:
         global output
         output = lambda x: print(colored(x, color))
+        if color == "red":
+            pEp.debug_color(31)
+        elif color == "green":
+            pEp.debug_color(32)
+        elif color == "cyan":
+            pEp.debug_color(36)
 
     if imap:
         me = pEp.Identity(settings.IMAP_EMAIL, name + " of " + settings.IMAP_USER, name)
@@ -222,6 +235,8 @@ if __name__=="__main__":
     optParser.add_option("-j", "--multi-threaded", action="store_true",
             dest="multithreaded",
             help="use multithreaded instead of single threaded implementation")
+    optParser.add_option("-n", "--noend", action="store_true",
+            dest="noend", help="do not end")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -232,6 +247,9 @@ if __name__=="__main__":
         try: None in end_on
         except TypeError:
             end_on = (end_on,)
+
+    if options.noend:
+        end_on = (None,)
 
     multithreaded = options.multithreaded
     run(options.exec_for, options.color)

@@ -26,6 +26,8 @@ parser.add_argument('--decrypt', '-d', help='decrypt p≡p message',
         action='store_true', dest='decrypt')
 parser.add_argument('--import', '-i', help='import key data in PGP format',
         action='store_true', dest='keyimport')
+parser.add_argument('--export', '-x', help='export key data in PGP format',
+        action='store_true', dest='keyexport')
 parser.add_argument('--version', '-V', help='show program version',
         action='store_true', dest='version')
 parser.add_argument('files', metavar='FILE', nargs='*',
@@ -33,8 +35,8 @@ parser.add_argument('files', metavar='FILE', nargs='*',
 
 args = parser.parse_args()
 
-if not(args.encrypt) and not(args.decrypt) and not (args.keyimport) and not(args.version):
-    print('use either --encrypt, --decrypt or --import', file=sys.stderr)
+if not(args.encrypt) and not(args.decrypt) and not (args.keyimport) and not (args.keyexport) and not(args.version):
+    print('use either --encrypt, --decrypt, --import or --export', file=sys.stderr)
     sys.exit(2)
 
 if args.version:
@@ -84,6 +86,17 @@ try:
                 import_key(text)
             except RuntimeError:
                 print("error importing key(s)", file=sys.stderr)
+
+        elif args.keyexport:
+            if filename == '-':
+                text = sys.stdin.read()
+            else:
+                with open(filename, "rb") as f:
+                    text = f.read()
+            try:
+                import_key(text)
+            except RuntimeError:
+                print("error exporting key(s)", file=sys.stderr)
 
 except KeyboardInterrupt:
     print('\n', file=sys.stderr)

@@ -90,6 +90,8 @@ if __name__ == "__main__":
             help="setup environment, then stop")
     optParser.add_option("-p", "--print", action="store_true", dest="print",
             help="print sync message trace in inbox")
+    optParser.add_option("-n", "--noend", action="store_true", dest="noend",
+            help="do not end")
     optParser.add_option("-E", "--end-on", dest="notifications",
             help="end test on these notifications")
     optParser.add_option("-3", "--third-device", action="store_true", dest="third",
@@ -117,6 +119,14 @@ if __name__ == "__main__":
 
         if options.cleanall:
             rmrf("Backup")
+
+        if options.setup_only:
+            os.makedirs("TestInbox", exist_ok=True)
+            setup("Phone")
+            setup("Laptop")
+            if options.third:
+                setup("Pad")
+
 
     elif options.backup:
         rmrf("Backup")
@@ -167,6 +177,9 @@ if __name__ == "__main__":
                 try: None in end_on
                 except TypeError:
                     end_on = (end_on,)
+            elif options.noend:
+                end_on = (None,)
+
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
                 options.multithreaded, options.imap))
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,

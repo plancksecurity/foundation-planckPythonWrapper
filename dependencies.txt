@@ -1,0 +1,4 @@
+pEpPythonAdapter    => Python 3
+                    => g++ | clang | CL.EXE
+                    -> boost::python
+                    -> pEpEngine
