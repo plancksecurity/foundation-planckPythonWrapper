@@ -18,7 +18,7 @@ test/Library
 test/Phone
 test/TestInbox
 test/lib
-test/sync_settings.py
+test/imap_settings.py
 venv
 launch.json
 settings.json
