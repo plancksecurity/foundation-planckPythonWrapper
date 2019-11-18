@@ -21,7 +21,7 @@ $ HOME=$PWD lldb python3 --  ../sync_handshake.py -e Phone
 Then this side is doing a replay in the debugger.  Using touch to set a
 different timestamp on the marker will only partly replay.
 
-In order to work with IMAP you need to create a sync_settings.py file with the
+In order to work with IMAP you need to create a imap_settings.py file with the
 following variables:
 
 IMAP_HOST = 'domain.ch'

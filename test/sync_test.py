@@ -108,24 +108,27 @@ if __name__ == "__main__":
         options.clean = True
 
     if options.clean:
-        rmrf("TestInbox")
-        rmrf("Phone")
-        rmrf("Laptop")
-        rmrf("Pad")
-        try:
-            miniimap.clean_inbox()
-        except:
-            pass
 
-        if options.cleanall:
-            rmrf("Backup")
+        if options.imap:
+            try:
+                miniimap.clean_inbox()
+            except:
+                pass
+        else:
+            rmrf("TestInbox")
+            rmrf("Phone")
+            rmrf("Laptop")
+            rmrf("Pad")
+            
+            if options.cleanall:
+                rmrf("Backup")
 
-        if options.setup_only:
-            os.makedirs("TestInbox", exist_ok=True)
-            setup("Phone")
-            setup("Laptop")
-            if options.third:
-                setup("Pad")
+            if options.setup_only:
+                os.makedirs("TestInbox", exist_ok=True)
+                setup("Phone")
+                setup("Laptop")
+                if options.third:
+                    setup("Pad")
 
 
     elif options.backup:
@@ -160,7 +163,7 @@ if __name__ == "__main__":
         l.sort(key=(lambda p: p.stat().st_mtime))
         for p in l:
             print_msg(p)
-        
+
     else:
         from multiprocessing import Process
 

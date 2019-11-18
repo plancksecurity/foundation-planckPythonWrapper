@@ -25,7 +25,7 @@ import pEp
 import minimail
 import miniimap
 
-import sync_settings as settings
+import imap_settings 
 
 from datetime import datetime
 
@@ -105,6 +105,7 @@ def messageToSend(msg):
     minimail.send(inbox, msg, device_name)
 
 def messageImapToSend(msg):
+    print("send imap message")
     if msg.enc_format:
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
@@ -126,6 +127,7 @@ def getMessageToSend(msg):
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
+        print('ui.notifyHandshake')
         print(colored(str(signal), "yellow"), end=" ")
         output("on " + device_name + "" if not me.fpr else
                 "for identities " + str(me.fpr) + " " + str(partner.fpr))
@@ -163,6 +165,8 @@ def run(name, color=None, imap=False):
     global device_name
     device_name = name
 
+    print("run sync_handhske")
+
     if color:
         global output
         output = lambda x: print(colored(x, color))
@@ -174,7 +178,8 @@ def run(name, color=None, imap=False):
             pEp.debug_color(36)
 
     if imap:
-        me = pEp.Identity(settings.IMAP_EMAIL, name + " of " + settings.IMAP_USER, name)
+        print("run handshake using imap")
+        me = pEp.Identity(imap_settings.IMAP_EMAIL, name + " of " + imap_settings.IMAP_USER, name)
         pEp.myself(me)
         pEp.messageToSend = messageImapToSend
     else:
@@ -195,13 +200,14 @@ def run(name, color=None, imap=False):
         sync = Thread(target=sync_thread)
         sync.start()
     else:
+        print('no threading')
         sync = None
         ui = UserInterface()
 
     try:
         while not the_end:
             if imap:
-                l = miniimap.recv_all(inbox, 'start_time')
+                l = miniimap.recv_all(inbox)
             else:
                 l = minimail.recv_all(inbox, name)
             for n, m in l:
@@ -237,6 +243,10 @@ if __name__=="__main__":
             help="use multithreaded instead of single threaded implementation")
     optParser.add_option("-n", "--noend", action="store_true",
             dest="noend", help="do not end")
+    optParser.add_option("-i", "--imap", action="store_true",
+            dest="imap",
+            help="use imap instead of minimail")
+
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -252,5 +262,5 @@ if __name__=="__main__":
         end_on = (None,)
 
     multithreaded = options.multithreaded
-    run(options.exec_for, options.color)
+    run(options.exec_for, options.color, options.imap)
 

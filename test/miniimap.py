@@ -3,32 +3,19 @@ import pprint
 import email.message
 import email.charset
 import time
-import sync_settings as settings
+import os
+import imap_settings as settings
 
 
 def connect():
     "connect to the IMAP server Inbox"
     server = imaplib.IMAP4_SSL(settings.IMAP_HOST)
     server.login(settings.IMAP_USER, settings.IMAP_PWD)
-    server.select('Inbox')
+    tmp, data = server.select('Inbox')
+    if os.environ.get('NUMMESSAGES') is None:
+        os.environ["NUMMESSAGES"] = data[0].decode("UTF-8")
 
     return server
-
-def pEpMessage_to_imap(msg):
-    "convert pEpMessage to python imap formatted string"
-    new_message = email.message.Message()
-    new_message["From"] = str(msg.from_).replace("\n", " ")
-    new_message["To"] = str(msg.to[0])
-    new_message["Subject"] = msg.shortmsg
-    if msg.opt_fields:
-        for field, value in msg.opt_fields.items():
-            new_message[field] = str(value).replace("\n", " ")
-    new_message.set_payload(msg.longmsg)
-
-    new_message.set_charset(email.charset.Charset("utf-8"))
-    encoded_message = str(new_message).encode("utf-8")
-
-    return encoded_message
 
 def bytesmessage_to_string(msg):
     "converts bytes-like message to string"
@@ -37,30 +24,30 @@ def bytesmessage_to_string(msg):
 
 def send(inbox, msg):
     "send msg to inbox in MIME format"
+    print("send imap")
+
     server = connect()
-    msg = pEpMessage_to_imap(msg)
-    print('******** sent msg *******')
-    print(msg)
-    server.append('Inbox', '', imaplib.Time2Internaldate(time.time()), msg)
+    tmp, data = server.append('Inbox', '', imaplib.Time2Internaldate(time.time()), str(msg).encode("UTF-8"))
     server.close()
 
 
-def recv_all(inbox, start_time):
-    """receive a list of new MIME messages from inbox, which are newer than the
-    start_time"""
+def recv_all(inbox):
+    """receive a list of all MIME messages from inbox newer than the last message when first connected"""
+    print("recieve imap")
 
     server = connect()
     r = []
 
     tmp, data = server.search(None, 'ALL')
-    # tmp, data = server.search(None, 'SENTSINCE {0}'.format(start_time.strftime("%d-%b-%Y %H:%M%S")))
+
+    oldermsgid = os.environ.get('NUMMESSAGES')
 
     for num in data[0].split():
-        tmp, data = server.fetch(num, '(RFC822)')
-        msg = bytesmessage_to_string(data[0][1])
-        r.append((num, msg))
-        print('******** recieved msg *******')
-        print(msg)
+        if int(num) >= int(oldermsgid):
+            tmp, data = server.fetch(num, '(RFC822)')
+            msg = bytesmessage_to_string(data[0][1])
+            r.append((num, msg))
+            os.environ["NUMMESSAGES"] = num.decode("UTF-8")
 
     server.close()
 
@@ -68,11 +55,14 @@ def recv_all(inbox, start_time):
 
 
 def clean_inbox():
-    print('clean IMAP')
+    """clean all messsages from IMAP inbox"""
+    print('cleaning IMAP...')
     server = connect()
     typ, data = server.search(None, 'ALL')
     for num in data[0].split():
         server.store(num, '+FLAGS', '\\Deleted')
-        server.expunge()
+    server.expunge()
+    server.close()
+    print('IMAP inbox empty.')
 
 

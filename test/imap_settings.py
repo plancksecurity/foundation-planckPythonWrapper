@@ -1,0 +1,5 @@
+IMAP_HOST = 'exchange.peptest.ch'
+IMAP_PORT = '993'
+IMAP_USER = r'testnet\test046'
+IMAP_PWD = 'pEpdichauf5'
+IMAP_EMAIL = 'test046@exchange.peptest.ch'
