@@ -105,7 +105,6 @@ def messageToSend(msg):
     minimail.send(inbox, msg, device_name)
 
 def messageImapToSend(msg):
-    print("send imap message")
     if msg.enc_format:
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
@@ -113,7 +112,7 @@ def messageImapToSend(msg):
     text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
     output(text)
     msg.opt_fields = { "pEp.sync": text }
-    miniimap.send(inbox, msg)
+    miniimap.send('Inbox', msg)
 
 def getMessageToSend(msg):
     if msg.enc_format:
@@ -127,7 +126,6 @@ def getMessageToSend(msg):
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
-        print('ui.notifyHandshake')
         print(colored(str(signal), "yellow"), end=" ")
         output("on " + device_name + "" if not me.fpr else
                 "for identities " + str(me.fpr) + " " + str(partner.fpr))
@@ -165,8 +163,6 @@ def run(name, color=None, imap=False):
     global device_name
     device_name = name
 
-    print("run sync_handhske")
-
     if color:
         global output
         output = lambda x: print(colored(x, color))
@@ -178,7 +174,6 @@ def run(name, color=None, imap=False):
             pEp.debug_color(36)
 
     if imap:
-        print("run handshake using imap")
         me = pEp.Identity(imap_settings.IMAP_EMAIL, name + " of " + imap_settings.IMAP_USER, name)
         pEp.myself(me)
         pEp.messageToSend = messageImapToSend
@@ -200,14 +195,13 @@ def run(name, color=None, imap=False):
         sync = Thread(target=sync_thread)
         sync.start()
     else:
-        print('no threading')
         sync = None
         ui = UserInterface()
 
     try:
         while not the_end:
             if imap:
-                l = miniimap.recv_all(inbox)
+                l = miniimap.recv_all()
             else:
                 l = minimail.recv_all(inbox, name)
             for n, m in l:

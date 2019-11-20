@@ -110,10 +110,11 @@ if __name__ == "__main__":
     if options.clean:
 
         if options.imap:
-            try:
-                miniimap.clean_inbox()
-            except:
-                pass
+            miniimap.clean_inbox()
+
+            if options.cleanall:
+                rmrf("Backup")
+    
         else:
             rmrf("TestInbox")
             rmrf("Phone")
@@ -139,21 +140,39 @@ if __name__ == "__main__":
         except FileExistsError:
             pass
 
-        shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Pad", "Backup/Pad", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
+        if options.imap:
+            try:
+                os.mkdir("Backup/TestInbox")
+            except FileExistsError:
+                pass
+            miniimap.backup_inbox()
+        else:
+            shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
+            try:
+                shutil.copytree("Pad", "Backup/Pad", symlinks=True, copy_function=shutil.copy2)
+            except FileNotFoundError:
+                pass
+
 
     elif options.restore:
-        rmrf("TestInbox")
-        rmrf("Phone")
-        rmrf("Laptop")
-        rmrf("Pad")
+        if options.imap:
+            miniimap.clean_inbox()
+            miniimap.restore_inbox()
+        else:
+            rmrf("TestInbox")
+            rmrf("Phone")
+            rmrf("Laptop")
+            rmrf("Pad")
 
-        shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/Pad", "Pad", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
+            try:
+                shutil.copytree("Backup/Pad", "Pad", symlinks=True, copy_function=shutil.copy2)
+            except FileNotFoundError:
+                pass
 
     elif options.print:
         from sync_handshake import print_msg

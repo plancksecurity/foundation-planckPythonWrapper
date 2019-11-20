@@ -1,10 +1,9 @@
 import imaplib
-import pprint
-import email.message
-import email.charset
+import pathlib
 import time
 import os
 import imap_settings as settings
+from secrets import token_urlsafe
 
 
 def connect():
@@ -12,6 +11,9 @@ def connect():
     server = imaplib.IMAP4_SSL(settings.IMAP_HOST)
     server.login(settings.IMAP_USER, settings.IMAP_PWD)
     tmp, data = server.select('Inbox')
+
+    #When you connect to the inbox one of the parameters returned is the current
+    #number of messages in it
     if os.environ.get('NUMMESSAGES') is None:
         os.environ["NUMMESSAGES"] = data[0].decode("UTF-8")
 
@@ -24,16 +26,14 @@ def bytesmessage_to_string(msg):
 
 def send(inbox, msg):
     "send msg to inbox in MIME format"
-    print("send imap")
 
     server = connect()
-    tmp, data = server.append('Inbox', '', imaplib.Time2Internaldate(time.time()), str(msg).encode("UTF-8"))
+    tmp, data = server.append(inbox, flags='', date_time=time.time(), message=str(msg).encode("UTF-8"))
     server.close()
 
 
-def recv_all(inbox):
+def recv_all():
     """receive a list of all MIME messages from inbox newer than the last message when first connected"""
-    print("recieve imap")
 
     server = connect()
     r = []
@@ -58,7 +58,7 @@ def clean_inbox():
     """clean all messsages from IMAP inbox"""
     print('cleaning IMAP...')
     server = connect()
-    typ, data = server.search(None, 'ALL')
+    tmp, data = server.search(None, 'ALL')
     for num in data[0].split():
         server.store(num, '+FLAGS', '\\Deleted')
     server.expunge()
@@ -66,3 +66,28 @@ def clean_inbox():
     print('IMAP inbox empty.')
 
 
+def backup_inbox():
+    """copy all messsages from IMAP to local backup folder"""
+    server = connect()
+    tmp, data = server.search(None, 'ALL')
+    for num in data[0].split():
+        tmp, data = server.fetch(num, '(RFC822 BODY[HEADER])')
+        device = str(data[0][1]).split('From: "')[1].split(' of')[0]
+        name = device + "_" + token_urlsafe(16) + ".eml"
+        msg = bytesmessage_to_string(data[0][1])
+        with open(os.path.join('Backup/TestInbox',name), "wb") as f:
+            f.write(str(msg).encode())
+
+    server.close()
+
+def restore_inbox():
+    """copy all the messages from the Backup folder to the IMAP inbox"""
+    server = connect()
+    backups = pathlib.Path("./Backup/TestInbox")
+    emails = backups.glob("*.eml")
+    l = [ path for path in emails ]
+    for p in l:
+        with open(p, "rb") as f:
+            tmp, data = server.append("Inbox", flags='', date_time=p.stat().st_ctime, message=f.read(-1))
+    
+    server.close()
