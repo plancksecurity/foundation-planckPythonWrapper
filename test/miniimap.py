@@ -21,8 +21,11 @@ def connect():
 
 def bytesmessage_to_string(msg):
     "converts bytes-like message to string"
-    msg = msg.decode("UTF-8").rstrip()
-    return msg
+    if type(msg) is bytes:
+        msg = msg.decode("UTF-8").rstrip()
+        return msg
+    else:
+        return str(msg)
 
 def send(inbox, msg):
     "send msg to inbox in MIME format"
