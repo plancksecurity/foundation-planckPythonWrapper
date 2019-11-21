@@ -132,7 +132,7 @@ def shutdown_sync():
     pEp.shutdown_sync()
 
 
-def run(name, color=None):
+def run(name, color=None, own_ident=1):
     global device_name
     device_name = name
 
@@ -148,6 +148,15 @@ def run(name, color=None):
 
     me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
     pEp.myself(me)
+
+    if own_ident >= 2:
+        me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
+        pEp.myself(me2)
+
+    if own_ident == 3:
+        me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
+        pEp.myself(me3)
+
     pEp.messageToSend = messageToSend
 
     if multithreaded:
@@ -200,10 +209,15 @@ if __name__=="__main__":
             help="use multithreaded instead of single threaded implementation")
     optParser.add_option("-n", "--noend", action="store_true",
             dest="noend", help="do not end")
+    optParser.add_option("-o", "--own-identities", type="int", dest="own_ident",
+            help="simulate having OWN_IDENT own identities (1 to 3)", default=1)
     options, args = optParser.parse_args()
 
     if not options.exec_for:
         options.exec_for = os.path.basename(os.getcwd())
+
+    if options.own_ident < 1 or options.own_ident > 3:
+        raise ValueError("illegal number of own identities (allowed are 1 to 3)")
 
     if options.notifications:
         end_on = eval(options.notifications)
@@ -215,5 +229,5 @@ if __name__=="__main__":
         end_on = (None,)
 
     multithreaded = options.multithreaded
-    run(options.exec_for, options.color)
+    run(options.exec_for, options.color, options.own_ident)
 
