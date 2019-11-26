@@ -77,11 +77,7 @@ def print_msg(p):
         raise TypeError("print_msg(): pathlib.Path and pEp.Message supported, but "
                 + str(type(p)) + " delivered")
     
-    m = False
-
-    if msg.opt_fields.get("pEp.sync"):
-        m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
-    
+    m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
         if etree:
             tree = objectify.fromstring(m.group(1).replace("\r", ""))
@@ -90,31 +86,18 @@ def print_msg(p):
             text = m.group(1).replace("\r", "").strip()
             while text.count("  "):
                 text = text.replace("  ", " ")
-        print('-- BEACON --')
         print(text)
 
 
 def messageToSend(msg):
-    if msg.enc_format:
-        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
-    else:
-        m = msg
-    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
-    output(text)
-    msg.opt_fields = { "pEp.sync": text }
+    msg = add_debug_info(msg)
     minimail.send(inbox, msg, device_name)
 
 def messageImapToSend(msg):
-    if msg.enc_format:
-        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
-    else:
-        m = msg
-    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
-    output(text)
-    msg.opt_fields = { "pEp.sync": text }
+    msg = add_debug_info(msg)
     miniimap.send('Inbox', msg)
 
-def getMessageToSend(msg):
+def add_debug_info(msg):
     if msg.enc_format:
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
@@ -123,6 +106,7 @@ def getMessageToSend(msg):
     output(text)
     msg.opt_fields = { "pEp.sync": text }
     return msg
+
 
 class UserInterface(pEp.UserInterface):
     def notifyHandshake(self, me, partner, signal):
@@ -159,7 +143,7 @@ def shutdown_sync():
     pEp.shutdown_sync()
 
 
-def run(name, color=None, imap=False):
+def run(name, color=None, imap=False, own_ident=1):
     global device_name
     device_name = name
 
@@ -180,9 +164,16 @@ def run(name, color=None, imap=False):
     else:
         me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
         pEp.myself(me)
-        pEp.messageToSend = messageToSend
-    
 
+        if own_ident >= 2:
+            me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
+            pEp.myself(me2)
+
+        if own_ident == 3:
+            me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
+            pEp.myself(me3)    
+
+        pEp.messageToSend = messageToSend
 
     if multithreaded:
         from threading import Thread
@@ -240,11 +231,16 @@ if __name__=="__main__":
     optParser.add_option("-i", "--imap", action="store_true",
             dest="imap",
             help="use imap instead of minimail")
+    optParser.add_option("-o", "--own-identities", type="int", dest="own_ident",
+            help="simulate having OWN_IDENT own identities (1 to 3)", default=1)
 
     options, args = optParser.parse_args()
 
     if not options.exec_for:
         options.exec_for = os.path.basename(os.getcwd())
+
+    if options.own_ident < 1 or options.own_ident > 3:
+        raise ValueError("illegal number of own identities (allowed are 1 to 3)")
 
     if options.notifications:
         end_on = eval(options.notifications)
@@ -254,6 +250,9 @@ if __name__=="__main__":
 
     if options.noend:
         end_on = (None,)
+
+    if options.imap and options.own_ident >1:
+        raise ValueError("Multiple own identities not supported for imap mode")        
 
     multithreaded = options.multithreaded
     run(options.exec_for, options.color, options.imap)
