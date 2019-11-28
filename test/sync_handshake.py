@@ -73,7 +73,7 @@ def print_msg(p):
     else:
         raise TypeError("print_msg(): pathlib.Path and pEp.Message supported, but "
                 + str(type(p)) + " delivered")
-
+    
     m = re.search("<keysync>(.*)</keysync>", msg.opt_fields["pEp.sync"].replace("\n", " "))
     if m:
         if etree:
@@ -87,6 +87,15 @@ def print_msg(p):
 
 
 def messageToSend(msg):
+    msg = add_debug_info(msg)
+    minimail.send(inbox, msg, device_name)
+
+def messageImapToSend(msg):
+    import miniimap
+    msg = add_debug_info(msg)
+    miniimap.send('Inbox', msg)
+
+def add_debug_info(msg):
     if msg.enc_format:
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
@@ -94,7 +103,7 @@ def messageToSend(msg):
     text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
     output(text)
     msg.opt_fields = { "pEp.sync": text }
-    minimail.send(inbox, msg, device_name)
+    return msg
 
 
 class UserInterface(pEp.UserInterface):
@@ -132,7 +141,11 @@ def shutdown_sync():
     pEp.shutdown_sync()
 
 
-def run(name, color=None, own_ident=1):
+def run(name, color=None, imap=False, own_ident=1):
+    if imap:
+        import miniimap
+        import imap_settings
+
     global device_name
     device_name = name
 
@@ -146,18 +159,23 @@ def run(name, color=None, own_ident=1):
         elif color == "cyan":
             pEp.debug_color(36)
 
-    me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
-    pEp.myself(me)
+    if imap:
+        me = pEp.Identity(imap_settings.IMAP_EMAIL, name + " of " + imap_settings.IMAP_USER, name)
+        pEp.myself(me)
+        pEp.messageToSend = messageImapToSend
+    else:
+        me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
+        pEp.myself(me)
 
-    if own_ident >= 2:
-        me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
-        pEp.myself(me2)
+        if own_ident >= 2:
+            me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
+            pEp.myself(me2)
 
-    if own_ident == 3:
-        me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
-        pEp.myself(me3)
+        if own_ident == 3:
+            me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
+            pEp.myself(me3)    
 
-    pEp.messageToSend = messageToSend
+        pEp.messageToSend = messageToSend
 
     if multithreaded:
         from threading import Thread
@@ -175,7 +193,10 @@ def run(name, color=None, own_ident=1):
 
     try:
         while not the_end:
-            l = minimail.recv_all(inbox, name)
+            if imap:
+                l = miniimap.recv_all()
+            else:
+                l = minimail.recv_all(inbox, name)
             for n, m in l:
                 msg = pEp.Message(m)
                 output("*** Reading")
@@ -209,8 +230,12 @@ if __name__=="__main__":
             help="use multithreaded instead of single threaded implementation")
     optParser.add_option("-n", "--noend", action="store_true",
             dest="noend", help="do not end")
+    optParser.add_option("-i", "--imap", action="store_true",
+            dest="imap",
+            help="use imap instead of minimail")
     optParser.add_option("-o", "--own-identities", type="int", dest="own_ident",
             help="simulate having OWN_IDENT own identities (1 to 3)", default=1)
+
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -228,6 +253,9 @@ if __name__=="__main__":
     if options.noend:
         end_on = (None,)
 
+    if options.imap and options.own_ident >1:
+        raise ValueError("Multiple own identities not supported for imap mode")        
+
     multithreaded = options.multithreaded
-    run(options.exec_for, options.color, options.own_ident)
+    run(options.exec_for, options.color, options.imap, options.own_ident)
 

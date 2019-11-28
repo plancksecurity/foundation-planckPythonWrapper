@@ -17,5 +17,9 @@ test/Laptop
 test/Library
 test/Phone
 test/TestInbox
+test/Backup
 test/lib
-
+test/imap_settings.py
+venv
+launch.json
+settings.json

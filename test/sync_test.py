@@ -20,7 +20,10 @@ import shutil
 import pathlib
 
 
-def test_for(path, color=None, end_on=None, mt=False):
+def test_for(path, color=None, end_on=None, mt=False, imap=False):
+    if imap:
+        import miniimap
+
     cwd = os.getcwd();
     os.chdir(path)
     os.environ["HOME"] = os.getcwd()
@@ -31,7 +34,7 @@ def test_for(path, color=None, end_on=None, mt=False):
         sync_handshake.end_on = end_on
     sync_handshake.multithreaded = mt
 
-    sync_handshake.run(path, color)
+    sync_handshake.run(path, color, imap)
 
     os.chdir(cwd)
 
@@ -98,26 +101,37 @@ if __name__ == "__main__":
     optParser.add_option("-j", "--multi-threaded", action="store_true",
             dest="multithreaded",
             help="use multithreaded instead of single threaded implementation")
+    optParser.add_option("-i", "--imap", action="store_true",
+            dest="imap",
+            help="use imap instead of minimail")
     options, args = optParser.parse_args()
 
     if options.cleanall:
         options.clean = True
 
     if options.clean:
-        rmrf("TestInbox")
-        rmrf("Phone")
-        rmrf("Laptop")
-        rmrf("Pad")
 
-        if options.cleanall:
-            rmrf("Backup")
+        if options.imap:
+            miniimap.clean_inbox()
 
-        if options.setup_only:
-            os.makedirs("TestInbox", exist_ok=True)
-            setup("Phone")
-            setup("Laptop")
-            if options.third:
-                setup("Pad")
+            if options.cleanall:
+                rmrf("Backup")
+    
+        else:
+            rmrf("TestInbox")
+            rmrf("Phone")
+            rmrf("Laptop")
+            rmrf("Pad")
+            
+            if options.cleanall:
+                rmrf("Backup")
+
+            if options.setup_only:
+                os.makedirs("TestInbox", exist_ok=True)
+                setup("Phone")
+                setup("Laptop")
+                if options.third:
+                    setup("Pad")
 
 
     elif options.backup:
@@ -128,21 +142,39 @@ if __name__ == "__main__":
         except FileExistsError:
             pass
 
-        shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Pad", "Backup/Pad", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
+        if options.imap:
+            try:
+                os.mkdir("Backup/TestInbox")
+            except FileExistsError:
+                pass
+            miniimap.backup_inbox()
+        else:
+            shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Laptop", "Backup/Laptop", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("TestInbox", "Backup/TestInbox", symlinks=True, copy_function=shutil.copy2)
+            try:
+                shutil.copytree("Pad", "Backup/Pad", symlinks=True, copy_function=shutil.copy2)
+            except FileNotFoundError:
+                pass
+
 
     elif options.restore:
-        rmrf("TestInbox")
-        rmrf("Phone")
-        rmrf("Laptop")
-        rmrf("Pad")
+        if options.imap:
+            miniimap.clean_inbox()
+            miniimap.restore_inbox()
+        else:
+            rmrf("TestInbox")
+            rmrf("Phone")
+            rmrf("Laptop")
+            rmrf("Pad")
 
-        shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/Pad", "Pad", symlinks=True, copy_function=shutil.copy2)
-        shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/Phone", "Phone", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/Laptop", "Laptop", symlinks=True, copy_function=shutil.copy2)
+            shutil.copytree("Backup/TestInbox", "TestInbox", symlinks=True, copy_function=shutil.copy2)
+            try:
+                shutil.copytree("Backup/Pad", "Pad", symlinks=True, copy_function=shutil.copy2)
+            except FileNotFoundError:
+                pass
 
     elif options.print:
         from sync_handshake import print_msg
@@ -152,7 +184,7 @@ if __name__ == "__main__":
         l.sort(key=(lambda p: p.stat().st_mtime))
         for p in l:
             print_msg(p)
-        
+
     else:
         from multiprocessing import Process
 
@@ -173,12 +205,12 @@ if __name__ == "__main__":
                 end_on = (None,)
 
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
-                options.multithreaded))
+                options.multithreaded, options.imap))
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,
-                options.multithreaded))
+                options.multithreaded, options.imap))
             if options.third:
                 Pad = Process(target=test_for, args=("Pad", "cyan", end_on,
-                    options.multithreaded))
+                    options.multithreaded, options.imap))
 
             Phone.start()
             Laptop.start()
