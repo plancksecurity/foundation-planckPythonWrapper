@@ -21,8 +21,6 @@ import pathlib
 
 
 def test_for(path, color=None, end_on=None, mt=False, imap=False):
-    if imap:
-        import miniimap
 
     cwd = os.getcwd();
     os.chdir(path)
@@ -106,6 +104,9 @@ if __name__ == "__main__":
             help="use imap instead of minimail")
     options, args = optParser.parse_args()
 
+    if options.imap:
+        import miniimap
+
     if options.cleanall:
         options.clean = True
 
@@ -133,7 +134,6 @@ if __name__ == "__main__":
                 if options.third:
                     setup("Pad")
 
-
     elif options.backup:
         rmrf("Backup")
 
@@ -147,6 +147,7 @@ if __name__ == "__main__":
                 os.mkdir("Backup/TestInbox")
             except FileExistsError:
                 pass
+
             miniimap.backup_inbox()
         else:
             shutil.copytree("Phone", "Backup/Phone", symlinks=True, copy_function=shutil.copy2)

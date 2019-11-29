@@ -7,7 +7,7 @@ from secrets import token_urlsafe
 try:
     import imap_settings as settings
 except:
-    raise ValueError("Imap settings file not found, please check the readme - miniimap")
+    raise ValueError("Imap settings file not found, please check the readme")
 
 
 def connect():
@@ -16,8 +16,8 @@ def connect():
     server.login(settings.IMAP_USER, settings.IMAP_PWD)
     tmp, data = server.select('Inbox')
 
-    #When you connect to the inbox one of the parameters returned is the current
-    #number of messages in it
+    # When you connect to the inbox one of the parameters returned is the
+    # current number of messages in it
     if os.environ.get('NUMMESSAGES') is None:
         os.environ["NUMMESSAGES"] = data[0].decode("UTF-8")
 

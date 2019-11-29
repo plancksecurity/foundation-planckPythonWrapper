@@ -142,9 +142,6 @@ def shutdown_sync():
 
 
 def run(name, color=None, imap=False, own_ident=1):
-    if imap:
-        import miniimap
-        import imap_settings
 
     global device_name
     device_name = name
@@ -160,6 +157,9 @@ def run(name, color=None, imap=False, own_ident=1):
             pEp.debug_color(36)
 
     if imap:
+        import miniimap
+        import imap_settings
+        
         me = pEp.Identity(imap_settings.IMAP_EMAIL, name + " of " + imap_settings.IMAP_USER, name)
         pEp.myself(me)
         pEp.messageToSend = messageImapToSend
