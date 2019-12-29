@@ -20,7 +20,7 @@ import shutil
 import pathlib
 
 
-def test_for(path, color=None, end_on=None, mt=False, imap=False):
+def test_for(path, color=None, end_on=None, mt=False, imap=False, own_ident=1):
 
     cwd = os.getcwd();
     os.chdir(path)
@@ -32,7 +32,7 @@ def test_for(path, color=None, end_on=None, mt=False, imap=False):
         sync_handshake.end_on = end_on
     sync_handshake.multithreaded = mt
 
-    sync_handshake.run(path, color, imap)
+    sync_handshake.run(path, color, imap, own_ident)
 
     os.chdir(cwd)
 
@@ -205,8 +205,11 @@ if __name__ == "__main__":
             elif options.noend:
                 end_on = (None,)
 
+            # Phone runs with own_ident = 2
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
-                options.multithreaded, options.imap))
+                options.multithreaded, options.imap, 2))
+
+            # others run with own_ident = 1
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,
                 options.multithreaded, options.imap))
             if options.third:
