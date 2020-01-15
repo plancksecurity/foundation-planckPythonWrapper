@@ -49,7 +49,7 @@ namespace pEp {
             _throw_status(status);
             return words;
         }
-        
+
         void trust_personal_key(Identity ident)
         {
             if (ident.fpr() == "")
@@ -82,7 +82,7 @@ namespace pEp {
             PEP_STATUS status = unset_identity_flags(adapter.session(), ident, flags);
             _throw_status(status);
         }
-        
+
         void key_reset_trust(Identity ident)
         {
             if (ident.fpr() == "")
@@ -95,6 +95,8 @@ namespace pEp {
             PEP_STATUS status = key_reset_trust(adapter.session(), ident);
             _throw_status(status);
         }
+
+
 
         boost::python::list import_key(string key_data)
         {
@@ -116,6 +118,22 @@ namespace pEp {
             free_identity_list(private_keys);
             return result;
         }
+
+        void set_own_key(Identity& ident, string fpr)
+        {
+            if (ident.address() == "")
+                throw invalid_argument("address needed");
+            if (ident.username() == "")
+                throw invalid_argument("username needed");
+            if (ident.user_id() == "")
+                throw invalid_argument("user_id needed");
+            if (fpr == "")
+                throw invalid_argument("fpr needed");
+
+
+            const char* fpr_c = fpr.c_str();
+            PEP_STATUS status = set_own_key(adapter.session(), ident, fpr_c);
+            _throw_status(status);
+        }
     }
 }
-

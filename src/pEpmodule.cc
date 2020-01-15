@@ -138,7 +138,7 @@ BOOST_PYTHON_MODULE(pEp)
     scope().attr("per_machine_directory") = per_machine_directory();
     scope().attr("engine_version") = get_engine_version();
     scope().attr("protocol_version") = get_protocol_version();
-    
+
     def("passive_mode", pEp::PythonAdapter::config_passive_mode,
             "do not attach pub keys to all messages");
 
@@ -227,7 +227,7 @@ BOOST_PYTHON_MODULE(pEp)
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
         .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
         .def("__copy__", &pEp::PythonAdapter::Identity::copy);
-    
+
     identity_class.attr("PEP_OWN_USERID") = "pEp_own_userId";
 
     auto blob_class = class_<Message::Blob>("Blob",
@@ -423,6 +423,21 @@ BOOST_PYTHON_MODULE(pEp)
             "private_key_list = import_key(key_data)\n"
             "\n"
             "import key(s) from key_data\n"
+        );
+
+    def("set_own_key", &pEp::PythonAdapter::set_own_key,
+            "set_own_key(me, fpr)\n"
+            "\n"
+            "mark a key as an own key, and make it the default key\n"
+            "\n"
+            "me         Own identity for which to add the existing key\n"
+            "fpr        The fingerprint of the key to be added\n"
+            "\n"
+            "me->address, me->user_id and me->username must be set to valid data\n"
+            "myself() is called by set_own_key() without key generation\n"
+            "me->flags are ignored\n"
+            "me->address must not be an alias\n"
+            "me->fpr will be ignored and replaced by fpr\n"
         );
 
     // message API

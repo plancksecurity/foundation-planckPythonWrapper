@@ -18,6 +18,6 @@ namespace pEp {
         void key_reset_trust(Identity ident);
 
         boost::python::list import_key(string key_data);
+        void set_own_key(Identity& ident, string fpr);
     }
 }
-
