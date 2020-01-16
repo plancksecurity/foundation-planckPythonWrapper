@@ -25,6 +25,7 @@ import pEp
 import minimail
 
 from datetime import datetime
+from time import sleep
 
 try:
     from termcolor import colored
@@ -124,6 +125,7 @@ class UserInterface(pEp.UserInterface):
                         pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
                         pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
                     ])
+            sleep(.5) # user is reading message
             try:
                 if options.reject:
                     self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
