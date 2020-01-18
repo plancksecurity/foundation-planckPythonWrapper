@@ -118,6 +118,10 @@ namespace pEp {
         {
             ::set_debug_color(adapter.session(), ansi_color);
         }
+
+        void leave_device_group()
+            ::leave_device_group(adapter.session());
+        }
     }
 }
 
@@ -540,6 +544,12 @@ BOOST_PYTHON_MODULE(pEp)
 
     def("debug_color", &pEp::PythonAdapter::debug_color,
             "for debug builds set ANSI color value");
+
+    def("leave_device_group", &pEp::PythonAdapter::leave_device_group,
+            "leave_device_group()\n"
+            "\n"
+            "call this for a grouped device, which should leave\n"
+       );
 
     // codecs
 
