@@ -119,7 +119,7 @@ namespace pEp {
             ::set_debug_color(adapter.session(), ansi_color);
         }
 
-        void leave_device_group()
+        void leave_device_group() {
             ::leave_device_group(adapter.session());
         }
     }
