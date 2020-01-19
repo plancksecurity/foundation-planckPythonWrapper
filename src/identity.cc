@@ -164,6 +164,18 @@ namespace pEp {
             return result;
         }
 
+        void Identity::enable_for_sync()
+        {
+            PEP_STATUS status = ::enable_identity_for_sync(adapter.session(), *this);
+            _throw_status(status);
+        }
+
+        void Identity::disable_for_sync()
+        {
+            PEP_STATUS status = ::disable_identity_for_sync(adapter.session(), *this);
+            _throw_status(status);
+        }
+
         Myself::Myself(string address, string username, string user_id, string lang)
             : Identity(address, username, user_id, "", 0, lang)
 

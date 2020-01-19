@@ -202,6 +202,9 @@ BOOST_PYTHON_MODULE(pEp)
             "identity. If it does not, remove the key from the keyring; the key's status is\n"
             "completely fresh on next contact from the partner.")
 
+        .def("enable_for_sync", &pEp::PythonAdapter::Identity::enable_for_sync)
+        .def("disable_for_sync", &pEp::PythonAdapter::Identity::disable_for_sync)
+
         .add_property("address", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::address,
                 (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::address,
                 "email address or URI")

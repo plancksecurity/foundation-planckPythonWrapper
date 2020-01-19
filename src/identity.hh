@@ -67,6 +67,9 @@ namespace pEp {
             void key_reset(string fpr="");
 
             bool is_pEp_user();
+
+            void enable_for_sync();
+            void disable_for_sync();
         };
 
         class Myself : public Identity {
