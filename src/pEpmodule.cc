@@ -202,8 +202,12 @@ BOOST_PYTHON_MODULE(pEp)
             "identity. If it does not, remove the key from the keyring; the key's status is\n"
             "completely fresh on next contact from the partner.")
 
-        .def("enable_for_sync", &pEp::PythonAdapter::Identity::enable_for_sync)
-        .def("disable_for_sync", &pEp::PythonAdapter::Identity::disable_for_sync)
+        .def("enable_for_sync", &pEp::PythonAdapter::Identity::enable_for_sync,
+                "Enable own identity for p≡p sync.\n\n"
+                "Only use this on own identities, which are used as accounts.\n")
+        .def("disable_for_sync", &pEp::PythonAdapter::Identity::disable_for_sync,
+                "Disable own identity for p≡p sync.\n\n"
+                "Only use this on own identities, which are used as accounts.\n")
 
         .add_property("address", (string(pEp::PythonAdapter::Identity::*)()) &pEp::PythonAdapter::Identity::address,
                 (void(pEp::PythonAdapter::Identity::*)(string)) &pEp::PythonAdapter::Identity::address,
