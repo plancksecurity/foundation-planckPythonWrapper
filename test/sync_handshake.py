@@ -143,7 +143,7 @@ def shutdown_sync():
     pEp.shutdown_sync()
 
 
-def run(name, color=None, imap=False, own_ident=1):
+def run(name, color=None, imap=False, own_ident=1, leave=False):
 
     global device_name
     device_name = name
@@ -194,6 +194,9 @@ def run(name, color=None, imap=False, own_ident=1):
         ui = UserInterface()
 
     try:
+        if leave:
+            pEp.leave_device_group()
+
         while not the_end:
             if imap:
                 l = miniimap.recv_all()
@@ -237,6 +240,10 @@ if __name__=="__main__":
             help="use imap instead of minimail")
     optParser.add_option("-o", "--own-identities", type="int", dest="own_ident",
             help="simulate having OWN_IDENT own identities (1 to 3)", default=1)
+    optParser.add_option("-L", "--leave-device-group", action="store_true",
+            dest="leave",
+            help="after a successful sync run this to make the device leave the "
+            "device group again")
 
     options, args = optParser.parse_args()
 
@@ -259,5 +266,5 @@ if __name__=="__main__":
         raise ValueError("Multiple own identities not supported for imap mode")        
 
     multithreaded = options.multithreaded
-    run(options.exec_for, options.color, options.imap, options.own_ident)
+    run(options.exec_for, options.color, options.imap, options.own_ident, options.leave)
 
