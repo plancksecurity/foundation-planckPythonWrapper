@@ -225,4 +225,3 @@ if __name__ == "__main__":
             Laptop.join()
             if options.third:
                 Pad.join()
-
