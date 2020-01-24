@@ -282,4 +282,7 @@ setup(
         cmdclass={
             'build_ext': BuildExtCommand,
         },
+        extras_require={
+            'test': ['pytest'],
+        },
     )
