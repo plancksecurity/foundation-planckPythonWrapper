@@ -101,7 +101,10 @@ def add_debug_info(msg):
         m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
         m = msg
-    text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
+    try:    
+        text = "<!-- sending from " + device_name + " -->\n" + m.attachments[0].decode()
+    except UnicodeDecodeError as e:
+        text = "<!-- sending from " + device_name + " -->\n *** NO DECODER AVAILABLE FOR THIS MESSAGE TYPE ***\n" 
     output(text)
     msg.opt_fields = { "pEp.sync": text }
     return msg
@@ -267,4 +270,3 @@ if __name__=="__main__":
 
     multithreaded = options.multithreaded
     run(options.exec_for, options.color, options.imap, options.own_ident, options.leave)
-
