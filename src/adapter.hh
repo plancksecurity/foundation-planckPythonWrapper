@@ -14,6 +14,7 @@ namespace pEp {
 
         class Adapter {
                 bool flag_unregister;
+                bool flag_sync_enabled;
 
             public:
                 Adapter(bool unregister_this = false);
@@ -28,15 +29,20 @@ namespace pEp {
                 PEP_SESSION session(session_action action = none);
                 static ::utility::locked_queue< SYNC_EVENT >& queue()
                 {
-                    static ::utility::locked_queue< SYNC_EVENT > q;
-                    return q;
+                    if (!q)
+                        q = new ::utility::locked_queue< SYNC_EVENT >();
+                    return *q;
                 }
-
-                void shutdown_sync() { queue().push_front(nullptr); }
+                void script_is_implementing_sync() { flag_sync_enabled = true; }
+                void shutdown_sync();
+                bool is_sync_active() { return flag_sync_enabled; }
 
             protected:
                 static PyObject *ui_object(PyObject *value = nullptr);
                 static int _inject_sync_event(SYNC_EVENT ev, void *management);
+
+                static ::utility::locked_queue< SYNC_EVENT > *q;
+                bool queue_active() { return !!q; }
 
             private:
                 static mutex& mtx()

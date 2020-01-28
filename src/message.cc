@@ -306,7 +306,7 @@ namespace pEp {
         }
 
         boost::python::tuple Message::decrypt(int flags) {
-            return decrypt_message(*this, flags);
+            return pEp::PythonAdapter::decrypt_message(*this, flags);
         }
 
         int Message::outgoing_rating()

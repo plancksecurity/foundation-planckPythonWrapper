@@ -7,6 +7,7 @@
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 #include <pEp/sync_codec.h>
+#include <pEp/distribution_codec.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -47,7 +48,7 @@ namespace pEp {
             PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t) flags;
             message *_src = src;
 
-            PEP_STATUS status = decrypt_message(adapter.session(), _src, &_dst, &_keylist,
+            PEP_STATUS status = ::decrypt_message(adapter.session(), _src, &_dst, &_keylist,
                     &_rating, &_flags);
             _throw_status(status);
 

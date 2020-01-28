@@ -7,7 +7,7 @@
 namespace pEp {
     namespace PythonAdapter {
         Adapter::Adapter(bool unregister_this)
-            : flag_unregister(unregister_this)
+            : flag_unregister(unregister_this), flag_sync_enabled(false)
         {
             session(init);
         }
@@ -53,6 +53,15 @@ namespace pEp {
                 _throw_status(status);
 
             return _session;
+        }
+
+        ::utility::locked_queue< SYNC_EVENT > * Adapter::q = nullptr;
+
+        void Adapter::shutdown_sync()
+        {
+            if (queue_active())
+                queue().push_front(nullptr);
+            flag_sync_enabled = false;
         }
 
         PyObject *Adapter::ui_object(PyObject *value)

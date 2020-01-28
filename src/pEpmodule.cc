@@ -122,6 +122,14 @@ namespace pEp {
         void leave_device_group() {
             ::leave_device_group(adapter.session());
         }
+
+        void script_is_implementing_sync() {
+            adapter.script_is_implementing_sync();
+        }
+
+        bool is_sync_active() {
+            return adapter.is_sync_active();
+        }
     }
 }
 
@@ -556,6 +564,19 @@ BOOST_PYTHON_MODULE(pEp)
             "leave_device_group()\n"
             "\n"
             "call this for a grouped device, which should leave\n"
+       );
+    
+    def("script_is_implementing_sync", &pEp::PythonAdapter::script_is_implementing_sync,
+            "script_is_implementing_sync()\n"
+            "\n"
+            "call this in case the Python script is implementing sync to make\n"
+            "is_sync_active() working\n"
+       );
+
+    def("is_sync_active", &pEp::PythonAdapter::is_sync_active,
+            "is_sync_active()\n"
+            "\n"
+            "True if sync is active, False otherwise\n"
        );
 
     // codecs
