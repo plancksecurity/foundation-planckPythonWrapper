@@ -14,7 +14,6 @@ namespace pEp {
 
         class Adapter {
                 bool flag_unregister;
-                bool flag_sync_enabled;
 
             public:
                 Adapter(bool unregister_this = false);
@@ -42,6 +41,8 @@ namespace pEp {
                 static int _inject_sync_event(SYNC_EVENT ev, void *management);
 
                 static ::utility::locked_queue< SYNC_EVENT > *q;
+                static bool flag_sync_enabled;
+
                 bool queue_active() { return !!q; }
 
             private:

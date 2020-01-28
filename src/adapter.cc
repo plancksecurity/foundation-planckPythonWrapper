@@ -7,7 +7,7 @@
 namespace pEp {
     namespace PythonAdapter {
         Adapter::Adapter(bool unregister_this)
-            : flag_unregister(unregister_this), flag_sync_enabled(false)
+            : flag_unregister(unregister_this)
         {
             session(init);
         }
@@ -56,6 +56,7 @@ namespace pEp {
         }
 
         ::utility::locked_queue< SYNC_EVENT > * Adapter::q = nullptr;
+        bool Adapter::flag_sync_enabled = false;
 
         void Adapter::shutdown_sync()
         {
@@ -75,6 +76,9 @@ namespace pEp {
 
         int Adapter::_inject_sync_event(SYNC_EVENT ev, void *management)
         {
+            if (!flag_sync_enabled)
+                return 1;
+
             if (is_sync_thread(adapter.session())) {
                 PEP_STATUS status = do_sync_protocol_step(adapter.session(), adapter.ui_object(), ev);
                 return status == PEP_STATUS_OK ? 0 : 1;

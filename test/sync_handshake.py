@@ -193,6 +193,7 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
         sync = Thread(target=sync_thread)
         sync.start()
     else:
+        pEp.script_is_implementing_sync()
         sync = None
         ui = UserInterface()
 
@@ -201,6 +202,8 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
             pEp.leave_device_group()
 
         while not the_end:
+            if pEp.is_sync_active():
+                pass # we could react on this
             if imap:
                 l = miniimap.recv_all()
             else:
