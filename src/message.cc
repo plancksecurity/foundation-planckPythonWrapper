@@ -45,7 +45,7 @@ namespace pEp {
             free(_bl->value);
             _bl->size = src.len;
             _bl->value = mem;
-            
+
             PyBuffer_Release(&src);
 
             this->mime_type(mime_type);
@@ -114,10 +114,14 @@ namespace pEp {
         {
             if (encoding == "") {
                 string _mime_type = _bl->mime_type ? _bl->mime_type : "";
+                encoding = "ascii";
+
                 if (_mime_type == "application/pEp.sync")
                     encoding = "pep.sync";
-                else
-                    encoding = "ascii";
+
+                if (_mime_type == "application/pEp.keyreset")
+                    encoding = "pep.distribution";
+
             }
             object codecs = import("codecs");
             object _decode = codecs.attr("decode");
@@ -158,7 +162,7 @@ namespace pEp {
 
                     _msg = shared_ptr< message >(_cpy);
                     break;
-                    
+
                 case PEP_BUFFER_TOO_SMALL:
                     throw runtime_error("mime_decode_message: buffer too small");
 
@@ -318,7 +322,7 @@ namespace pEp {
                 throw invalid_argument("address needed");
             if (from().username() == "")
                 throw invalid_argument("username needed");
-            
+
             PEP_STATUS status = myself(adapter.session(), _msg->from);
             _throw_status(status);
 
@@ -328,7 +332,7 @@ namespace pEp {
 
             return (int) rating;
         }
-        
+
         int Message::outgoing_color()
         {
             return _color(outgoing_rating());
@@ -397,4 +401,3 @@ namespace pEp {
         }
     }
 }
-

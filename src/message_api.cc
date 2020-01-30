@@ -36,7 +36,7 @@ namespace pEp {
 
             if (!_dst || _dst == _src)
                 return Message(_src);
-            
+
             return Message(_dst);
         }
 
@@ -99,6 +99,38 @@ namespace pEp {
             return boost::python::make_tuple(object(handle<>(ba)), 0);
         }
 
+        boost::python::tuple Distribution_decode(object buffer)
+        {
+            Py_buffer src;
+            int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
+            if (result)
+                throw invalid_argument("need a contiguous buffer to read");
+
+            char *dst = NULL;
+            PEP_STATUS status = PER_to_XER_Distribution_msg((char *) src.buf, src.len, &dst);
+            PyBuffer_Release(&src);
+            _throw_status(status);
+
+            string _dst(dst);
+            free(dst);
+            return boost::python::make_tuple(_dst, 0);
+        }
+
+        static boost::python::tuple Distribution_encode(string text)
+        {
+            char *data = NULL;
+            size_t size = 0;
+            PEP_STATUS status = XER_to_PER_Distribution_msg(text.c_str(), &data, &size);
+            _throw_status(status);
+
+            PyObject *ba = PyBytes_FromStringAndSize(data, size);
+            free(data);
+            if (!ba)
+                throw bad_alloc();
+
+            return boost::python::make_tuple(object(handle<>(ba)), 0);
+        }
+
         object sync_search(string name)
         {
             if (name != "pep.sync") {
@@ -114,6 +146,22 @@ namespace pEp {
                 return call< object >(CodecInfo.ptr(), _sync_encode, _sync_decode);
             }
         }
+
+        object distribution_search(string name)
+        {
+            if (name != "pep.distribution") {
+                return object();
+            }
+            else {
+                object codecs = import("codecs");
+                object CodecInfo = codecs.attr("CodecInfo");
+
+                object _distribution_decode = make_function(Distribution_decode);
+                object _distribution_encode = make_function(Distribution_encode);
+
+                return call< object >(CodecInfo.ptr(), _distribution_encode, _distribution_decode);
+            }
+        }
+
     }
 }
-

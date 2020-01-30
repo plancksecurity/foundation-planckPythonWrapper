@@ -268,8 +268,9 @@ BOOST_PYTHON_MODULE(pEp)
     "\n"
     "decode Blob data into string depending on MIME type if encoding=''\n"
     "\n"
-    "   mime_type='application/pEp.sync'    decode as 'pEp.sync'\n"
-    "   other mime_type                     decode as 'ascii' by default\n"
+    "   mime_type='application/pEp.sync'      decode as 'pEp.sync'\n"
+    "   mime_type='application/pEp.keyreset'  decode as 'pEp.keyreset'\n"
+    "   other mime_type                       decode as 'ascii' by default\n"
                 )
         .add_property("mime_type", (string(Message::Blob::*)()) &Message::Blob::mime_type,
                 (void(Message::Blob::*)(string)) &Message::Blob::mime_type,
@@ -579,8 +580,8 @@ BOOST_PYTHON_MODULE(pEp)
             "True if sync is active, False otherwise\n"
        );
 
+
     // codecs
-
     call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(sync_search));
+    call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(distribution_search));
 }
-
