@@ -21,7 +21,7 @@ if sys.platform == 'winnt':
         import winreg
     else:
         import _winreg as winreg
-        
+
 
 from setuptools.command.build_ext import build_ext
 
@@ -54,7 +54,7 @@ def getPythonLibver():
             '{cmd}{py_version_major}',
             '{cmd}{py_version_major}{abiflags}',
             '{cmd}'
-        ):
+    ):
         val = template.format(
             cmd = g['PYTHON'],
             py_version_nodot = g['py_version_nodot'],
@@ -86,7 +86,7 @@ class BuildExtCommand(build_ext):
         regKey = None
         try:
             regKey = winreg.OpenKey(
-                    winreg.HKEY_LOCAL_MACHINE, REG_PATH, 0, winreg.KEY_READ)
+                winreg.HKEY_LOCAL_MACHINE, REG_PATH, 0, winreg.KEY_READ)
             # Keys: Description, FileName, FriendlyName, LoadBehavior
             com_server, regtype = winreg.QueryValueEx(regKey, 'FileName')
             winreg.CloseKey(regKey)
@@ -98,7 +98,7 @@ class BuildExtCommand(build_ext):
         # <install-base>\\bin\\COM_Server.exe
         dirname = os.path.dirname
         return dirname( dirname( com_server ) )
-        
+
     def initialize_options(self):
         build_ext.initialize_options(self)
         # self.boost_python = BuildExtCommand.default_pyver
@@ -173,12 +173,12 @@ class BuildExtCommand(build_ext):
             ]
         else:
             HOME = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
-            PEPLIBNAME = 'libpEpEngine.so'
+            PEPLIBNAME = 'pEpEngine.so'
             LIBPEPA = 'libpEpAdapter.a'
-            BOOSTLIBNAME = 'libboost_python37.so'
+            BOOSTLIBNAME = 'boost_{boost_python:s}-mt.so'
             SYS_INCLUDES = ['/usr/local/pEp/include', '/usr/local/include', '/usr/include']
             SYS_SHARES = ['/usr/local/pEp/share', '/usr/local/share', '/usr/share']
-            SYS_LIB_PREFIXES = ['/usr/local/pEp/bin', '/usr/local/bin', '/usr/bin', '/usr/lib/x86_64-linux-gnu/']
+            SYS_LIB_PREFIXES = ['/usr/local/pEp/bin', '/usr/local/bin', '/usr/bin']
 
         use_local_incl = (self.local or os.path.isfile(
             join(HOME, 'include', 'pEp', 'pEpEngine.h')) )
@@ -251,7 +251,7 @@ class BuildExtCommand(build_ext):
         global module_pEp
         extend_once( module_pEp.include_dirs, [ENGINE_INC, LIBPEPA_INC, BOOST_INC, ASN1C_INC] )
         extend_once( module_pEp.library_dirs, [ENGINE_LIB, LIBPEPA_LIB, BOOST_LIB] )
-        extend_once( module_pEp.libraries, ['pEpEngine', 'boost_python3', 'boost_locale'] )
+        extend_once( module_pEp.libraries, ['pEpEngine', 'boost_python37-mt', 'boost_locale-mt'] )
 
         if self.debug:
             module_pEp.extra_compile_args = ['-O0', '-g', '-UNDEBUG', '-std=c++14']
@@ -264,22 +264,22 @@ class BuildExtCommand(build_ext):
 
 # module_pEp global is referenced in BuildExtCommand
 module_pEp = Extension('pEp',
-        sources = glob('src/*.cc'),
-        libraries = ['pEpEngine'],
-        # extra_compile_args = compile_args,
-        # include_dirs = [ENGINE_INC, BOOST_INC, ASN1C_INC],
-        # library_dirs = [ENGINE_LIB, BOOST_LIB],
-    )
+                       sources = glob('src/*.cc'),
+                       libraries = ['pEpEngine'],
+                       # extra_compile_args = compile_args,
+                       # include_dirs = [ENGINE_INC, BOOST_INC, ASN1C_INC],
+                       # library_dirs = [ENGINE_LIB, BOOST_LIB],
+                       )
 
 
 setup(
-        name='pEp',
-        version='2.0',
-        description='p≡p for Python',
-        author="Volker Birk",
-        author_email="vb@pep-project.org",
-        ext_modules=[module_pEp,],
-        cmdclass={
-            'build_ext': BuildExtCommand,
-        },
-    )
+    name='pEp',
+    version='2.0',
+    description='p≡p for Python',
+    author="Volker Birk",
+    author_email="vb@pep-project.org",
+    ext_modules=[module_pEp,],
+    cmdclass={
+        'build_ext': BuildExtCommand,
+    },
+)
