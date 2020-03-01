@@ -72,7 +72,7 @@ try:
                 dst = src.encrypt()
             else:
                 src.dir = 0
-                dst, keys, rating, consumed, flags = src.decrypt()
+                dst, keys, rating, flags = src.decrypt()
 
             print(str(dst))
 

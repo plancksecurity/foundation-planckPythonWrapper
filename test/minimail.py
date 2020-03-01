@@ -13,8 +13,8 @@ delete the marker file to re-read all messages
 
 """
 
-# Minimail 1.1
-# Copyleft 2019, p≡p foundation
+# Minimail 1.2
+# Copyleft 2019, 2020, p≡p foundation
 
 # this file is under GNU General Public License 3.0
 
@@ -22,10 +22,18 @@ delete the marker file to re-read all messages
 import os
 from secrets import token_urlsafe
 from time import sleep
+from random import random
 
 
-timing = .1
+# set timing to None for random timing
+timing = None
 
+
+def snooze():
+    if timing is None:
+        sleep(random()/2)
+    else:
+        sleep(timing)
 
 def unlock(inbox):
     "clear the inbox from lockfile"
@@ -49,14 +57,14 @@ class Lock:
     def __enter__(self):
         lockfile = self.inbox / "lock"
         while lockfile.is_file():
-            sleep(timing)
+            snooze()
         lockfile.touch()
 
 
 def send(inbox, msg, marker):
     "send msg to inbox in MIME format"
 
-    sleep(timing)
+    snooze()
     with Lock(inbox):
         name = marker + "_" + token_urlsafe(16) + ".eml"
         with open(inbox / name, "wb") as f:
@@ -95,7 +103,7 @@ def recv_all(inbox, marker):
                         txt = f.read(-1)
                         r.append((p, txt))
         if not r:
-            sleep(timing)
+            snooze()
 
     return r
 

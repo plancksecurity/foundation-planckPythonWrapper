@@ -102,6 +102,10 @@ if __name__ == "__main__":
     optParser.add_option("-i", "--imap", action="store_true",
             dest="imap",
             help="use imap instead of minimail")
+    optParser.add_option("-A", "--add-account-after-sync", action="store_true",
+            dest="add_account",
+            help="after sync add an account")
+
     options, args = optParser.parse_args()
 
     if options.imap:
@@ -207,7 +211,7 @@ if __name__ == "__main__":
 
             # Phone runs with own_ident = 2
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
-                options.multithreaded, options.imap, 2))
+                options.multithreaded, options.imap, 1))
 
             # others run with own_ident = 1
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,

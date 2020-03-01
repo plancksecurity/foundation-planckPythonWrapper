@@ -130,10 +130,11 @@ class UserInterface(pEp.UserInterface):
                     ])
             sleep(.5) # user is reading message
             try:
-                if options.reject:
-                    self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
-                else:
-                    self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+                if not options.noanswer:
+                    if options.reject:
+                        self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
+                    else:
+                        self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
 
             except NameError:
                 self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
@@ -234,6 +235,8 @@ if __name__=="__main__":
             help="reject device group")
     optParser.add_option("--accept", action="store_false", dest="reject",
             help="accept device group (default)")
+    optParser.add_option("--no-answer", action="store_true", dest="noanswer",
+            help="do not answer device group handshake")
     optParser.add_option("-E", "--end-on", dest="notifications",
             help="end test on these notifications")
     optParser.add_option("-j", "--multi-threaded", action="store_true",
