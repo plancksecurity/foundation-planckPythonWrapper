@@ -477,6 +477,13 @@ BOOST_PYTHON_MODULE(pEp)
         .value("PEP_rating_b0rken", PEP_rating_b0rken)
         .value("PEP_rating_under_attack", PEP_rating_under_attack);
 
+    enum_<PEP_color>("PEP_color")
+        .value("PEP_color_no_color", PEP_color_no_color)
+        .value("PEP_color_yellow", PEP_color_yellow)
+        .value("PEP_color_green", PEP_color_green)
+        .value("PEP_color_red", PEP_color_red);
+
+
     def("incoming_message", &incoming_message,
     "msg = incoming_message(mime_text)\n"
     "\n"
