@@ -5,6 +5,7 @@
 
 #include <boost/python.hpp>
 #include <pEp/pEpEngine.h>
+#include <pEp/message_api.h>
 #include <string>
 #include <memory>
 #include <cstddef>
@@ -57,7 +58,7 @@ namespace pEp {
             void flags(identity_flags_t flags) { _ident->flags = flags; }
 
             int rating();
-            int color();
+            PEP_color color();
 
             Identity copy();
             Identity deepcopy(dict& memo);

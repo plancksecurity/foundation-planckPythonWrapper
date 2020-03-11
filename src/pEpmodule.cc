@@ -241,7 +241,7 @@ BOOST_PYTHON_MODULE(pEp)
                 (void(pEp::PythonAdapter::Identity::*)(identity_flags_t)) &pEp::PythonAdapter::Identity::flags,
                 "flags (p≡p internal)")
         .add_property("rating", &pEp::PythonAdapter::Identity::rating, "rating of Identity")
-        .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity")
+        .add_property("color", &pEp::PythonAdapter::Identity::color, "color of Identity as PEP_color")
         .add_property("is_pEp_user", &pEp::PythonAdapter::Identity::is_pEp_user, "True if this is an identity of a pEp user")
         .def("__deepcopy__", &pEp::PythonAdapter::Identity::deepcopy)
         .def("update", &pEp::PythonAdapter::Identity::update, "update Identity")
@@ -391,7 +391,7 @@ BOOST_PYTHON_MODULE(pEp)
     "   flags           flags set while decryption\n"
                 )
         .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")
-        .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have")
+        .add_property("outgoing_color", &Message::outgoing_color, "color outgoing message will have as PEP_color")
         .def("__deepcopy__", &Message::deepcopy)
         .def("__copy__", &Message::copy);
 
@@ -497,7 +497,7 @@ BOOST_PYTHON_MODULE(pEp)
     def("color", &_color,
     "c = color(rating)\n"
     "\n"
-    "calculate color value out of rating"
+    "calculate color value out of rating. Returns PEP_color"
             );
     def("trustwords", &_trustwords,
     "text = trustwords(ident_own, ident_partner)\n"

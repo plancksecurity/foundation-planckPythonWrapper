@@ -333,7 +333,7 @@ namespace pEp {
             return (int) rating;
         }
 
-        int Message::outgoing_color()
+        PEP_color Message::outgoing_color()
         {
             return _color(outgoing_rating());
         }

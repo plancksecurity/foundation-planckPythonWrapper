@@ -6,6 +6,7 @@
 #include <boost/python.hpp>
 #include <boost/lexical_cast.hpp>
 #include <pEp/message.h>
+#include <pEp/message_api.h>
 #include <string>
 #include "str_attr.hh"
 #include "identity.hh"
@@ -132,7 +133,7 @@ namespace pEp {
 
             boost::python::tuple decrypt(int flags=0);
             int outgoing_rating();
-            int outgoing_color();
+            PEP_color outgoing_color();
             Message deepcopy(dict& memo);
             Message copy();
         };
