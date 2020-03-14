@@ -178,7 +178,7 @@ class BuildExtCommand(build_ext):
             BOOSTLIBNAME = 'libboost_python37.so'
             SYS_INCLUDES = ['/usr/local/pEp/include', '/usr/local/include', '/usr/include']
             SYS_SHARES = ['/usr/local/pEp/share', '/usr/local/share', '/usr/share']
-            SYS_LIB_PREFIXES = ['/usr/local/pEp/bin', '/usr/local/bin', '/usr/bin', '/usr/lib/x86_64-linux-gnu/']
+            SYS_LIB_PREFIXES = ['/usr/local/pEp/bin', '/usr/local/bin', '/usr/bin', '/usr/lib/x86_64-linux-gnu/', '/usr/lib/i386-linux-gnu/']
 
         use_local_incl = (self.local or os.path.isfile(
             join(HOME, 'include', 'pEp', 'pEpEngine.h')) )
