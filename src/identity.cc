@@ -125,7 +125,7 @@ namespace pEp {
             return (int) rating;
         }
 
-        int Identity::color()
+        PEP_color Identity::color()
         {
             return _color(rating());
         }

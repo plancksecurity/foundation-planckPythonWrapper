@@ -62,9 +62,9 @@ namespace pEp {
             return boost::python::make_tuple(dst, keylist, _rating, _flags);
         }
 
-        int _color(int rating)
+        PEP_color _color(int rating)
         {
-            return (int) ::color_from_rating((PEP_rating) rating);
+            return ::color_from_rating((PEP_rating) rating);
         }
 
         boost::python::tuple sync_decode(object buffer)
