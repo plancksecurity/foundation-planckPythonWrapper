@@ -9,7 +9,7 @@ import sys
 from sys import argv
 
 import os
-from os import environ, uname
+from os import environ
 from os.path import dirname, exists, join
 
 from setuptools import setup, Extension
