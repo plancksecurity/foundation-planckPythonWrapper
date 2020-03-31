@@ -1,11 +1,41 @@
-There's a setup.py in pEpPythonAdapter/
+# pEpPythonAdapter
 
-In Python we've setup tools, so it's:
+## Build Insttructions
 
-python3 setup.py build
+These build instructions should work on:
+ * Linux
+ * MacOS
+ * Windows
+
+### Build
+To build against system wide pEp installation (libs/includes) 
+```bash
+python3 setup.py build_ext
+```
+
+To build against a pEp installation in your home dir (libs/includes): 
+```bash
+python3 setup.py build_ext --local
+```
+
+To build against a pEp installation in a custom installation root (libs/includes) 
+```bash
+python3 setup.py build_ext --prefix=<path_to_your_install_root>
+```
+
+### Install
+
+To install the extension module system wide, as root, run:
+```bash
 python3 setup.py install
+```
 
-That is a Python concept. You can find more about it here:
+To install the extension module into you home dir
+```bash
+python3 setup.py install --user
+```
 
-https://docs.python.org/3/extending/building.html#building-c-and-c-extensions-with-distutils
-
+To install the extension module into a custom destination
+```bash
+python3 setup.py install --prefix=<custom_destination_root>
+```
