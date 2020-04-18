@@ -313,15 +313,18 @@ namespace pEp {
             return pEp::PythonAdapter::decrypt_message(*this, flags);
         }
 
-        int Message::outgoing_rating()
+        PEP_rating Message::outgoing_rating()
         {
             if (_msg->dir != PEP_dir_outgoing)
                 throw invalid_argument("Message.dir must be outgoing");
 
             if (from().address() == "")
-                throw invalid_argument("address needed");
+                throw invalid_argument("from.address needed");
             if (from().username() == "")
-                throw invalid_argument("username needed");
+                throw invalid_argument("from.username needed");
+
+            if (len(to()) + len(cc()) == 0)
+                throw invalid_argument("either to or cc needed");
 
             PEP_STATUS status = myself(adapter.session(), _msg->from);
             _throw_status(status);
@@ -330,7 +333,7 @@ namespace pEp {
             status = outgoing_message_rating(adapter.session(), *this, &rating);
             _throw_status(status);
 
-            return (int) rating;
+            return rating;
         }
 
         PEP_color Message::outgoing_color()

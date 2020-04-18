@@ -462,26 +462,25 @@ BOOST_PYTHON_MODULE(pEp)
 
     // message API
 
-    enum_<PEP_rating>("PEP_rating")
-        .value("PEP_rating_undefined", PEP_rating_undefined)
-        .value("PEP_rating_cannot_decrypt", PEP_rating_cannot_decrypt)
-        .value("PEP_rating_have_no_key", PEP_rating_have_no_key)
-        .value("PEP_rating_unencrypted", PEP_rating_unencrypted)
-        .value("PEP_rating_unencrypted_for_some", PEP_rating_unencrypted_for_some)
-        .value("PEP_rating_unreliable", PEP_rating_unreliable)
-        .value("PEP_rating_reliable", PEP_rating_reliable)
-        .value("PEP_rating_trusted", PEP_rating_trusted)
-        .value("PEP_rating_trusted_and_anonymized", PEP_rating_trusted_and_anonymized)
-        .value("PEP_rating_fully_anonymous", PEP_rating_fully_anonymous)
-        .value("PEP_rating_mistrust", PEP_rating_mistrust)
-        .value("PEP_rating_b0rken", PEP_rating_b0rken)
-        .value("PEP_rating_under_attack", PEP_rating_under_attack);
+    enum_<PEP_rating>("rating")
+        .value("_undefined", PEP_rating_undefined)
+        .value("cannot_decrypt", PEP_rating_cannot_decrypt)
+        .value("have_no_key", PEP_rating_have_no_key)
+        .value("unencrypted", PEP_rating_unencrypted)
+        .value("unreliable", PEP_rating_unreliable)
+        .value("reliable", PEP_rating_reliable)
+        .value("trusted", PEP_rating_trusted)
+        .value("trusted_and_anonymized", PEP_rating_trusted_and_anonymized)
+        .value("fully_anonymous", PEP_rating_fully_anonymous)
+        .value("mistrust", PEP_rating_mistrust)
+        .value("b0rken", PEP_rating_b0rken)
+        .value("under_attack", PEP_rating_under_attack);
 
-    enum_<PEP_color>("PEP_color")
-        .value("PEP_color_no_color", PEP_color_no_color)
-        .value("PEP_color_yellow", PEP_color_yellow)
-        .value("PEP_color_green", PEP_color_green)
-        .value("PEP_color_red", PEP_color_red);
+    enum_<PEP_color>("colorvalue")
+        .value("no_color", PEP_color_no_color)
+        .value("yellow", PEP_color_yellow)
+        .value("green", PEP_color_green)
+        .value("red", PEP_color_red);
 
 
     def("incoming_message", &incoming_message,
