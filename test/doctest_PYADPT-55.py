@@ -1,44 +1,44 @@
 # Regression test against API breakage
 # colors used to be represented as a simple int
-# NEW: colors are represented by PEP_color enum
-# Test for equal resolution of colors using int (OLD) vs using PEP_color (NEW)
+# NEW: colors are represented by colorvalue enum
+# Test for equal resolution of colors using int (OLD) vs using colorvalue (NEW)
 
+print("Running PYADPT-55")
 """
->>> resolveOLDvsNEW(pEp.PEP_color.PEP_color_no_color)
+>>> resolveOLDvsNEW(pEp.colorvalue.no_color)
 True
->>> resolveOLDvsNEW(pEp.PEP_color.PEP_color_yellow)
+>>> resolveOLDvsNEW(pEp.colorvalue.yellow)
 True
->>> resolveOLDvsNEW(pEp.PEP_color.PEP_color_green)
+>>> resolveOLDvsNEW(pEp.colorvalue.green)
 True
->>> resolveOLDvsNEW(pEp.PEP_color.PEP_color_red)
+>>> resolveOLDvsNEW(pEp.colorvalue.red)
 True
 """
-
 
 
 import pEp
-# resolves a color represented as int, the OLD way
-# returns PEP_color
+# resolves a color represented as int, the OLD way, as an int.
+# returns colorvalue
 def resolveColorOLD(col):
-    ret = pEp.PEP_color()
+    ret = pEp.colorvalue()
 
-    c = pEp.PEP_color(col)
+    c = pEp.colorvalue(col)
     if(c == 0):
-        ret = pEp.PEP_color.PEP_color_no_color
+        ret = pEp.colorvalue.no_color
     if(c == 1):
-        ret = pEp.PEP_color.PEP_color_yellow
+        ret = pEp.colorvalue.yellow
     if(c == 2):
-        ret = pEp.PEP_color.PEP_color_green
+        ret = pEp.colorvalue.green
     if(c == -1):
-        ret = pEp.PEP_color.PEP_color_red
+        ret = pEp.colorvalue.red
 
     return ret
 
-# resolves a color represented as PEP_color, the NEW way
-# returns PEP_color
+# resolves a color represented as colorvalue, the NEW way
+# returns colorvalue
 def resolveColorNEW(col):
-    c = pEp.PEP_color(col)
-    return col
+    c = pEp.colorvalue(col)
+    return c
 
 # Compare color resolution OLD vs NEW way
 # return True if results are equal

@@ -16,7 +16,7 @@ Bob Bourne <bob.bourne@peptest.ch>
 >>> print(m2)
 >>> m3, keys, rating, flags = m2.decrypt()
 >>> rating
-pEp.PEP_rating.PEP_rating_reliable
+pEp.rating.reliable
 """
 
 if __name__ == "__main__":
