@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # Regression test against API breakage
 # colors used to be represented as a simple int
 # NEW: colors are represented by colorvalue enum

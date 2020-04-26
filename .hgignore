@@ -23,3 +23,5 @@ test/imap_settings.py
 venv
 launch.json
 settings.json
+# Default ignored files
+.idea/workspace.xml

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """
 >>> import pEp
 >>> me = pEp.Identity("alice.smith@peptest.ch", "Alice Smith", "23")
