@@ -26,8 +26,7 @@ parser.add_argument('--decrypt', '-d', help='decrypt p≡p message',
         action='store_true', dest='decrypt')
 parser.add_argument('--import', '-i', help='import key data in PGP format',
         action='store_true', dest='keyimport')
-parser.add_argument('--export', '-x', help='export key data in PGP format',
-        action='store_true', dest='keyexport')
+parser.add_argument('--export', '-x', help='export key data for identity address in PGP format', type=str, dest='keyexport')
 parser.add_argument('--version', '-V', help='show program version',
         action='store_true', dest='version')
 parser.add_argument('files', metavar='FILE', nargs='*',
@@ -52,6 +51,7 @@ def crlf(line):
 
 try:
     if len(args.files) == 0:
+        print("No files")
         args.files = ['-']
 
     for filename in args.files:
@@ -78,6 +78,7 @@ try:
 
         elif args.keyimport:
             if filename == '-':
+                print("specify Indentity address")
                 text = sys.stdin.read()
             else:
                 with open(filename, "rb") as f:
@@ -88,13 +89,16 @@ try:
                 print("error importing key(s)", file=sys.stderr)
 
         elif args.keyexport:
-            if filename == '-':
-                text = sys.stdin.read()
-            else:
-                with open(filename, "rb") as f:
-                    text = f.read()
+            id = Identity()
+            id.address = args.keyexport
+            id.update()
             try:
-                import_key(text)
+                keydata = export_key(id)
+                if filename == '-':
+                    print(keydata)
+                else:
+                    with open(filename, "w") as f:
+                        f.write(keydata)
             except RuntimeError:
                 print("error exporting key(s)", file=sys.stderr)
 
