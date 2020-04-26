@@ -19,6 +19,7 @@ namespace pEp {
 
         boost::python::list import_key(string key_data);
         string export_key(Identity ident);
+        string export_secret_key(Identity ident);
         void set_own_key(Identity& ident, string fpr);
     }
 }

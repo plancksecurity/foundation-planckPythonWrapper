@@ -451,6 +451,12 @@ BOOST_PYTHON_MODULE(pEp)
             "export key(s) of identity\n"
         );
 
+    def("export_secret_key", &pEp::PythonAdapter::export_secret_key,
+            "key_data = export_seret_key(identity)\n"
+            "\n"
+            "export secret key(s) of identity\n"
+        );
+
     def("set_own_key", &pEp::PythonAdapter::set_own_key,
             "set_own_key(me, fpr)\n"
             "\n"
