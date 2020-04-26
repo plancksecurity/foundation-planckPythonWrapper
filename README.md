@@ -3,8 +3,8 @@
 ## Build Insttructions
 
 These build instructions should work on:
- * Linux
- * MacOS
+ * Linux (Verified 26.4.20 - heck)
+ * MacOS (Verified 26.4.20 - heck)
  * Windows
 
 ### Build
@@ -39,3 +39,4 @@ To install the extension module into a custom destination
 ```bash
 python3 setup.py install --prefix=<custom_destination_root>
 ```
+Attention: The ~ (tilde) does not get expanded, but env vars work ($HOME). 
