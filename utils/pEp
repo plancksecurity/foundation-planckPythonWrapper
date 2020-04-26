@@ -26,7 +26,10 @@ parser.add_argument('--decrypt', '-d', help='decrypt p≡p message',
         action='store_true', dest='decrypt')
 parser.add_argument('--import', '-i', help='import key data in PGP format',
         action='store_true', dest='keyimport')
-parser.add_argument('--export', '-x', help='export key data for identity address in PGP format', type=str, dest='keyexport')
+parser.add_argument('--export', '-x', help='export key data for identity address in PGP format',
+        type=str, dest='keyexport')
+parser.add_argument('--secret-keys', help='option for --export',
+                    action='store_true', dest='secret_keys')
 parser.add_argument('--version', '-V', help='show program version',
         action='store_true', dest='version')
 parser.add_argument('files', metavar='FILE', nargs='*',
@@ -93,7 +96,10 @@ try:
             id.address = args.keyexport
             id.update()
             try:
-                keydata = export_key(id)
+                if args.secret_keys:
+                    keydata = export_secret_key(id)
+                else:
+                    keydata = export_key(id)
                 if filename == '-':
                     print(keydata)
                 else:
