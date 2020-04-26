@@ -119,6 +119,17 @@ namespace pEp {
             return result;
         }
 
+        string export_key(Identity ident)
+        {
+            PEP_STATUS status = PEP_STATUS_OK;
+            char* key_data = NULL;
+            size_t size;
+            status = ::export_key(adapter.session(), ident.fpr().c_str(), &key_data, &size);
+
+            _throw_status(status);
+            return key_data;
+        }
+
         void set_own_key(Identity& ident, string fpr)
         {
             if (ident.address() == "")

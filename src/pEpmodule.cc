@@ -445,6 +445,12 @@ BOOST_PYTHON_MODULE(pEp)
             "import key(s) from key_data\n"
         );
 
+    def("export_key", &pEp::PythonAdapter::export_key,
+            "key_data = export_key(identity)\n"
+            "\n"
+            "export key(s) of identity\n"
+        );
+
     def("set_own_key", &pEp::PythonAdapter::set_own_key,
             "set_own_key(me, fpr)\n"
             "\n"
