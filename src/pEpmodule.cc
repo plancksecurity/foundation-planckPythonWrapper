@@ -210,6 +210,16 @@ BOOST_PYTHON_MODULE(pEp)
             "identity. If it does not, remove the key from the keyring; the key's status is\n"
             "completely fresh on next contact from the partner.")
 
+        .def("key_mistrusted", &pEp::PythonAdapter::Identity::key_mistrusted,
+                boost::python::arg("fpr")=object(""),
+            "If you want updated trust on the identity, you ll have"
+            "to call update_identity or myself respectively after this."
+            "N.B. If you are calling this on a key that is the identity or user default,"
+            "it will be removed as the default key for ANY identity and user for which"
+            "it is the default. Please keep in mind that the undo in undo_last_mistrust"
+            "will only undo the current identity's / it's user's default, not any"
+            "other identities which may be impacted (this will not affect most use cases)")
+
         .def("enable_for_sync", &pEp::PythonAdapter::Identity::enable_for_sync,
                 "Enable own identity for p≡p sync.\n\n"
                 "Only use this on own identities, which are used as accounts.\n")

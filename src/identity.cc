@@ -14,7 +14,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
 
         Identity::Identity(string address, string username, string user_id,
                 string fpr, int comm_type, string lang, identity_flags_t flags)
@@ -153,6 +152,12 @@ namespace pEp {
         {
             PEP_STATUS status = ::key_reset_identity(adapter.session(), *this,
                     fpr != "" ? fpr.c_str() : nullptr);
+            _throw_status(status);
+        }
+
+        void Identity::key_mistrusted()
+        {
+            PEP_STATUS status = ::key_mistrusted(adapter.session(), *this);
             _throw_status(status);
         }
 

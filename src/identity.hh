@@ -66,6 +66,7 @@ namespace pEp {
             virtual void update();
 
             void key_reset(string fpr="");
+            void key_mistrusted();
 
             bool is_pEp_user();
 
