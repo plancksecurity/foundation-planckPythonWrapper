@@ -7,6 +7,7 @@
 >>> alice = pEp.Identity("alice@peptest.org", "23")
 >>> pEp.myself(alice)
 >>> pEp.export_key(alice)
+>>> pEp.export_secret_key(alice)
 """
 
 import  pEp;
