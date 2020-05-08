@@ -149,7 +149,7 @@ namespace pEp {
         {
             message *_cpy;
             PEP_STATUS status = mime_decode_message(mimetext.c_str(),
-                    mimetext.size(), &_cpy);
+                    mimetext.size(), &_cpy, NULL);
             switch (status) {
                 case PEP_STATUS_OK:
                     if (_cpy)
@@ -215,7 +215,7 @@ namespace pEp {
             char *mimetext;
             string result;
 
-            PEP_STATUS status = mime_encode_message(*this, false, &mimetext);
+            PEP_STATUS status = mime_encode_message(*this, false, &mimetext, false);
             switch (status) {
                 case PEP_STATUS_OK:
                     result = mimetext;
