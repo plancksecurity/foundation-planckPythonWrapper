@@ -1,16 +1,17 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
+#include <typeinfo>
+#include <sstream>
+
+#include <pEp/identity_list.h>
+#include <pEp/keymanagement.h>
+#include <pEp/key_reset.h>
+
 #include "identity.hh"
 #include "pEpmodule.hh"
 #include "basic_api.hh"
 #include "message_api.hh"
-#include <typeinfo>
-#include <sstream>
-#include <pEp/identity_list.h>
-#include <pEp/keymanagement.h>
-#include <pEp/key_reset.h>
-#include <pEp/message_api.h>
 
 namespace pEp {
     namespace PythonAdapter {
@@ -118,7 +119,7 @@ namespace pEp {
                 throw invalid_argument("address must be given");
 
             PEP_rating rating = PEP_rating_undefined;
-            PEP_STATUS status = ::identity_rating(adapter.session(), _ident.get(), &rating);
+            PEP_STATUS status = ::identity_rating(pEp::Adapter::session(), _ident.get(), &rating);
             _throw_status(status);
 
             return (int) rating;
@@ -150,34 +151,34 @@ namespace pEp {
 
         void Identity::key_reset(string fpr)
         {
-            PEP_STATUS status = ::key_reset_identity(adapter.session(), *this,
+            PEP_STATUS status = ::key_reset_identity(pEp::Adapter::session(), *this,
                     fpr != "" ? fpr.c_str() : nullptr);
             _throw_status(status);
         }
 
         void Identity::key_mistrusted()
         {
-            PEP_STATUS status = ::key_mistrusted(adapter.session(), *this);
+            PEP_STATUS status = ::key_mistrusted(pEp::Adapter::session(), *this);
             _throw_status(status);
         }
 
         bool Identity::is_pEp_user()
         {
             bool result;
-            PEP_STATUS status = ::is_pEp_user(adapter.session(), *this, &result);
+            PEP_STATUS status = ::is_pEp_user(pEp::Adapter::session(), *this, &result);
             _throw_status(status);
             return result;
         }
 
         void Identity::enable_for_sync()
         {
-            PEP_STATUS status = ::enable_identity_for_sync(adapter.session(), *this);
+            PEP_STATUS status = ::enable_identity_for_sync(pEp::Adapter::session(), *this);
             _throw_status(status);
         }
 
         void Identity::disable_for_sync()
         {
-            PEP_STATUS status = ::disable_identity_for_sync(adapter.session(), *this);
+            PEP_STATUS status = ::disable_identity_for_sync(pEp::Adapter::session(), *this);
             _throw_status(status);
         }
 
@@ -220,7 +221,7 @@ namespace pEp {
             pEp_identity *_dup = ::identity_dup(_ident);
             if (!_dup)
                 throw bad_alloc();
-            PEP_STATUS status = update_identity(adapter.session(), _dup);
+            PEP_STATUS status = update_identity(pEp::Adapter::session(), _dup);
             _throw_status(status);
             free_identity(ident);
             ident = _dup;
@@ -258,7 +259,7 @@ namespace pEp {
                     free_identity_list(_il);
                     throw bad_alloc();
                 }
-                PEP_STATUS status = update_identity(adapter.session(), _dup);
+                PEP_STATUS status = update_identity(pEp::Adapter::session(), _dup);
                 if (status != PEP_STATUS_OK) {
                     free_identity_list(_il);
                     _throw_status(status);

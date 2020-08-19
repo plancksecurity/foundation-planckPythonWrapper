@@ -1,10 +1,13 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#include "basic_api.hh"
 #include <sstream>
+
 #include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
+#include <pEp/Adapter.hh>
+
+#include "basic_api.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -16,7 +19,7 @@ namespace pEp {
                 throw runtime_error("update_identity: '" PEP_OWN_USERID
                         "' may only be used for own identities");
 
-            PEP_STATUS status = update_identity(adapter.session(), ident);
+            PEP_STATUS status = update_identity(pEp::Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -30,7 +33,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 ident.user_id(ident.address());
 
-            PEP_STATUS status = myself(adapter.session(), ident);
+            PEP_STATUS status = myself(pEp::Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -44,7 +47,7 @@ namespace pEp {
 
             char *words = NULL;
             size_t size = 0;
-            PEP_STATUS status =  get_trustwords(adapter.session(), me, partner,
+            PEP_STATUS status =  get_trustwords(pEp::Adapter::session(), me, partner,
                                         lang.c_str(),&words, &size, full);
             _throw_status(status);
             return words;
@@ -57,7 +60,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id must be provided");
 
-            PEP_STATUS status = trust_personal_key(adapter.session(), ident);
+            PEP_STATUS status = trust_personal_key(pEp::Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -68,7 +71,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = set_identity_flags(adapter.session(), ident, flags);
+            PEP_STATUS status = set_identity_flags(pEp::Adapter::session(), ident, flags);
             _throw_status(status);
         }
 
@@ -79,7 +82,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = unset_identity_flags(adapter.session(), ident, flags);
+            PEP_STATUS status = unset_identity_flags(pEp::Adapter::session(), ident, flags);
             _throw_status(status);
         }
 
@@ -92,7 +95,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = key_reset_trust(adapter.session(), ident);
+            PEP_STATUS status = key_reset_trust(pEp::Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -101,7 +104,7 @@ namespace pEp {
         boost::python::list import_key(string key_data)
         {
             ::identity_list *private_keys = NULL;
-            PEP_STATUS status = ::import_key(adapter.session(), key_data.c_str(), key_data.size(), &private_keys);
+            PEP_STATUS status = ::import_key(pEp::Adapter::session(), key_data.c_str(), key_data.size(), &private_keys);
             if (status && status != PEP_KEY_IMPORTED)
                 _throw_status(status);
 
@@ -124,7 +127,7 @@ namespace pEp {
             PEP_STATUS status = PEP_STATUS_OK;
             char* key_data = NULL;
             size_t size;
-            status = ::export_key(adapter.session(), ident.fpr().c_str(), &key_data, &size);
+            status = ::export_key(pEp::Adapter::session(), ident.fpr().c_str(), &key_data, &size);
 
             _throw_status(status);
             return key_data;
@@ -135,7 +138,7 @@ namespace pEp {
             PEP_STATUS status = PEP_STATUS_OK;
             char* key_data = NULL;
             size_t size;
-            status = ::export_secret_key(adapter.session(), ident.fpr().c_str(), &key_data, &size);
+            status = ::export_secret_key(pEp::Adapter::session(), ident.fpr().c_str(), &key_data, &size);
 
             _throw_status(status);
             return key_data;
@@ -154,7 +157,7 @@ namespace pEp {
 
 
             const char* fpr_c = fpr.c_str();
-            PEP_STATUS status = set_own_key(adapter.session(), ident, fpr_c);
+            PEP_STATUS status = set_own_key(pEp::Adapter::session(), ident, fpr_c);
             _throw_status(status);
         }
     }

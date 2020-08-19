@@ -1,10 +1,7 @@
 #pragma once
 
-#include <boost/python.hpp>
-#include "identity.hh"
-#include "message.hh"
-#include "adapter.hh"
 #include <pEp/pEpEngine.h>
+#include "message.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -16,8 +13,9 @@ namespace pEp {
         void _throw_status(PEP_STATUS status);
         void messageToSend(Message msg);
         PEP_STATUS _messageToSend(::message *msg);
-        void do_sync_protocol();
-        extern Adapter adapter;
+        PEP_STATUS _ensure_passphrase(PEP_SESSION session, const char *fpr);
+//         void do_sync_protocol();
+//         extern Adapter adapter;
     }
 }
 

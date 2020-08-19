@@ -4,7 +4,7 @@
 #pragma once
 
 #include "pEpmodule.hh"
-#include "locked_queue.hh"
+#include "pEp/locked_queue.hh"
 #include "user_interface.hh"
 #include <pEp/sync_api.h>
 

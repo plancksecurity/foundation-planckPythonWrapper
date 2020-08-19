@@ -4,11 +4,14 @@
 #pragma once
 
 #include <boost/python.hpp>
-#include <pEp/pEpEngine.h>
-#include <pEp/message_api.h>
 #include <string>
 #include <memory>
 #include <cstddef>
+
+#include <pEp/pEpEngine.h>
+#include <pEp/message_api.h>
+#include "pEp/Adapter.hh"
+
 #include "str_attr.hh"
 
 namespace pEp {

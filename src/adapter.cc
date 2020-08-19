@@ -3,6 +3,7 @@
 
 #include "user_interface.hh"
 #include <assert.h>
+#include "adapter.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -42,7 +43,8 @@ namespace pEp {
                 case init:
                     ++booked;
                     if (!_session)
-                        status = ::init(&_session, _messageToSend, _inject_sync_event);
+                        status = ::init(&_session, _messageToSend, _inject_sync_event, _ensure_passphrase);
+//                        status = ::init(&_session, _messageToSend, _inject_sync_event);
                     break;
 
                 default:
@@ -74,24 +76,24 @@ namespace pEp {
             return obj;
         }
 
-        int Adapter::_inject_sync_event(SYNC_EVENT ev, void *management)
-        {
-            if (!flag_sync_enabled)
-                return 1;
-
-            if (is_sync_thread(adapter.session())) {
-                PEP_STATUS status = do_sync_protocol_step(adapter.session(), adapter.ui_object(), ev);
-                return status == PEP_STATUS_OK ? 0 : 1;
-            }
-
-            try {
-                queue().push_back(ev);
-            }
-            catch (exception&) {
-                return 1;
-            }
-            return 0;
-        }
+//        int Adapter::_inject_sync_event(SYNC_EVENT ev, void *management)
+//        {
+//            if (!flag_sync_enabled)
+//                return 1;
+//
+//            if (is_sync_thread(adapter.session())) {
+//                PEP_STATUS status = do_sync_protocol_step(adapter.session(), adapter.ui_object(), ev);
+//                return status == PEP_STATUS_OK ? 0 : 1;
+//            }
+//
+//            try {
+//                queue().push_back(ev);
+//            }
+//            catch (exception&) {
+//                return 1;
+//            }
+//            return 0;
+//        }
     }
 }
 

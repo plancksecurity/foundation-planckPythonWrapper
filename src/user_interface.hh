@@ -3,10 +3,13 @@
 
 #pragma once
 
-#include "pEpmodule.hh"
-#include <setjmp.h> 
+#include <csetjmp>
+
 #include <pEp/sync_api.h>
 #include <pEp/message_api.h>
+
+#include "pEpmodule.hh"
+
 
 namespace pEp {
     namespace PythonAdapter {

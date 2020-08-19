@@ -1,37 +1,39 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#include "pEpmodule.hh"
+#include <boost/python.hpp>
 #include <boost/locale.hpp>
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "basic_api.hh"
-#include "message_api.hh"
-#include "user_interface.hh"
-#include "adapter.hh"
-
 #include <mutex>
 
+#include <pEp/Adapter.hh>
 #include <pEp/key_reset.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 #include <pEp/status_to_string.h>
 
+#include "pEpmodule.hh"
+#include "basic_api.hh"
+#include "message_api.hh"
+#include "user_interface.hh"
+
+
 namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        Adapter adapter(true);
+//        Adapter adapter(true);
 
         void config_passive_mode(bool enable)
         {
-            ::config_passive_mode(adapter.session(), enable);
+            ::config_passive_mode(pEp::Adapter::session(), enable);
         }
 
         void config_unencrypted_subject(bool enable)
         {
-            ::config_unencrypted_subject(adapter.session(), enable);
+            ::config_unencrypted_subject(pEp::Adapter::session(), enable);
         }
 
         void key_reset_user(string user_id, string fpr)
@@ -39,7 +41,7 @@ namespace pEp {
             if (user_id == "")
                 throw invalid_argument("user_id required");
 
-            PEP_STATUS status = ::key_reset_user(adapter.session(),
+            PEP_STATUS status = ::key_reset_user(pEp::Adapter::session(),
                     user_id.c_str(), fpr != "" ?  fpr.c_str() : nullptr);
             _throw_status(status);
         }
@@ -51,7 +53,7 @@ namespace pEp {
 
         void key_reset_all_own_keys()
         {
-            PEP_STATUS status = ::key_reset_all_own_keys(adapter.session());
+            PEP_STATUS status = ::key_reset_all_own_keys(pEp::Adapter::session());
             _throw_status(status);
         }
 
@@ -86,6 +88,11 @@ namespace pEp {
             }
         }
 
+        PEP_STATUS _ensure_passphrase(PEP_SESSION session, const char *fpr)
+        {
+            return PEP_STATUS_OK;
+        }
+
         PEP_STATUS _messageToSend(::message *msg)
         {
             if (!_scope)
@@ -104,31 +111,31 @@ namespace pEp {
             throw runtime_error("implement pEp.messageToSend(msg)");
         }
 
-        void do_sync_protocol()
-        {
-            ::do_sync_protocol(adapter.session(), nullptr);
-        }
+//        void do_sync_protocol()
+//        {
+//            ::do_sync_protocol(pEp::Adapter::session(), nullptr);
+//        }
 
         void shutdown_sync()
         {
-            adapter.shutdown_sync();
+            pEp::Adapter::shutdown();
         }
 
         void debug_color(int ansi_color)
         {
-            ::set_debug_color(adapter.session(), ansi_color);
+            ::set_debug_color(pEp::Adapter::session(), ansi_color);
         }
 
         void leave_device_group() {
-            ::leave_device_group(adapter.session());
+            ::leave_device_group(pEp::Adapter::session());
         }
 
-        void script_is_implementing_sync() {
-            adapter.script_is_implementing_sync();
-        }
+//        void script_is_implementing_sync() {
+//            adapter.script_is_implementing_sync();
+//        }
 
         bool is_sync_active() {
-            return adapter.is_sync_active();
+            return pEp::Adapter::is_sync_running();
         }
     }
 }
@@ -547,38 +554,40 @@ BOOST_PYTHON_MODULE(pEp)
         .value("SYNC_NOTIFY_SOLE"                  , SYNC_NOTIFY_SOLE)
         .value("SYNC_NOTIFY_IN_GROUP"              , SYNC_NOTIFY_IN_GROUP);
 
-    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
-            "UserInterface",
-    "class MyUserInterface(UserInterface):\n"
-    "   def notifyHandshake(self, me, partner):\n"
-    "       ...\n"
-    "\n"
-    "p≡p User Interface class\n"
-    "To be used as a mixin\n"
-    )
-        .def("notifyHandshake", &UserInterface::notifyHandshake,
-    "notifyHandshake(self, me, partner)\n"
-    "\n"
-    "   me              own identity\n"
-    "   partner         identity of communication partner\n"
-    "\n"
-    "overwrite this method with an implementation of a handshake dialog")
-        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
-                boost::python::arg("identities")=object(),
-    "deliverHandshakeResult(self, result, identities=None)\n"
-    "\n"
-    "   result          -1: cancel, 0: accepted, 1: rejected\n"
-    "   identities      list of identities to share or None for all\n"
-    "\n"
-    "call to deliver the handshake result of the handshake dialog")
-    ;
+//    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
+//            "UserInterface",
+//    "class MyUserInterface(UserInterface):\n"
+//    "   def notifyHandshake(self, me, partner):\n"
+//    "       ...\n"
+//    "\n"
+//    "p≡p User Interface class\n"
+//    "To be used as a mixin\n"
+//    )
+//        .def("notifyHandshake", &UserInterface::notifyHandshake,
+//    "notifyHandshake(self, me, partner)\n"
+//    "\n"
+//    "   me              own identity\n"
+//    "   partner         identity of communication partner\n"
+//    "\n"
+//    "overwrite this method with an implementation of a handshake dialog")
+//        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
+//                boost::python::arg("identities")=object(),
+//    "deliverHandshakeResult(self, result, identities=None)\n"
+//    "\n"
+//    "   result          -1: cancel, 0: accepted, 1: rejected\n"
+//    "   identities      list of identities to share or None for all\n"
+//    "\n"
+//    "call to deliver the handshake result of the handshake dialog")
+//    ;
 
-    def("do_sync_protocol", &pEp::PythonAdapter::do_sync_protocol,
-        "do_sync_protocol()\n"
-        "\n"
-        "in case of an explicit sync thread instead of a single threaded\n"
-        "implementation call this function in your sync thread\n"
-    );
+
+// TODO: Replace with start_sync()
+//    def("do_sync_protocol", &pEp::PythonAdapter::do_sync_protocol,
+//        "do_sync_protocol()\n"
+//        "\n"
+//        "in case of an explicit sync thread instead of a single threaded\n"
+//        "implementation call this function in your sync thread\n"
+//    );
 
     def("shutdown_sync", &pEp::PythonAdapter::shutdown_sync,
             "shutdown_sync()\n"
@@ -595,12 +604,12 @@ BOOST_PYTHON_MODULE(pEp)
             "call this for a grouped device, which should leave\n"
        );
     
-    def("script_is_implementing_sync", &pEp::PythonAdapter::script_is_implementing_sync,
-            "script_is_implementing_sync()\n"
-            "\n"
-            "call this in case the Python script is implementing sync to make\n"
-            "is_sync_active() working\n"
-       );
+//    def("script_is_implementing_sync", &pEp::PythonAdapter::script_is_implementing_sync,
+//            "script_is_implementing_sync()\n"
+//            "\n"
+//            "call this in case the Python script is implementing sync to make\n"
+//            "is_sync_active() working\n"
+//       );
 
     def("is_sync_active", &pEp::PythonAdapter::is_sync_active,
             "is_sync_active()\n"

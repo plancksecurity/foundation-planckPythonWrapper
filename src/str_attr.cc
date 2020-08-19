@@ -3,8 +3,9 @@
 
 #include <boost/python.hpp>
 #include <boost/locale.hpp>
+#include <cstdlib>
+
 #include "str_attr.hh"
-#include <stdlib.h>
 
 namespace pEp {
     namespace utility {

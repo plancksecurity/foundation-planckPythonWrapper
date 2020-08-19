@@ -2,16 +2,18 @@
 // see LICENSE.txt
 
 #include <Python.h>
-#include "message.hh"
-#include "message_api.hh"
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <stdexcept>
 #include <sstream>
 #include <vector>
+
 #include <pEp/mime.h>
 #include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
+
+#include "message.hh"
+#include "message_api.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -326,11 +328,11 @@ namespace pEp {
             if (len(to()) + len(cc()) == 0)
                 throw invalid_argument("either to or cc needed");
 
-            PEP_STATUS status = myself(adapter.session(), _msg->from);
+            PEP_STATUS status = myself(pEp::Adapter::session(), _msg->from);
             _throw_status(status);
 
             PEP_rating rating = PEP_rating_undefined;
-            status = outgoing_message_rating(adapter.session(), *this, &rating);
+            status = outgoing_message_rating(pEp::Adapter::session(), *this, &rating);
             _throw_status(status);
 
             return rating;
@@ -359,7 +361,7 @@ namespace pEp {
             if (me.address().empty() || me.user_id().empty())
                 throw runtime_error("at least address and user_id of own user needed");
 
-            ::myself(adapter.session(), me);
+            ::myself(pEp::Adapter::session(), me);
             auto m = Message(PEP_dir_outgoing, &me);
             return m;
         }
@@ -368,7 +370,7 @@ namespace pEp {
         {
             if (ident.address().empty())
                 throw runtime_error("at least address needed");
-            update_identity(adapter.session(), ident);
+            update_identity(pEp::Adapter::session(), ident);
             return object(ident);
         }
 

@@ -5,9 +5,11 @@
 
 #include <boost/python.hpp>
 #include <boost/lexical_cast.hpp>
+#include <string>
+
 #include <pEp/message.h>
 #include <pEp/message_api.h>
-#include <string>
+
 #include "str_attr.hh"
 #include "identity.hh"
 

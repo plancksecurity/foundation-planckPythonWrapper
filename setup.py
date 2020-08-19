@@ -90,6 +90,7 @@ class BuildExtCommand(build_ext):
         ]
         libs = [
             'pEpEngine',
+            'pEpAdapter',
             'boost_python37-mt',
             'boost_locale-mt'
         ]
@@ -111,6 +112,7 @@ class BuildExtCommand(build_ext):
         ]
         libs = [
             'pEpEngine',
+            'pEpAdapter',
             'boost_python37-mt',
             'boost_locale-mt'
         ]
@@ -129,6 +131,7 @@ class BuildExtCommand(build_ext):
         ]
         libs = [
             'pEpEngine',
+            'pEpAdapter',
             'boost_python3',
             'boost_locale'
         ]
@@ -185,7 +188,7 @@ class BuildExtCommand(build_ext):
         libdirs += sys_libdirs
 
         # Compile flags
-        compile_flags = ['-std=c++14']
+        compile_flags = ['-std=c++14', '-fpermissive']
         if self.debug:
             pEpLog("debug mode")
             compile_flags += ['-O0', '-g', '-UNDEBUG']
@@ -218,7 +221,16 @@ if sys.version_info[0] < 3:
 
 module_pEp = Extension(
     'pEp',
-    sources = glob('src/*.cc'),
+    sources =   [
+                'src/pEpmodule.cc',
+                'src/basic_api.cc',
+                'src/identity.cc',
+                'src/message.cc',
+                'src/message_api.cc',
+                'src/str_attr.cc',
+                # 'src/user_interface.cc',
+                # 'src/adapter.cc'
+                ],
 )
 
 # "MAIN" Function

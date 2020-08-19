@@ -1,13 +1,14 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#include "message_api.hh"
-#include "basic_api.hh"
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 #include <pEp/sync_codec.h>
 #include <pEp/distribution_codec.h>
+
+#include "message_api.hh"
+#include "basic_api.hh"
 
 namespace pEp {
     namespace PythonAdapter {
@@ -29,7 +30,7 @@ namespace pEp {
             message *_dst = NULL;
 
             message *_src = src;
-            PEP_STATUS status = encrypt_message(adapter.session(), _src, _extra, &_dst,
+            PEP_STATUS status = encrypt_message(pEp::Adapter::session(), _src, _extra, &_dst,
                     _enc_format, _flags);
             free_stringlist(_extra);
             _throw_status(status);
@@ -48,7 +49,7 @@ namespace pEp {
             PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t) flags;
             message *_src = src;
 
-            PEP_STATUS status = ::decrypt_message(adapter.session(), _src, &_dst, &_keylist,
+            PEP_STATUS status = ::decrypt_message(pEp::Adapter::session(), _src, &_dst, &_keylist,
                     &_rating, &_flags);
             _throw_status(status);
 
