@@ -140,7 +140,7 @@ namespace pEp {
     }
 }
 
-BOOST_PYTHON_MODULE(pEp)
+BOOST_PYTHON_MODULE(native_pEp)
 {
     using namespace boost::python;
     using namespace boost::locale;

@@ -18,18 +18,16 @@ from glob import glob
 
 from setuptools.command.build_ext import build_ext
 
-verboseLevel = 0
 
 def pEpLog(*msg):
-    if verboseLevel > 0:
-        import inspect
-        msgstr = ''
-        separator = ' '
-        for m in msg:
-            msgstr += str(m)
-            msgstr += separator
-        func = inspect.currentframe().f_back.f_code
-        print(func.co_filename + " : " + func.co_name + " : "  + msgstr)
+    import inspect
+    msgstr = ''
+    separator = ' '
+    for m in msg:
+        msgstr += str(m)
+        msgstr += separator
+    func = inspect.currentframe().f_back.f_code
+    print(func.co_filename + " : " + func.co_name + " : "  + msgstr)
 
 class BuildExtCommand(build_ext):
 
@@ -39,13 +37,11 @@ class BuildExtCommand(build_ext):
     ]
 
     def initialize_options(self):
-        pEpLog("called")
         build_ext.initialize_options(self)
         self.local = None != environ.get('PER_USER_DIRECTORY')
         self.prefix = getattr(self, "prefix=", None)
 
     def windowsGetInstallLocation(self):
-        pEpLog("called")
         # Note: should be installed to 'C:\Program Files (x86)' while a 32-bit distro
         # TODO: Try desktop adapter location first, then COM server
         # FIXME: This is wrong, we should chase the COM server, not the Outlook Plugin (even if they're in the same place)
@@ -138,16 +134,11 @@ class BuildExtCommand(build_ext):
         return (home, sys_includes, sys_libdirs, libs)
 
     def finalize_options(self):
-        pEpLog("called")
         build_ext.finalize_options(self)
 
-        pEpLog("verbose: ", self.verbose)
         pEpLog("local: ", self.local)
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
-
-        global verboseLevel
-        verboseLevel = self.verbose
 
         # get build information for platform
         if sys.platform == 'winnt':
@@ -220,14 +211,14 @@ if sys.version_info[0] < 3:
 
 
 module_pEp = Extension(
-    'pEp',
+    'native_pEp',
     sources =   [
-                'src/pEpmodule.cc',
-                'src/basic_api.cc',
-                'src/identity.cc',
-                'src/message.cc',
-                'src/message_api.cc',
-                'src/str_attr.cc',
+                'src/pEp/native_pEp/pEpmodule.cc',
+                'src/pEp/native_pEp/basic_api.cc',
+                'src/pEp/native_pEp/identity.cc',
+                'src/pEp/native_pEp/message.cc',
+                'src/pEp/native_pEp/message_api.cc',
+                'src/pEp/native_pEp/str_attr.cc',
                 # 'src/user_interface.cc',
                 # 'src/adapter.cc'
                 ],
@@ -242,6 +233,7 @@ setup(
     author_email="vb@pep-project.org",
     maintainer="Heck",
     maintainer_email="heck@pep.foundation",
+    package_dir='src',
     ext_modules=[module_pEp],
     cmdclass={
         'build_ext': BuildExtCommand,
