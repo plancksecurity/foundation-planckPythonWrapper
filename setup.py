@@ -168,7 +168,6 @@ class BuildExtCommand(build_ext):
 
         # Append prefix-dir
         if self.prefix:
-            pEpLog("using prefix=",self.prefix)
             prefix_include=[ join(self.prefix, 'include') ]
             prefix_libdirs=[ join(self.prefix, 'lib') ]
             includes += prefix_include
@@ -219,7 +218,7 @@ module_pEp = Extension(
                 'src/pEp/native_pEp/message.cc',
                 'src/pEp/native_pEp/message_api.cc',
                 'src/pEp/native_pEp/str_attr.cc',
-                # 'src/user_interface.cc',
+                'src/pEp/native_pEp/user_interface.cc',
                 # 'src/adapter.cc'
                 ],
 )

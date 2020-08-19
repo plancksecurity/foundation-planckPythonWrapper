@@ -37,16 +37,17 @@ static const char *version_string = "p≡p Python adapter version 0.3";
 void _init() {
     pEpLog("called");
     callback_dispatcher.add(_messageToSend, nullptr, nullptr, nullptr);
+    Adapter::_messageToSend = CallbackDispatcher::messageToSend;
 }
 
 void config_passive_mode(bool enable)
 {
-    ::config_passive_mode(pEp::Adapter::session(), enable);
+    ::config_passive_mode(Adapter::session(), enable);
 }
 
 void config_unencrypted_subject(bool enable)
 {
-    ::config_unencrypted_subject(pEp::Adapter::session(), enable);
+    ::config_unencrypted_subject(Adapter::session(), enable);
 }
 
 void key_reset_user(string user_id, string fpr)
@@ -54,7 +55,7 @@ void key_reset_user(string user_id, string fpr)
     if (user_id == "")
         throw invalid_argument("user_id required");
 
-    PEP_STATUS status = ::key_reset_user(pEp::Adapter::session(),
+    PEP_STATUS status = ::key_reset_user(Adapter::session(),
             user_id.c_str(), fpr != "" ?  fpr.c_str() : nullptr);
     _throw_status(status);
 }
@@ -66,7 +67,7 @@ void key_reset_user2(string user_id)
 
 void key_reset_all_own_keys()
 {
-    PEP_STATUS status = ::key_reset_all_own_keys(pEp::Adapter::session());
+    PEP_STATUS status = ::key_reset_all_own_keys(Adapter::session());
     _throw_status(status);
 }
 
@@ -123,22 +124,22 @@ void messageToSend(Message msg) {
 
 //        void do_sync_protocol()
 //        {
-//            ::do_sync_protocol(pEp::Adapter::session(), nullptr);
+//            ::do_sync_protocol(Adapter::session(), nullptr);
 //        }
 
 void shutdown_sync()
 {
-    pEp::Adapter::shutdown();
+    Adapter::shutdown();
 }
 
 void debug_color(int ansi_color)
 {
-    ::set_debug_color(pEp::Adapter::session(), ansi_color);
+    ::set_debug_color(Adapter::session(), ansi_color);
 }
 
 void leave_device_group()
 {
-    ::leave_device_group(pEp::Adapter::session());
+    ::leave_device_group(Adapter::session());
 }
 
 //        void script_is_implementing_sync() {
@@ -147,7 +148,7 @@ void leave_device_group()
 
 bool is_sync_active()
 {
-    return pEp::Adapter::is_sync_running();
+    return Adapter::is_sync_running();
 }
 
 BOOST_PYTHON_MODULE(native_pEp)
@@ -565,30 +566,30 @@ BOOST_PYTHON_MODULE(native_pEp)
         .value("SYNC_NOTIFY_SOLE"                  , SYNC_NOTIFY_SOLE)
         .value("SYNC_NOTIFY_IN_GROUP"              , SYNC_NOTIFY_IN_GROUP);
 
-//    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
-//            "UserInterface",
-//    "class MyUserInterface(UserInterface):\n"
-//    "   def notifyHandshake(self, me, partner):\n"
-//    "       ...\n"
-//    "\n"
-//    "p≡p User Interface class\n"
-//    "To be used as a mixin\n"
-//    )
-//        .def("notifyHandshake", &UserInterface::notifyHandshake,
-//    "notifyHandshake(self, me, partner)\n"
-//    "\n"
-//    "   me              own identity\n"
-//    "   partner         identity of communication partner\n"
-//    "\n"
-//    "overwrite this method with an implementation of a handshake dialog")
-//        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
-//                boost::python::arg("identities")=object(),
-//    "deliverHandshakeResult(self, result, identities=None)\n"
-//    "\n"
-//    "   result          -1: cancel, 0: accepted, 1: rejected\n"
-//    "   identities      list of identities to share or None for all\n"
-//    "\n"
-//    "call to deliver the handshake result of the handshake dialog");
+    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
+            "UserInterface",
+    "class MyUserInterface(UserInterface):\n"
+    "   def notifyHandshake(self, me, partner):\n"
+    "       ...\n"
+    "\n"
+    "p≡p User Interface class\n"
+    "To be used as a mixin\n"
+    )
+        .def("notifyHandshake", &UserInterface::notifyHandshake,
+    "notifyHandshake(self, me, partner)\n"
+    "\n"
+    "   me              own identity\n"
+    "   partner         identity of communication partner\n"
+    "\n"
+    "overwrite this method with an implementation of a handshake dialog")
+        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
+                boost::python::arg("identities")=object(),
+    "deliverHandshakeResult(self, result, identities=None)\n"
+    "\n"
+    "   result          -1: cancel, 0: accepted, 1: rejected\n"
+    "   identities      list of identities to share or None for all\n"
+    "\n"
+    "call to deliver the handshake result of the handshake dialog");
 
 
 // TODO: Replace with start_sync()

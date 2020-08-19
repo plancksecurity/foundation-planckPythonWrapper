@@ -9,6 +9,8 @@
 
 namespace pEp {
 namespace PythonAdapter {
+using namespace std;
+using namespace boost::python;
 
 UserInterface *UserInterface::_ui = nullptr;
 
@@ -28,16 +30,16 @@ UserInterface_callback::UserInterface_callback(PyObject *self) :
     UserInterface(), _self(self)
 {
 //    adapter.ui_object(self);
-    PEP_STATUS status = ::register_sync_callbacks(pEp::Adapter::session(),
-            (void *) this, _notifyHandshake, retrieve_next_sync_event);
-    assert(status == PEP_STATUS_OK);
-    if (status)
-        _throw_status(status);
+//    PEP_STATUS status = ::register_sync_callbacks(Adapter::session(),
+//            (void *) this, _notifyHandshake, retrieve_next_sync_event);
+//    assert(status == PEP_STATUS_OK);
+//    if (status)
+//        _throw_status(status);
 }
 
 UserInterface_callback::~UserInterface_callback()
 {
-    ::unregister_sync_callbacks(pEp::Adapter::session());
+//    ::unregister_sync_callbacks(Adapter::session());
 }
 
 PEP_STATUS UserInterface::_notifyHandshake(
@@ -78,7 +80,7 @@ void UserInterface::deliverHandshakeResult(int result, object identities)
         }
     }
 
-    PEP_STATUS status = ::deliverHandshakeResult(pEp::Adapter::session(),
+    PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(),
             (sync_handshake_result) result, shared_identities);
     free_identity_list(shared_identities);
     _throw_status(status);
@@ -88,7 +90,7 @@ PEP_rating UserInterface::get_key_rating_for_user(string user_id, string fpr)
 {
     PEP_rating result;
     PEP_STATUS status =
-        ::get_key_rating_for_user(pEp::Adapter::session(),
+        ::get_key_rating_for_user(Adapter::session(),
                 user_id.c_str(), fpr.c_str(), &result);
     _throw_status(status);
     return result;

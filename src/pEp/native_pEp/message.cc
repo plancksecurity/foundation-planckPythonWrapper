@@ -332,11 +332,11 @@ PEP_rating Message::outgoing_rating()
     if (len(to()) + len(cc()) == 0)
         throw invalid_argument("either to or cc needed");
 
-    PEP_STATUS status = myself(pEp::Adapter::session(), _msg->from);
+    PEP_STATUS status = myself(Adapter::session(), _msg->from);
     _throw_status(status);
 
     PEP_rating rating = PEP_rating_undefined;
-    status = outgoing_message_rating(pEp::Adapter::session(), *this, &rating);
+    status = outgoing_message_rating(Adapter::session(), *this, &rating);
     _throw_status(status);
 
     return rating;
@@ -365,7 +365,7 @@ Message outgoing_message(Identity me)
     if (me.address().empty() || me.user_id().empty())
         throw runtime_error("at least address and user_id of own user needed");
 
-    ::myself(pEp::Adapter::session(), me);
+    ::myself(Adapter::session(), me);
     auto m = Message(PEP_dir_outgoing, &me);
     return m;
 }
@@ -374,7 +374,7 @@ static object update(Identity ident)
 {
     if (ident.address().empty())
         throw runtime_error("at least address needed");
-    update_identity(pEp::Adapter::session(), ident);
+    update_identity(Adapter::session(), ident);
     return object(ident);
 }
 

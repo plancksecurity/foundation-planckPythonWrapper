@@ -18,7 +18,6 @@ namespace pEp {
 namespace PythonAdapter {
 
 class UserInterface {
-private:
     static UserInterface *_ui;
 public:
     UserInterface();
@@ -42,7 +41,6 @@ protected:
 };
 
 class UserInterface_callback : public UserInterface {
-private:
     PyObject *_self;
 public:
     UserInterface_callback(PyObject *self);
