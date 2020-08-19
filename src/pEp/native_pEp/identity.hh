@@ -3,91 +3,98 @@
 
 #pragma once
 
+// System
 #include <boost/python.hpp>
 #include <string>
 #include <memory>
 #include <cstddef>
 
+// Engine
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>
+
+//libpEpAdapter
 #include "pEp/Adapter.hh"
 
+// local
 #include "str_attr.hh"
 
 namespace pEp {
-    namespace PythonAdapter {
-        using namespace utility;
-        using namespace std;
+namespace PythonAdapter {
 
-        // Identity is owning a pEp_identity
+using std::string;
+using std::shared_ptr;
 
-        class Identity {
-        protected:
-            shared_ptr< pEp_identity > _ident;
+// Identity is owning a pEp_identity
 
-        public:
-            Identity(string address = "", string username = "",
-                    string user_id = "", string fpr = "", int comm_type = 0,
-                    string lang = "", identity_flags_t flags = 0);
+class Identity {
+protected:
+    shared_ptr< pEp_identity > _ident;
 
-            Identity(const Identity& second);
-            Identity(pEp_identity *ident);
-            virtual ~Identity();
-            operator pEp_identity *();
-            operator const pEp_identity *() const;
+public:
+    Identity(string address = "", string username = "",
+            string user_id = "", string fpr = "", int comm_type = 0,
+            string lang = "", identity_flags_t flags = 0);
 
-            string _repr();
-            string _str();
+    Identity(const Identity& second);
+    Identity(pEp_identity *ident);
+    virtual ~Identity();
+    operator pEp_identity *();
+    operator const pEp_identity *() const;
 
-            string address() { return str_attr(_ident->address); }
-            void address(string value) { str_attr(_ident->address, value); }
+    string _repr();
+    string _str();
 
-            string fpr() { return str_attr(_ident->fpr); }
-            void fpr(string value) { str_attr(_ident->fpr, value); }
+    string address() { return str_attr(_ident->address); }
+    void address(string value) { str_attr(_ident->address, value); }
 
-            string user_id() { return str_attr(_ident->user_id); }
-            void user_id(string value) { str_attr(_ident->user_id, value); }
+    string fpr() { return str_attr(_ident->fpr); }
+    void fpr(string value) { str_attr(_ident->fpr, value); }
 
-            string username() { return str_attr(_ident->username); }
-            void username(string value);
+    string user_id() { return str_attr(_ident->user_id); }
+    void user_id(string value) { str_attr(_ident->user_id, value); }
 
-            PEP_comm_type comm_type() { return _ident->comm_type; }
-            void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
+    string username() { return str_attr(_ident->username); }
+    void username(string value);
 
-            std::string lang();
-            void lang(std::string value);
+    PEP_comm_type comm_type() { return _ident->comm_type; }
+    void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
 
-            identity_flags_t flags() { return _ident->flags; }
-            void flags(identity_flags_t flags) { _ident->flags = flags; }
+    std::string lang();
+    void lang(std::string value);
 
-            int rating();
-            PEP_color color();
+    identity_flags_t flags() { return _ident->flags; }
+    void flags(identity_flags_t flags) { _ident->flags = flags; }
 
-            Identity copy();
-            Identity deepcopy(dict& memo);
+    int rating();
+    PEP_color color();
 
-            virtual void update();
+    Identity copy();
+    Identity deepcopy(dict& memo);
 
-            void key_reset(string fpr="");
-            void key_mistrusted();
+    virtual void update();
 
-            bool is_pEp_user();
+    void key_reset(string fpr="");
+    void key_mistrusted();
 
-            void enable_for_sync();
-            void disable_for_sync();
-        };
+    bool is_pEp_user();
 
-        class Myself : public Identity {
-        public:
-            Myself(string address, string username, string user_id="", string lang="");
-            virtual void update();
-        };
+    void enable_for_sync();
+    void disable_for_sync();
+};
 
-        Identity identity_attr(pEp_identity *&ident);
-        void identity_attr(pEp_identity *&ident, object value);
+class Myself : public Identity {
+public:
+    Myself(string address, string username, string user_id="", string lang="");
+    virtual void update();
+};
 
-        boost::python::list identitylist_attr(identity_list *&il);
-        void identitylist_attr(identity_list *&il, boost::python::list value);
-    }
-}
+Identity identity_attr(pEp_identity *&ident);
+void identity_attr(pEp_identity *&ident, object value);
+
+boost::python::list identitylist_attr(identity_list *&il);
+void identitylist_attr(identity_list *&il, boost::python::list value);
+
+} // namespace PythonAdapter
+} // namespace pEp {
 

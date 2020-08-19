@@ -17,7 +17,7 @@ import native_pEp
 # Executed on module import
 def init():
     print("init() called")
-    # native_pEp._init()
+    native_pEp._init()
 
 # Executed when run as script
 def main():

@@ -3,4 +3,5 @@
 
 import pEp
 
+dir(pEp)
 pEp.is_sync_active()
