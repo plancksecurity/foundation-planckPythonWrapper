@@ -11,14 +11,21 @@ from native_pEp import *
 # import the module
 import native_pEp
 
-
-
-
-
 # Executed on module import
 def init():
-    print("init() called")
-    native_pEp._init()
+    print(init, "called")
+    native_pEp._init_after_main_module()
+
+
+def message_to_send(msg):
+    """
+    message_to_send(msg)
+    override pEp.message_to_send(msg) with your own implementation
+    this callback is being called when a p≡p management message needs to be sent
+    """
+    print("message_to_send() - default callback\n")
+    print("overwrite this method")
+
 
 # Executed when run as script
 def main():

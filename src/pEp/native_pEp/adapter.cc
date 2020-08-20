@@ -43,7 +43,7 @@ namespace pEp {
                 case init:
                     ++booked;
                     if (!_session)
-                        status = ::init(&_session, _messageToSend, _inject_sync_event, _ensure_passphrase);
+//                        status = ::init(&_session, _messageToSend, _inject_sync_event, _ensure_passphrase);
 //                        status = ::init(&_session, _messageToSend, _inject_sync_event);
                     break;
 

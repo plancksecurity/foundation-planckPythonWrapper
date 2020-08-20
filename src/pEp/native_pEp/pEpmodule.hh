@@ -15,11 +15,8 @@ void config_unencrypted_subject(bool enable);
 void key_reset_user(string user_id, string fpr);
 void key_reset_all_own_keys();
 void _throw_status(PEP_STATUS status);
-void messageToSend(Message msg);
 PEP_STATUS _messageToSend(::message *msg);
-PEP_STATUS _ensure_passphrase(PEP_SESSION session, const char *fpr);
-// void do_sync_protocol();
-// extern Adapter adapter;
+PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
 
 } // namespace PythonAdapter
 } // namespace pEp {

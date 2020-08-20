@@ -86,15 +86,15 @@ void UserInterface::deliverHandshakeResult(int result, object identities)
     _throw_status(status);
 }
 
-PEP_rating UserInterface::get_key_rating_for_user(string user_id, string fpr)
-{
-    PEP_rating result;
-    PEP_STATUS status =
-        ::get_key_rating_for_user(Adapter::session(),
-                user_id.c_str(), fpr.c_str(), &result);
-    _throw_status(status);
-    return result;
-}
+//PEP_rating UserInterface::get_key_rating_for_user(string user_id, string fpr)
+//{
+//    PEP_rating result;
+//    PEP_STATUS status =
+//        ::get_key_rating_for_user(Adapter::session(),
+//                user_id.c_str(), fpr.c_str(), &result);
+//    _throw_status(status);
+//    return result;
+//}
 
 //SYNC_EVENT UserInterface::retrieve_next_sync_event(void *management, unsigned threshold)
 //{
