@@ -219,7 +219,6 @@ module_pEp = Extension(
                 'src/pEp/native_pEp/message_api.cc',
                 'src/pEp/native_pEp/str_attr.cc',
                 'src/pEp/native_pEp/user_interface.cc',
-                # 'src/adapter.cc'
                 ],
 )
 
