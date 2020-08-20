@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef STR_ATTR_HH
+#define STR_ATTR_HH
 
 // System
 #include <string>
@@ -36,6 +37,7 @@ void strdict_attr(stringpair_list_t *&spl, dict value);
 stringlist_t *to_stringlist(boost::python::list l);
 boost::python::list from_stringlist(const stringlist_t *sl);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
 
+#endif /* STR_ATTR_HH */

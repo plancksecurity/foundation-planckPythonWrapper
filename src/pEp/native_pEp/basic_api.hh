@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef BASIC_API_HH
+#define BASIC_API_HH
 
 #include "pEpmodule.hh"
 
@@ -23,5 +24,7 @@ string export_key(Identity ident);
 string export_secret_key(Identity ident);
 void set_own_key(Identity& ident, string fpr);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
+
+#endif /* BASIC_API_HH */

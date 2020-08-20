@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef USER_INTERFACE_HH
+#define USER_INTERFACE_HH
 
 // System
 #include <csetjmp>
@@ -52,6 +53,8 @@ public:
     );
 };
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
+
+#endif /* USER_INTERFACE_HH */
 

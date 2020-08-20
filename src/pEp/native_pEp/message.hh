@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef MESSAGE_HH
+#define MESSAGE_HH
 
 // System
 #include <string>
@@ -147,6 +148,7 @@ public:
 Message outgoing_message(Identity me);
 Message incoming_message(string mime_text);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
 
+#endif /* MESSAGE_HH */

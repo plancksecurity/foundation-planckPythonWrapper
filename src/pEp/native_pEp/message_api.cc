@@ -1,7 +1,6 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-
 // Engine
 #include <pEp/pEpEngine.h>
 #include <pEp/message_api.h>

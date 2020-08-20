@@ -1,4 +1,8 @@
-#pragma once
+// This file is under GNU Affero General Public License 3.0
+// see LICENSE.txt
+
+#ifndef PEPMODULE_HH
+#define PEPMODULE_HH
 
 // Engine
 #include <pEp/pEpEngine.h>
@@ -18,6 +22,7 @@ void _throw_status(PEP_STATUS status);
 PEP_STATUS _messageToSend(::message *msg);
 PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
 
+#endif /* PEPMODULE_HH */

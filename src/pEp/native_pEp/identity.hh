@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef IDENTITY_HH
+#define IDENTITY_HH
 
 // System
 #include <boost/python.hpp>
@@ -95,6 +96,7 @@ void identity_attr(pEp_identity *&ident, object value);
 boost::python::list identitylist_attr(identity_list *&il);
 void identitylist_attr(identity_list *&il, boost::python::list value);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
 
+#endif /* IDENTITY_HH */

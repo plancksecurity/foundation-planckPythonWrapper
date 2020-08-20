@@ -1,7 +1,8 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-#pragma once
+#ifndef MESSAGE_API_HH
+#define MESSAGE_API_HH
 
 #include "pEpmodule.hh"
 
@@ -20,5 +21,7 @@ PEP_color _color(int rating);
 object sync_search(string name);
 object distribution_search(string name);
 
-} // namespace PythonAdapter
-} // namespace pEp {
+} /* namespace PythonAdapter */
+} /* namespace pEp */
+
+#endif /* MESSAGE_API_HH */
