@@ -1,12 +1,4 @@
-PREFIX = /home/heck/local-default/
-DEBUG = 1
-BUILD_DIR = ./build
-
-BUILD_EXT_OPTS = --prefix=$(PREFIX)
-
-ifeq ($(DEBUG),1)
-	BUILD_EXT_OPTS+=--debug
-endif
+include Makefile.conf
 
 .PHONY: all build clean devenv envtest
 
