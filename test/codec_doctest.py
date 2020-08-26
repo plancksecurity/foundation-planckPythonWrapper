@@ -3,14 +3,15 @@
 
 """
 >>> import pEp
->>> def messageToSend(msg):
+>>> def message_to_send(msg):
 ...   m, keys, rating, flags = msg.decrypt()
 ...   try:
 ...     m.attachments[0].decode()
 ...     print("decode successfull")
 ...   except UnicodeDecodeError as e:
 ...     print("decode failed")
->>> pEp.messageToSend = messageToSend
+>>> pEp.message_to_send = message_to_send
+>>> pEp.myself(pEp.Identity(""))
 >>> pEp.key_reset_all_own_keys()
 decode successfull
 decode successfull

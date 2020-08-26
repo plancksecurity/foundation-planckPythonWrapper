@@ -22,6 +22,20 @@ def message_to_send(msg):
     message_to_send(msg)
     override pEp.message_to_send(msg) with your own implementation
     this callback is being called when a p≡p management message needs to be sent
+    GIL CAVEAT
+    """
+    print("message_to_send() - default callback\n")
+    print("overwrite this method")
+
+
+def notify_handshake(me, partner, signal):
+    """
+    notifyHandshake(self, me, partner)
+        me              own identity
+        partner         identity of communication partner
+        signal          the handshake signal
+    overwrite this method with an implementation of a handshake dialog
+    GIL CAVEAT
     """
     print("message_to_send() - default callback\n")
     print("overwrite this method")

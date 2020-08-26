@@ -24,7 +24,7 @@
 #include "pEpmodule.hh"
 #include "basic_api.hh"
 #include "message_api.hh"
-#include "user_interface.hh"
+//#include "user_interface.hh"
 
 namespace pEp {
 namespace PythonAdapter {
@@ -108,9 +108,13 @@ PEP_STATUS _messageToSend(::message *msg)
 {
     pEpLog("called");
     try {
+        PyGILState_STATE gil = PyGILState_Ensure();
+        pEpLog("GIL Aquired");
         object modref = import("pEp");
         object funcref = modref.attr("message_to_send");
-        call<void>(funcref.ptr(), Message(msg));
+        call<void>(funcref.ptr(), Message());
+        PyGILState_Release(gil);
+        pEpLog("GIL released");
     } catch (exception& e) { }
 
     return PEP_STATUS_OK;
@@ -119,6 +123,16 @@ PEP_STATUS _messageToSend(::message *msg)
 PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal)
 {
     pEpLog("called");
+    try {
+        PyGILState_STATE gil = PyGILState_Ensure();
+        pEpLog("GIL Aquired");
+        object modref = import("pEp");
+        object funcref = modref.attr("notify_handshake");
+        call<void>(funcref.ptr(), me, partner, signal);
+        PyGILState_Release(gil);
+        pEpLog("GIL released");
+    } catch (exception& e) { }
+
     return PEP_STATUS_OK;
 }
 
@@ -150,6 +164,34 @@ bool is_sync_active()
 
 void testfunc() {
     _messageToSend(NULL);
+}
+
+void deliverHandshakeResult(int result, object identities)
+{
+    identity_list *shared_identities = nullptr;
+    if (identities != boost::python::api::object() && boost::python::len(identities)) {
+        shared_identities = new_identity_list(nullptr);
+        if (!shared_identities)
+            throw bad_alloc();
+
+        try {
+            identity_list *si = shared_identities;
+            for (int i=0; i < boost::python::len(identities); ++i) {
+                Identity ident = extract< Identity >(identities[i]);
+                si = identity_list_add(si, ident);
+                if (!si)
+                    throw bad_alloc();
+            }
+        }
+        catch (exception& ex) {
+            free_identity_list(shared_identities);
+            throw ex;
+        }
+    }
+
+    PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(), (sync_handshake_result) result, shared_identities);
+    free_identity_list(shared_identities);
+    _throw_status(status);
 }
 
 BOOST_PYTHON_MODULE(native_pEp)
@@ -585,6 +627,14 @@ BOOST_PYTHON_MODULE(native_pEp)
 //    "call to deliver the handshake result of the handshake dialog"
 //    );
 
+    def("deliver_handshake_result", &deliverHandshakeResult, boost::python::arg("identities")=object(),
+        "deliverHandshakeResult(self, result, identities=None)\n"
+        "\n"
+        "   result          -1: cancel, 0: accepted, 1: rejected\n"
+        "   identities      list of identities to share or None for all\n"
+        "\n"
+        "call to deliver the handshake result of the handshake dialog"
+        );
 
     def("start_sync", &start_sync,
         "start_sync()\n"
