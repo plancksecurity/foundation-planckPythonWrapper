@@ -18,18 +18,16 @@ from glob import glob
 
 from setuptools.command.build_ext import build_ext
 
-verboseLevel = 0
 
 def pEpLog(*msg):
-    if verboseLevel > 0:
-        import inspect
-        msgstr = ''
-        separator = ' '
-        for m in msg:
-            msgstr += str(m)
-            msgstr += separator
-        func = inspect.currentframe().f_back.f_code
-        print(func.co_filename + " : " + func.co_name + " : "  + msgstr)
+    import inspect
+    msgstr = ''
+    separator = ' '
+    for m in msg:
+        msgstr += str(m)
+        msgstr += separator
+    func = inspect.currentframe().f_back.f_code
+    print(func.co_filename + " : " + func.co_name + " : "  + msgstr)
 
 class BuildExtCommand(build_ext):
 
@@ -39,13 +37,11 @@ class BuildExtCommand(build_ext):
     ]
 
     def initialize_options(self):
-        pEpLog("called")
         build_ext.initialize_options(self)
         self.local = None != environ.get('PER_USER_DIRECTORY')
         self.prefix = getattr(self, "prefix=", None)
 
     def windowsGetInstallLocation(self):
-        pEpLog("called")
         # Note: should be installed to 'C:\Program Files (x86)' while a 32-bit distro
         # TODO: Try desktop adapter location first, then COM server
         # FIXME: This is wrong, we should chase the COM server, not the Outlook Plugin (even if they're in the same place)
@@ -90,6 +86,7 @@ class BuildExtCommand(build_ext):
         ]
         libs = [
             'pEpEngine',
+            'pEpAdapter',
             'boost_python37-mt',
             'boost_locale-mt'
         ]
@@ -99,19 +96,14 @@ class BuildExtCommand(build_ext):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
         sys_includes = [
             '/opt/local/include',
-            '/usr/local/include',
-            '/Library/Frameworks/PrettyEasyPrivacy.framework/Versions/A/include',
-            '/usr/include',
         ]
         sys_libdirs = [
             '/opt/local/lib',
-            '/usr/local/lib',
-            '/Library/Frameworks/PrettyEasyPrivacy.framework/Versions/A/lib',
-            '/usr/lib',
         ]
         libs = [
             'pEpEngine',
-            'boost_python37-mt',
+            'pEpAdapter',
+            'boost_python38-mt',
             'boost_locale-mt'
         ]
         return (home, sys_includes, sys_libdirs, libs)
@@ -129,22 +121,18 @@ class BuildExtCommand(build_ext):
         ]
         libs = [
             'pEpEngine',
+            'pEpAdapter',
             'boost_python3',
             'boost_locale'
         ]
         return (home, sys_includes, sys_libdirs, libs)
 
     def finalize_options(self):
-        pEpLog("called")
         build_ext.finalize_options(self)
 
-        pEpLog("verbose: ", self.verbose)
         pEpLog("local: ", self.local)
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
-
-        global verboseLevel
-        verboseLevel = self.verbose
 
         # get build information for platform
         if sys.platform == 'winnt':
@@ -174,7 +162,6 @@ class BuildExtCommand(build_ext):
 
         # Append prefix-dir
         if self.prefix:
-            pEpLog("using prefix=",self.prefix)
             prefix_include=[ join(self.prefix, 'include') ]
             prefix_libdirs=[ join(self.prefix, 'lib') ]
             includes += prefix_include
@@ -185,7 +172,7 @@ class BuildExtCommand(build_ext):
         libdirs += sys_libdirs
 
         # Compile flags
-        compile_flags = ['-std=c++14']
+        compile_flags = ['-std=c++14', '-fpermissive']
         if self.debug:
             pEpLog("debug mode")
             compile_flags += ['-O0', '-g', '-UNDEBUG']
@@ -217,8 +204,16 @@ if sys.version_info[0] < 3:
 
 
 module_pEp = Extension(
-    'pEp',
-    sources = glob('src/*.cc'),
+    'native_pEp',
+    sources =   [
+                'src/pEp/native_pEp/pEpmodule.cc',
+                'src/pEp/native_pEp/basic_api.cc',
+                'src/pEp/native_pEp/identity.cc',
+                'src/pEp/native_pEp/message.cc',
+                'src/pEp/native_pEp/message_api.cc',
+                'src/pEp/native_pEp/str_attr.cc',
+                # 'src/pEp/native_pEp/user_interface.cc',
+                ],
 )
 
 # "MAIN" Function
@@ -230,6 +225,7 @@ setup(
     author_email="vb@pep-project.org",
     maintainer="Heck",
     maintainer_email="heck@pep.foundation",
+    package_dir='src',
     ext_modules=[module_pEp],
     cmdclass={
         'build_ext': BuildExtCommand,

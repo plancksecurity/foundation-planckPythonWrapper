@@ -1,0 +1,11 @@
+# This is an Example build config file (local.conf)
+# you might not need this file, but if the defaults dont work for you
+# You can override them here.
+# Tweak the values to your needs and rename it to local.conf
+
+######### C++ Compiler #########
+# DEBUG=1
+# DEBUG=0
+
+############# DIRS #############
+# PREFIX=$(HOME)/local
