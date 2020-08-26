@@ -96,20 +96,14 @@ class BuildExtCommand(build_ext):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
         sys_includes = [
             '/opt/local/include',
-            '/usr/local/include',
-            '/Library/Frameworks/PrettyEasyPrivacy.framework/Versions/A/include',
-            '/usr/include',
         ]
         sys_libdirs = [
             '/opt/local/lib',
-            '/usr/local/lib',
-            '/Library/Frameworks/PrettyEasyPrivacy.framework/Versions/A/lib',
-            '/usr/lib',
         ]
         libs = [
             'pEpEngine',
             'pEpAdapter',
-            'boost_python37-mt',
+            'boost_python38-mt',
             'boost_locale-mt'
         ]
         return (home, sys_includes, sys_libdirs, libs)

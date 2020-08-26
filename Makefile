@@ -12,7 +12,9 @@ clean:
 
 devenv:
 	LD_LIBRARY_PATH=$(PREFIX)/lib \
-	PYTHONPATH=`pwd`/build/lib.linux-x86_64-3.7:\
+	DYLD_LIBRARY_PATH=$(PREFIX)/lib \
+	PYTHONPATH=$PYTHONPATH:`pwd`/build/lib.linux-x86_64-3.7:\
+	PYTHONPATH=$PYTHONPATH:`pwd`/build/lib.macosx-10.9-x86_64-3.8:\
 	`pwd`/src \
 	bash -l
 
