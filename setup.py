@@ -219,13 +219,14 @@ module_pEp = Extension(
 # "MAIN" Function
 setup(
     name='pEp',
-    version='2.0',
+    version='2.1.0-RC2',
     description='p≡p for Python',
     author="Volker Birk",
     author_email="vb@pep-project.org",
     maintainer="Heck",
     maintainer_email="heck@pep.foundation",
-    package_dir='src',
+    package_dir={'':'src'},
+    packages=['pEp'],
     ext_modules=[module_pEp],
     cmdclass={
         'build_ext': BuildExtCommand,
