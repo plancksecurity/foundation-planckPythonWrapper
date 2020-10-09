@@ -11,6 +11,7 @@ from native_pEp import *
 # import the module
 import native_pEp
 
+
 # Executed on module import
 def init():
     print(init, "called")
@@ -44,6 +45,7 @@ def notify_handshake(me, partner, signal):
 # Executed when run as script
 def main():
     print("I am being run as a script")
+
 
 # MAIN
 if __name__ == "__main__":

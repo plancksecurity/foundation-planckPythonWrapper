@@ -27,10 +27,10 @@ def pEpLog(*msg):
         msgstr += str(m)
         msgstr += separator
     func = inspect.currentframe().f_back.f_code
-    print(func.co_filename + " : " + func.co_name + " : "  + msgstr)
+    print(func.co_filename + " : " + func.co_name + " : " + msgstr)
+
 
 class BuildExtCommand(build_ext):
-
     user_options = build_ext.user_options + [
         ('local', None, 'Use local pEp install in HOME/USERPROFILE for libs/includes'),
         ('prefix=', None, 'Use local pEp install in prefix for libs/includes'),
@@ -155,15 +155,15 @@ class BuildExtCommand(build_ext):
         # Append home-dir
         if self.local:
             pEpLog("local mode")
-            home_include=[ join(home, 'include') ]
-            home_libdirs=[ join(home, 'lib') ]
+            home_include = [join(home, 'include')]
+            home_libdirs = [join(home, 'lib')]
             includes += home_include
             libdirs += home_libdirs
 
         # Append prefix-dir
         if self.prefix:
-            prefix_include=[ join(self.prefix, 'include') ]
-            prefix_libdirs=[ join(self.prefix, 'lib') ]
+            prefix_include = [join(self.prefix, 'include')]
+            prefix_libdirs = [join(self.prefix, 'lib')]
             includes += prefix_include
             libdirs += prefix_libdirs
 
@@ -194,7 +194,7 @@ class BuildExtCommand(build_ext):
 
 
 if sys.platform == 'winnt':
-    if  sys.version_info[0] >= 3:
+    if sys.version_info[0] >= 3:
         import winreg
     else:
         import _winreg as winreg
@@ -202,18 +202,17 @@ if sys.platform == 'winnt':
 if sys.version_info[0] < 3:
     FileNotFoundError = EnvironmentError
 
-
 module_pEp = Extension(
     'native_pEp',
-    sources =   [
-                'src/pEp/native_pEp/pEpmodule.cc',
-                'src/pEp/native_pEp/basic_api.cc',
-                'src/pEp/native_pEp/identity.cc',
-                'src/pEp/native_pEp/message.cc',
-                'src/pEp/native_pEp/message_api.cc',
-                'src/pEp/native_pEp/str_attr.cc',
-                # 'src/pEp/native_pEp/user_interface.cc',
-                ],
+    sources=[
+        'src/pEp/native_pEp/pEpmodule.cc',
+        'src/pEp/native_pEp/basic_api.cc',
+        'src/pEp/native_pEp/identity.cc',
+        'src/pEp/native_pEp/message.cc',
+        'src/pEp/native_pEp/message_api.cc',
+        'src/pEp/native_pEp/str_attr.cc',
+        # 'src/pEp/native_pEp/user_interface.cc',
+    ],
 )
 
 # "MAIN" Function
@@ -225,7 +224,7 @@ setup(
     author_email="vb@pep-project.org",
     maintainer="Heck",
     maintainer_email="heck@pep.foundation",
-    package_dir={'':'src'},
+    package_dir={'': 'src'},
     packages=['pEp'],
     ext_modules=[module_pEp],
     cmdclass={
