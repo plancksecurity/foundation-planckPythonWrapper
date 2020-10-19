@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 300
+tab_width = 4
+
+# I know these keys are unknown, regard it as documentation
+indent_brace_style = K&R
+curly_bracket_next_line = false
+spaces_around_operators = true
+spaces_around_brackets = true
+quote_type = double
