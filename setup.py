@@ -223,4 +223,7 @@ setup(
     cmdclass={
         'build_ext': BuildExtCommand,
     },
+    # While not using a pyproject.toml, support setuptools_scm setup.cfg usage,
+    # see https://github.com/pypa/setuptools_scm/#setupcfg-usage
+    use_scm_version=True,
 )
