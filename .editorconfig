@@ -16,4 +16,15 @@ indent_brace_style = K&R
 curly_bracket_next_line = false
 spaces_around_operators = true
 spaces_around_brackets = true
-quote_type = double
+
+[*.py]
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+
+[*.ini]
+indent_size = 2
+
+[*.cfg]
+indent_size = 2
