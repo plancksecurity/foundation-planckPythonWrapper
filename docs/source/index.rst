@@ -11,6 +11,7 @@ Welcome to pEpPythonAdapter's documentation!
    :caption: Contents:
 
    software_using
+   api/pEp
 
 Indices and tables
 ==================
