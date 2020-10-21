@@ -10,6 +10,7 @@ Welcome to pEpPythonAdapter's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   install
    software_using
    api/pEp
 
