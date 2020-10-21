@@ -11,6 +11,7 @@ Welcome to pEpPythonAdapter's documentation!
    :caption: Contents:
 
    install
+   testing
    software_using
    api/pEp
 
