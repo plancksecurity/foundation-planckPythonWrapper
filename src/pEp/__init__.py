@@ -2,7 +2,7 @@
 # This file is being exectued upon 'import pEp'
 #
 # __all__ could be used to limit the symbols exported when using from <pkg> import *
-
+from pkg_resources import DistributionNotFound, get_distribution
 
 # Import all symbols EXCEPT the ones beginning with underscore into the current namespace
 from native_pEp import *
@@ -11,6 +11,10 @@ from native_pEp import *
 # import the module
 import native_pEp
 
+try:
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:
+    print("Package is not installed.")
 
 # Executed on module import
 def init():
