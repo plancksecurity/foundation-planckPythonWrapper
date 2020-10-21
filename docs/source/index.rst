@@ -10,6 +10,8 @@ Welcome to pEpPythonAdapter's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   software_using
+
 Indices and tables
 ==================
 
