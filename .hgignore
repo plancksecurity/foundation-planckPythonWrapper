@@ -27,3 +27,5 @@ settings.json
 # Default ignored files
 .idea/
 docs/build/
+.eggs
+.tox
