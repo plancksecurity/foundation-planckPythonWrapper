@@ -12,6 +12,7 @@ Welcome to pEpPythonAdapter's documentation!
 
    install
    testing
+   documentation
    software_using
    api/pEp
 
