@@ -26,3 +26,4 @@ launch.json
 settings.json
 # Default ignored files
 .idea/
+docs/build/
