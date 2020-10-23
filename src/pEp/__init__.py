@@ -6,6 +6,7 @@
 
 # Import all symbols EXCEPT the ones beginning with underscore into the current namespace
 from native_pEp import *
+
 # TODO: inter-pkg ref to make sure which native_pEp in sys.path gets loaded
 # like: pEp.native_pEp
 # import the module

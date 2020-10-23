@@ -15,6 +15,7 @@ Welcome to pEpPythonAdapter's documentation!
    documentation
    software_using
    api/pEp
+   api/library_root
 
 Indices and tables
 ==================
