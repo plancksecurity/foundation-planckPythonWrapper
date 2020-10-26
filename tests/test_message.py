@@ -1,23 +1,13 @@
 """Message unit tests."""
-import os
 
 from . import constants
 
 
-def test_msg_enc_dec_roundtrip(tmpdir, alice_sec_key_data, bob_pub_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
     import pEp
 
-    alice = pEp.Identity(
-        constants.ALICE_ADDRESS, constants.ALICE_NAME,
-        constants.ALICE_NAME_ADDR, constants.ALICE_FP, 0, ''
-        )
-
-    pEp.import_key(bob_pub_key_data)
-    bob = pEp.Identity(
-        constants.BOB_ADDRESS, constants.BOB_NAME, '',
-        constants.BOB_FP, 56, ''
-        )
+    alice = create_alice_identity
+    bob = create_bob_identity
 
     msg = pEp.Message(constants.OUTGOING_MSG, alice)
     msg.to = [bob]

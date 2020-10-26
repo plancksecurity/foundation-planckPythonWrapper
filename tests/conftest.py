@@ -1,5 +1,8 @@
 """pytest configuration for the unit tests."""
+import os
 import pytest
+
+from . import constants
 
 
 @pytest.fixture()
@@ -43,3 +46,30 @@ def alice_sec_key_data(datadir):
 def bob_pub_key_data(datadir):
     key_data = datadir.read('bob@openpgp.example.pub.asc')
     return key_data
+
+
+@pytest.fixture()
+def create_alice_identity(tmpdir, alice_sec_key_data, bob_pub_key_data):
+    os.environ["HOME"] = str(tmpdir)
+    import pEp
+
+    pEp.import_key(alice_sec_key_data)
+    alice = pEp.Identity(
+        constants.ALICE_ADDRESS, constants.ALICE_NAME,
+        constants.ALICE_NAME_ADDR, constants.ALICE_FP, 0, ''
+        )
+    pEp.set_own_key(alice, constants.ALICE_FP)
+    return alice
+
+
+@pytest.fixture()
+def create_bob_identity(tmpdir, bob_pub_key_data):
+    os.environ["HOME"] = str(tmpdir)
+    import pEp
+
+    pEp.import_key(bob_pub_key_data)
+    bob = pEp.Identity(
+        constants.BOB_ADDRESS, constants.BOB_NAME, '',
+        constants.BOB_FP, 56, ''
+        )
+    return bob
