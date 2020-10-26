@@ -1,23 +1,13 @@
 """Message unit tests."""
-import os
 
 from . import constants
 
 
-def test_msg_enc_dec_roundtrip(tmpdir, alice_sec_key_data, bob_pub_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
     import pEp
 
-    alice = pEp.Identity(
-        constants.ALICE_ADDRESS, constants.ALICE_NAME,
-        constants.ALICE_NAME_ADDR, constants.ALICE_FP, 0, ''
-        )
-
-    pEp.import_key(bob_pub_key_data)
-    bob = pEp.Identity(
-        constants.BOB_ADDRESS, constants.BOB_NAME, '',
-        constants.BOB_FP, 56, ''
-        )
+    alice = create_alice_identity
+    bob = create_bob_identity
 
     msg = pEp.Message(constants.OUTGOING_MSG, alice)
     msg.to = [bob]
@@ -46,14 +36,24 @@ def test_msg_enc_dec_roundtrip(tmpdir, alice_sec_key_data, bob_pub_key_data):
     # Decrypt message.
     dec_msg, key_list, rating, r = enc_msg.decrypt()
     assert r == 0
-    assert rating == pEp.PEP_rating.PEP_rating_reliable
+    # pEp version 2.2 throws this error:
+    # AttributeError: module 'pEp' has no attribute 'PEP_rating'
+    # assert rating == pEp.PEP_rating.PEP_rating_reliable
+    # It seems to have changed to the following.
+    assert rating == pEp.native_pEp.rating.reliable
 
-    # It is not known which key is generated for Alice, so check only the
-    # one for Bob.
+    # The first 2 keys are Alice's ones, the last is Bob's one.
+    assert key_list[0] == key_list[1] == constants.ALICE_FP
     assert key_list[-1] == constants.BOB_FP
     assert dec_msg.shortmsg == constants.SUBJECT
     assert dec_msg.longmsg.replace("\r", "") == msg.longmsg
     dec_lines = str(dec_msg).replace("\r", "").split("\n")
+    # pEp version 2.2 seems to have fixed some of the replaced characters.
+    # and changed also:
+    # Content-Type: doesn't pring `; charset="utf-8"` anymore.
+    # Content-Transfer-Encoding: doesn't print `quoted-printable` anymore.
+    # Content-Disposition: is not present anymore.
+    # `!` is not replaced by `=21` anymore.
     expected_dec_lines = """From: Alice Lovelace <alice@openpgp.example>
 To: Bob Babagge <bob@openpgp.example>
 Subject: This is a subject
@@ -62,11 +62,10 @@ X-EncStatus: reliable
 X-KeyList:
  X,X,D1A66E1A23B182C9980F788CFBFCC82A015E7330
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline; filename="msg.txt"
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi world=21
+Hi world!
 """.split("\n")
     assert dec_lines[:5] == expected_dec_lines[:5]
     assert dec_lines[7:] == expected_dec_lines[7:]

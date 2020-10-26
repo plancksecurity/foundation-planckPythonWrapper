@@ -8,9 +8,6 @@ INCOMING_MSG = 2
 ANGLE_ADDR = "<{}>"
 NAME_ADDR = "{} {}"
 
-PEP_NAME = "myself"
-PEP_ADDRESS = "myself@pep.fundation"
-
 BOB_NAME = "Bob Babagge"
 BOB_ADDRESS = "bob@openpgp.example"
 BOB_FP = "D1A66E1A23B182C9980F788CFBFCC82A015E7330"
