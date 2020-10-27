@@ -21,8 +21,8 @@
 from pkg_resources import get_distribution
 
 project = "pEpPythonAdapter"
-copyright = "2020, Volker Birk, Matthias Heckmann, juga"
-author = "Volker Birk, Matthias Heckmann, juga"
+copyright = "2020, Volker Birk, heck, juga"
+author = "Volker Birk, heck, juga"
 # The full version, including alpha/beta/rc tags
 release = get_distribution("pEp").version
 # The short X.Y version
@@ -134,7 +134,7 @@ latex_documents = [
         master_doc,
         "pEpPythonAdapter.tex",
         "pEpPythonAdapter Documentation",
-        "2020, Volker Birk, Matthias Heckmann, juga",
+        "2020, Volker Birk, heck, juga",
         "manual",
     )
 ]
