@@ -56,13 +56,4 @@ def notify_handshake(me, partner, signal):
     print("overwrite this method")
 
 
-# Executed when run as script
-def main():
-    print("I am being run as a script")
-
-
-# MAIN
-if __name__ == "__main__":
-    main()
-else:
-    init()
+init()
