@@ -203,15 +203,15 @@ if sys.version_info[0] < 3:
     FileNotFoundError = EnvironmentError
 
 module_pEp = Extension(
-    'native_pEp',
+    'pEp._pEp',
     sources=[
-        'src/pEp/native_pEp/pEpmodule.cc',
-        'src/pEp/native_pEp/basic_api.cc',
-        'src/pEp/native_pEp/identity.cc',
-        'src/pEp/native_pEp/message.cc',
-        'src/pEp/native_pEp/message_api.cc',
-        'src/pEp/native_pEp/str_attr.cc',
-        # 'src/pEp/native_pEp/user_interface.cc',
+        'src/pEp/_pEp/pEpmodule.cc',
+        'src/pEp/_pEp/basic_api.cc',
+        'src/pEp/_pEp/identity.cc',
+        'src/pEp/_pEp/message.cc',
+        'src/pEp/_pEp/message_api.cc',
+        'src/pEp/_pEp/str_attr.cc',
+        # 'src/pEp/_pEp/user_interface.cc',
     ],
 )
 

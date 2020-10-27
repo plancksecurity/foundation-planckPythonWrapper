@@ -40,7 +40,7 @@ def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
     # AttributeError: module 'pEp' has no attribute 'PEP_rating'
     # assert rating == pEp.PEP_rating.PEP_rating_reliable
     # It seems to have changed to the following.
-    assert rating == pEp.native_pEp.rating.reliable
+    assert rating == pEp._pEp.rating.reliable
 
     # The first 2 keys are Alice's ones, the last is Bob's one.
     assert key_list[0] == key_list[1] == constants.ALICE_FP

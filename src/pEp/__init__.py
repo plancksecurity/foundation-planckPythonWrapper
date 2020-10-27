@@ -1,25 +1,35 @@
+# -*- coding: UTF-8 -*-
 # pEp package
-# This file is being exectued upon 'import pEp'
+#
+# The names that are in _pEp that do not begin with an underscore, will be be imported into, and "re-exported" from this module.
+# They are defined in boost-python/C++, and are directly part of the pEpPythonAdapter API
+# The names that are in _pEp that DO begin with an underscore, will not be imported into this module, but will be accessible like _pEp._underscore_function().
+# They are not directly part of the pEpPythonAdapter API, and are meant to be wrapped in this module.
+# Example:
+# def underscore_function():
+#     _pEp._underscore_function()
 #
 # __all__ could be used to limit the symbols exported when using from <pkg> import *
-from pkg_resources import DistributionNotFound, get_distribution
+# TODO: Commented out until problems solved
+# from pkg_resources import DistributionNotFound, get_distribution
 
-# Import all symbols EXCEPT the ones beginning with underscore into the current namespace
-from native_pEp import *
-# TODO: inter-pkg ref to make sure which native_pEp in sys.path gets loaded
-# like: pEp.native_pEp
-# import the module
-import native_pEp
+# Imports all symbols EXCEPT the ones beginning with underscore
+from ._pEp import *
 
-try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
-    print("Package is not installed.")
+# import the native module into the current namespace because we also need to access the names beginning
+# with an underscore (of _pEp), but we dont want to import them into this module
+import ._pEp
+
+# TODO: Commented out until problems solved
+# try:
+#     __version__ = get_distribution(__name__).version
+# except DistributionNotFound:
+#     print("Package is not installed.")
 
 # Executed on module import
 def init():
     print(init, "called")
-    native_pEp._init_after_main_module()
+    _pEp._init_after_main_module()
 
 
 def message_to_send(msg):

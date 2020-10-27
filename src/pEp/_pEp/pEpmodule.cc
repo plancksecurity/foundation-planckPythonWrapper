@@ -178,7 +178,7 @@ namespace pEp {
             _throw_status(status);
         }
 
-        BOOST_PYTHON_MODULE(native_pEp) {
+        BOOST_PYTHON_MODULE(_pEp) {
                 init_before_main_module();
 
                 // Module init function called by pEp.init()
