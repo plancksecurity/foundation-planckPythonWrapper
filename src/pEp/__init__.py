@@ -8,17 +8,27 @@
 # Example:
 # def underscore_function():
 #     _pEp._underscore_function()
-#
+
 # __all__ could be used to limit the symbols exported when using from <pkg> import *
-# TODO: Commented out until problems solved
-# from pkg_resources import DistributionNotFound, get_distribution
+try:
+    from .__version__ import version as __version__
+except ImportError:
+    import warnings
+    warnings.warn("Error loading build-time defined __version__.py, trying setuptools now...")
+    try:
+        import setuptools_scm
+        __version__ = setuptools_scm.get_version()
+        del setuptools_scm
+    except Exception:
+        warnings.warn('could not determine %s package version' % __name__)
+        __version__ = '0.0.dev0+unknown'
 
 # Imports all symbols EXCEPT the ones beginning with underscore
 from ._pEp import *
 
 # import the native module into the current namespace because we also need to access the names beginning
 # with an underscore (of _pEp), but we dont want to import them into this module
-import ._pEp
+import pEp._pEp
 
 # TODO: Commented out until problems solved
 # try:

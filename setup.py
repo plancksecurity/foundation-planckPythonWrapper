@@ -225,5 +225,9 @@ setup(
     },
     # While not using a pyproject.toml, support setuptools_scm setup.cfg usage,
     # see https://github.com/pypa/setuptools_scm/#setupcfg-usage
-    use_scm_version=True,
+    use_scm_version={
+        'write_to': 'src/pEp/__version__.py',
+        #TODO: fallback_version does not seem to work in case os missing tag
+        'fallback_version' : '0.0.0-RC0'
+    }
 )
