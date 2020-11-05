@@ -12,22 +12,25 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
-
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../src'))
 # -- Project information -----------------------------------------------------
-from pkg_resources import get_distribution
+#from pkg_resources import get_distribution
 
 project = "pEpPythonAdapter"
 copyright = "2020, Volker Birk, heck, juga"
 author = "Volker Birk, heck, juga"
+
+import pEp
 # The full version, including alpha/beta/rc tags
-release = get_distribution("pEp").version
+release = pEp.__version__
 # The short X.Y version
 version = ".".join(release.split(".")[:2])
 
+# DEBUG
+print("release:", release)
+print("version:", version)
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
