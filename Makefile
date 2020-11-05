@@ -22,27 +22,35 @@ dist-whl: compile
 dist-egg: compile
 	python3 setup.py bdist_egg
 
+
 # Installation
 # ============
 # installs the package system wide
 install: compile
-	python3 setup.py install --force
+	pip3 install .
 
 # installs the package into your user home
 install-user: compile
-	python3 setup.py install --force --user
-
+	pip3 install . --user
 
 clean: clean-docs
-	rm -r $(BUILD_DIR)
-	rm -r $(DIST_DIR)
+	rm -rf $(BUILD_DIR)
+	rm -rf $(DIST_DIR)
+	rm -rf $(PYTHON_ARTIFACTS)
+	rm -rf $(VERSION_FILE)
+	rm -rf $(BUILD_INPLACE)
 
-# Creates an ad-hoc dev env using the compiled module
-devenv:
+
+# Envrionment
+# ===========
+# Creates and activates a new venv that has the LD_LIBRARY_PATH/DYLD_LIBRARY_PATH
+# already set for the prefix specified in local.conf
+# Only activates venv if already existing
+venv:
+	python3 -m venv _venv
 	LD_LIBRARY_PATH=$(PREFIX)/lib \
 	DYLD_LIBRARY_PATH=$(PREFIX)/lib \
-	PYTHONPATH=`pwd`/build/lib.linux-x86_64-3.7:`pwd`/build/lib.macosx-10.9-x86_64-3.8: \
-	bash -l
+	bash --rcfile _venv/bin/activate
 
 # Tests if the current environment is able to load the pEp module
 envtest:
@@ -54,5 +62,5 @@ envtest:
 docs:
 	make html -C docs/
 
-clean-docs
+clean-docs:
 	make clean -C docs/
