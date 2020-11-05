@@ -32,13 +32,11 @@ def pEpLog(*msg):
 
 class BuildExtCommand(build_ext):
     user_options = build_ext.user_options + [
-        ('local', None, 'Use local pEp install in HOME/USERPROFILE for libs/includes'),
-        ('prefix=', None, 'Use local pEp install in prefix for libs/includes'),
+        ('prefix=', None, 'Use pEp-base installation in prefix (libs/includes)'),
     ]
 
     def initialize_options(self):
         build_ext.initialize_options(self)
-        self.local = None != environ.get('PER_USER_DIRECTORY')
         self.prefix = getattr(self, "prefix=", None)
 
     def windowsGetInstallLocation(self):
@@ -130,7 +128,6 @@ class BuildExtCommand(build_ext):
     def finalize_options(self):
         build_ext.finalize_options(self)
 
-        pEpLog("local: ", self.local)
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
 
@@ -152,13 +149,6 @@ class BuildExtCommand(build_ext):
         includes = []
         libdirs = []
 
-        # Append home-dir
-        if self.local:
-            pEpLog("local mode")
-            home_include = [join(home, 'include')]
-            home_libdirs = [join(home, 'lib')]
-            includes += home_include
-            libdirs += home_libdirs
 
         # Append prefix-dir
         if self.prefix:
