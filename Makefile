@@ -16,18 +16,13 @@ dist-egg: compile
 	python3 setup.py bdist_egg
 
 
-# installs the package into the user home
-install: compile
-	python3 setup.py install --force --user
-
-# installs the package into PREFIX path
-install-prefix: compile
-	python3 setup.py install --force $(PREFIX_OPT)
-
 # installs the package system wide
-install-sys: compile
+install: compile
 	python3 setup.py install --force
 
+# installs the package into your user home
+install-user: compile
+	python3 setup.py install --force --user
 
 # build the module into build/
 compile:
