@@ -30,7 +30,6 @@ all the build options. You can use this as a template.
 
 ``cp local.conf.example local.conf``
 
-
 If you have pEp-base installed under a custom prefix (e.g. /home/foo/local) it is important
 that you specify "PREFIX".
 
@@ -40,29 +39,60 @@ To build the module just type:
 
 ``make``
 
+This will compile the C/C++ parts of the module and create the python packages in the .egg and .wheel format
+in the dist/ dir.
+
 Installation
 ------------
-You can install this adapter in the in the following ways:
+You can install the module in the in the following ways:
 
 To install the extension module system wide or into a venv:
 
 ``make install``
-
 
 To install the extension module into you home dir:
 
 ``make install-user``
 
 
-If you're working on different Python projects, it's recommended to use
-`virtualenv <https://virtualenv.pypa.io/en/stable/>`_ to have different
-libraries versions.
+Virtualenv
+----------
+We recommend using a venv to work on/with the pEpPythonAdapter.
+There is a convenience make target that will create and activate a venv that already has the LD_LIBRARY_PATH
+or DYLD_LIBRARY_PATH set according to your ```local.conf``.
+If the venv is not existing yet it will be created and activated.
+If the venv already exists it will only be activated.
 
-If you're working in a virtualenv you can also install the package with
-``pip install .``
+``make venv``
 
-To install the package in "develop mode", run ``python setup.py develop``
-or ``pip install -e .``
+After that, to install the pEp module into the venv, do:
+
+``make install``
+
+Test
+----
+To run the whole testsuite you need to create/activate the venv, and then invoke the make target 'test'.
+You can do this from a clean clone of the repo, no prior actions required, the whole module and all dependencies
+will be compiled and installed into the venv.
+
+``make venv``
+``make test``
+
+
+Module Development
+------------------
+To develop on the module itself, first of all create and activate a venv:
+
+``make venv``
+
+Then, in the venv install the module in development mode.
+
+``make develop``
+
+While developing there are two levels of changes. Changes to the python part of the module (pEp), and
+changes to the C/C++ part of the module (_pEp). If you change just python code, the changes are effective immediately.
+If you do changes to the C/C++ part you need to issue ``make develop`` again, to recompile the extension and install
+the new binary (.so/.dylib) of the module into the venv.
 
 
 Docker

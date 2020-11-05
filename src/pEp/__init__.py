@@ -30,12 +30,6 @@ from ._pEp import *
 # with an underscore (of _pEp), but we dont want to import them into this module
 import pEp._pEp
 
-# TODO: Commented out until problems solved
-# try:
-#     __version__ = get_distribution(__name__).version
-# except DistributionNotFound:
-#     print("Package is not installed.")
-
 # Executed on module import
 def init():
     print(init, "called")

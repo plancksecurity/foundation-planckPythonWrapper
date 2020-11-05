@@ -1,7 +1,6 @@
 include Makefile.conf
 
-.PHONY: all dist dist-egg dist-whl install install-prefix install-sys compile clean devenv envtest docs clean-docs
-
+.PHONY: all dist dist-egg dist-whl install install-prefix install-sys compile clean devenv envtest docs clean-docs test
 all: dist
 
 # Build
@@ -33,13 +32,6 @@ install: compile
 install-user: compile
 	pip3 install . --user
 
-clean: clean-docs
-	rm -rf $(BUILD_DIR)
-	rm -rf $(DIST_DIR)
-	rm -rf $(PYTHON_ARTIFACTS)
-	rm -rf $(VERSION_FILE)
-	rm -rf $(BUILD_INPLACE)
-
 
 # Envrionment
 # ===========
@@ -47,20 +39,47 @@ clean: clean-docs
 # already set for the prefix specified in local.conf
 # Only activates venv if already existing
 venv:
-	python3 -m venv _venv
+	python3 -m venv $(VENV_DIR)
 	LD_LIBRARY_PATH=$(PREFIX)/lib \
 	DYLD_LIBRARY_PATH=$(PREFIX)/lib \
-	bash --rcfile _venv/bin/activate
+	bash --rcfile $(VENV_DIR)/bin/activate
 
 # Tests if the current environment is able to load the pEp module
 envtest:
 	python3 -c 'import pEp'
+
+# Test
+# ====
+# Use these targets only in venv created with 'make venv'
+install-test: compile
+	pip3 install .[test]
+
+test: install-test
+	pytest
+
+
+# Development
+develop: compile
+	pip install -e .
 
 
 # Documentation
 # =============
 docs:
 	make html -C docs/
+
+
+# Housekeeping
+# ============
+clean-all: clean
+	rm -rf $(VENV_DIR)
+
+clean: clean-docs
+	rm -rf $(BUILD_DIR)
+	rm -rf $(DIST_DIR)
+	rm -rf $(PYTHON_ARTIFACTS)
+	rm -rf $(VERSION_FILE)
+	rm -rf $(BUILD_INPLACE)
 
 clean-docs:
 	make clean -C docs/
