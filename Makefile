@@ -8,6 +8,9 @@ all: dist
 compile:
 	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT)
 
+compile-inplace:
+	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT) --inplace
+
 # Packaging
 # =========
 # create wheel and egg package in dist/
@@ -65,7 +68,7 @@ develop: compile
 
 # Documentation
 # =============
-docs:
+docs: compile-inplace
 	make html -C docs/
 
 

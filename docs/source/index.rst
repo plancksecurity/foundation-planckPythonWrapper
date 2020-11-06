@@ -11,11 +11,8 @@ Welcome to pEpPythonAdapter's documentation!
    :caption: Contents:
 
    install
-   testing
-   documentation
    software_using
    api/pEp
-
 Indices and tables
 ==================
 

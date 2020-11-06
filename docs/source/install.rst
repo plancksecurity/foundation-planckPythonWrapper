@@ -76,6 +76,7 @@ You can do this from a clean clone of the repo, no prior actions required, the w
 will be compiled and installed into the venv.
 
 ``make venv``
+
 ``make test``
 
 
@@ -93,6 +94,37 @@ While developing there are two levels of changes. Changes to the python part of 
 changes to the C/C++ part of the module (_pEp). If you change just python code, the changes are effective immediately.
 If you do changes to the C/C++ part you need to issue ``make develop`` again, to recompile the extension and install
 the new binary (.so/.dylib) of the module into the venv.
+
+Documentation
+-------------
+The documentation of the pEpPythonAdapter uses `Sphinx <https://www.sphinx-doc.org/>`_
+Refer to the `Sphinx installation instructions <https://www.sphinx-doc.org/en/master/usage/installation.html>`_ to install it.
+
+To generate the documentation in the HTML format, there is a make target "docs"
+But first, you need to create/activate the venv or set the LD_LIBRARY_PATH manually.
+
+``make venv``
+
+``make docs``
+
+You can see the generated HTML documentation in a browser opening the directory
+`docs/build/html`.
+
+Housekeeping
+------------
+There are the following "clean" targets.
+
+To delete all the generated documentation, run:
+
+``make docs-clean``
+
+To delete all the "derived" files including eggs, wheels, shared libs, build files and caches, run:
+
+``make clean``
+
+To delete all of make clean plus the venv (should equal a complete reset), run:
+``make clean-all``
+
 
 
 Docker
