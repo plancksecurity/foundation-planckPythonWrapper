@@ -14,7 +14,7 @@ These `build instructions <https://dev.pep.foundation/Common%20Adapter%20Documen
 Additionally, there is a `build script <http://pep-security.lu/gitlab/juga/Internal-Deployment/-/blob/master/build-pep-stack.sh>`_
 that executes these build instructions automatically (Debian and MacOS):
 
-.. Note:: If you dont install pEp-base system wide, but under a prefix, like /home/foo/local/
+.. Note:: If you dont install pEp-base system wide, but under a prefix, like /home/foo/local/,
    you will need to have LD_LIBARY_PATH/DYLD_LIBRARY_PATH adjusted for all the following operations.
 
 
@@ -42,25 +42,13 @@ To build the module just type:
 This will compile the C/C++ parts of the module and create the python packages in the .egg and .wheel format
 in the dist/ dir.
 
-Installation
-------------
-You can install the module in the in the following ways:
-
-To install the extension module system wide or into a venv:
-
-``make install``
-
-To install the extension module into you home dir:
-
-``make install-user``
-
 
 Virtualenv
 ----------
 We recommend using a venv to work on/with the pEpPythonAdapter.
 There is a convenience make target that will create and activate a venv that already has the LD_LIBRARY_PATH
-or DYLD_LIBRARY_PATH set according to your ```local.conf``.
-If the venv is not existing yet it will be created and activated.
+or DYLD_LIBRARY_PATH set according to your ``local.conf``.
+If the venv does not yet it will be created and activated.
 If the venv already exists it will only be activated.
 
 ``make venv``
@@ -68,6 +56,20 @@ If the venv already exists it will only be activated.
 After that, to install the pEp module into the venv, do:
 
 ``make install``
+
+
+Installation
+------------
+You can install the module in the in the following ways.
+
+To install the extension module system wide or into a venv, use:
+
+``make install``
+
+To install the extension module into your home dir, use:
+
+``make install-user``
+
 
 Test
 ----
