@@ -1,6 +1,6 @@
 include Makefile.conf
 
-.PHONY: all dist dist-egg dist-whl install install-prefix install-sys compile clean devenv envtest docs clean-docs test
+.PHONY: all compile compile-inplace dist dist-egg dist-whl install install-user venv envtest install-test test develop docs  clean clean-all clean-docs
 all: dist
 
 # Build
@@ -42,7 +42,7 @@ install-user: compile
 # already set for the prefix specified in local.conf
 # Only activates venv if already existing
 venv:
-	python3 -m venv $(VENV_DIR)
+	python -m venv $(VENV_DIR)
 	LD_LIBRARY_PATH=$(PREFIX)/lib \
 	DYLD_LIBRARY_PATH=$(PREFIX)/lib \
 	bash --rcfile $(VENV_DIR)/bin/activate
