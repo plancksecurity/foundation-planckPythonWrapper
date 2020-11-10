@@ -5,8 +5,6 @@ from . import constants
 
 
 def test_create_one_identity_succeed(tmpdir):
-    # Change $HOME before initializing the db
-    os.environ["HOME"] = str(tmpdir)
     # It has to be imported here to get the management db initialized,
     import pEp
     alice = pEp.Identity()

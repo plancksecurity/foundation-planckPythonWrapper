@@ -33,6 +33,8 @@ def tmpdir(tmpdir_factory, request):
     """Create a tmp dir for the tests"""
     base = str(hash(request.node.nodeid))[:3]
     bn = tmpdir_factory.mktemp(base)
+    import os
+    os.environ["HOME"] = str(bn)
     return bn
 
 
