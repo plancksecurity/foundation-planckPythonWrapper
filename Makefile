@@ -42,7 +42,7 @@ install-user: compile
 # already set for the prefix specified in local.conf
 # Only activates venv if already existing
 venv:
-	python -m venv $(VENV_DIR)
+	python3 -m venv $(VENV_DIR)
 	LD_LIBRARY_PATH=$(PREFIX)/lib \
 	DYLD_LIBRARY_PATH=$(PREFIX)/lib \
 	bash --rcfile $(VENV_DIR)/bin/activate
