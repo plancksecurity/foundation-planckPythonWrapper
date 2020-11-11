@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Message unit tests."""
 
 from . import constants

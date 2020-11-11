@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """pytest configuration for the unit tests."""
 
 import os

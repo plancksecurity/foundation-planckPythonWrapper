@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Identity unit tests."""
 import os
 

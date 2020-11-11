@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Unit test for pEp package, not for subpackages or modules."""
 
 
