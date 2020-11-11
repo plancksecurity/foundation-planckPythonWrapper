@@ -54,7 +54,7 @@ def bob_pub_key_data(datadir):
 
 
 @pytest.fixture()
-def create_alice_identity(ctx_init, alice_sec_key_data):
+def import_identity_alice(ctx_init, alice_sec_key_data):
     import pEp
 
     pEp.import_key(alice_sec_key_data)
@@ -67,7 +67,7 @@ def create_alice_identity(ctx_init, alice_sec_key_data):
 
 
 @pytest.fixture()
-def create_bob_identity(ctx_init, bob_pub_key_data):
+def import_identity_bob(ctx_init, bob_pub_key_data):
     import pEp
 
     pEp.import_key(bob_pub_key_data)

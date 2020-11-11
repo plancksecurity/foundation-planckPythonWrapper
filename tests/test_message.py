@@ -4,11 +4,11 @@
 from . import constants
 
 
-def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
+def test_msg_enc_dec_roundtrip(import_identity_alice, import_identity_bob):
     import pEp
 
-    alice = create_alice_identity
-    bob = create_bob_identity
+    alice = import_identity_alice
+    bob = import_identity_bob
 
     msg = pEp.Message(constants.OUTGOING_MSG, alice)
     msg.to = [bob]
@@ -72,7 +72,7 @@ Hi world!
     assert dec_lines[7:] == expected_dec_lines[7:]
 
 
-def test_msg_len_changes(create_alice_identity, create_bob_identity):
+def test_msg_len_changes(import_identity_alice, import_identity_bob):
     """Test that the original message is modified after encryption.
 
     Headers are added and therefore the modified unencrypted message length
@@ -84,8 +84,8 @@ def test_msg_len_changes(create_alice_identity, create_bob_identity):
     """
     import pEp
 
-    alice = create_alice_identity
-    bob = create_bob_identity
+    alice = import_identity_alice
+    bob = import_identity_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
@@ -105,7 +105,7 @@ def test_msg_len_changes(create_alice_identity, create_bob_identity):
     assert msg_after_encrypt_len != msg_len
 
 
-def test_dec_msg_len(create_alice_identity, create_bob_identity):
+def test_dec_msg_len(import_identity_alice, import_identity_bob):
     """
     Test that the decrypted message length is different from the original.
 
@@ -114,8 +114,8 @@ def test_dec_msg_len(create_alice_identity, create_bob_identity):
     """
     import pEp
 
-    alice = create_alice_identity
-    bob = create_bob_identity
+    alice = import_identity_alice
+    bob = import_identity_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
@@ -155,12 +155,12 @@ Hi world!\r
     assert dec_msg_len - len_extra_headers == msg_len
 
 
-def test_null_char_rmed(create_alice_identity, create_bob_identity):
+def test_null_char_rmed(import_identity_alice, import_identity_bob):
     """Test that null characters and anything after them is removed."""
     import pEp
 
-    alice = create_alice_identity
-    bob = create_bob_identity
+    alice = import_identity_alice
+    bob = import_identity_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
