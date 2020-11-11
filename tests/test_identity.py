@@ -5,9 +5,8 @@ import os
 from . import constants
 
 
-def test_create_one_identity_succeed(ctx_init):
+def test_create_one_identity_succeed(pEp):
     # It has to be imported here to get the management db initialized,
-    import pEp
     alice = pEp.Identity()
     alice.address = constants.ALICE_ADDRESS
     alice.username = constants.ALICE_NAME
@@ -44,9 +43,7 @@ def test_create_one_identity_succeed(ctx_init):
     assert alice.flags == expected_alice.flags
 
 
-def test_two_identities_succeed(ctx_init, bob_key_pub):
-    import pEp
-
+def test_two_identities_succeed(pEp, bob_key_pub):
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
         constants.ALICE_FPR, 0, ''
@@ -88,9 +85,7 @@ def test_two_identities_succeed(ctx_init, bob_key_pub):
     assert bob.flags == 0
 
 
-def test_set_own_key(ctx_init, alice_key_sec):
-    import pEp
-
+def test_set_own_key(pEp, alice_key_sec):
     pEp.import_key(alice_key_sec)
     alice = pEp.Identity()
     alice.address = constants.ALICE_ADDRESS

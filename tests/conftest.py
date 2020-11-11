@@ -6,7 +6,7 @@ import pytest
 
 from . import constants
 
-
+# Static Data
 @pytest.fixture()
 def datadir(request):
     """Get, read, open test files from the tests "data" directory."""
@@ -29,9 +29,19 @@ def datadir(request):
                 return f.readlines()
     return D(request.fspath.dirpath("data"))
 
+@pytest.fixture()
+def alice_key_sec(datadir):
+    key_data = datadir.read('alice@openpgp.example.sec.asc')
+    return key_data
 
 @pytest.fixture()
-def ctx_init(tmpdir_factory, request):
+def bob_key_pub(datadir):
+    key_data = datadir.read('bob@openpgp.example.pub.asc')
+    return key_data
+
+# Init
+@pytest.fixture()
+def env_init(tmpdir_factory, request):
     """Create a tmp dir for the tests"""
     base = str(abs(hash(request.node.nodeid)))[:3]
     bn = tmpdir_factory.mktemp(base)
@@ -40,36 +50,29 @@ def ctx_init(tmpdir_factory, request):
     os.environ["PEP_HOME"] = str(bn)
     os.environ["HOME"] = str(bn)
 
-
 @pytest.fixture()
-def alice_key_sec(datadir):
-    key_data = datadir.read('alice@openpgp.example.sec.asc')
-    return key_data
-
-
-@pytest.fixture()
-def bob_key_pub(datadir):
-    key_data = datadir.read('bob@openpgp.example.pub.asc')
-    return key_data
-
-
-@pytest.fixture()
-def import_identity_alice(ctx_init, alice_key_sec):
+def pEp(env_init):
     import pEp
+    return pEp
 
+# Identities
+@pytest.fixture()
+def import_ident_alice(pEp, alice_key_sec):
     pEp.import_key(alice_key_sec)
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME,
         constants.ALICE_NAME_ADDR, constants.ALICE_FPR, 0, ''
     )
+    return alice
+
+@pytest.fixture()
+def import_ident_alice_as_own_ident(pEp, import_ident_alice):
+    alice = import_ident_alice
     pEp.set_own_key(alice, constants.ALICE_FPR)
     return alice
 
-
 @pytest.fixture()
-def import_identity_bob(ctx_init, bob_key_pub):
-    import pEp
-
+def import_ident_bob(pEp, bob_key_pub):
     pEp.import_key(bob_key_pub)
     bob = pEp.Identity(
         constants.BOB_ADDRESS, constants.BOB_NAME, '',

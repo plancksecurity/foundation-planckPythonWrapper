@@ -4,11 +4,9 @@
 from . import constants
 
 
-def test_msg_enc_dec_roundtrip(import_identity_alice, import_identity_bob):
-    import pEp
-
-    alice = import_identity_alice
-    bob = import_identity_bob
+def test_msg_enc_dec_roundtrip(pEp, import_ident_alice_as_own_ident, import_ident_bob):
+    alice = import_ident_alice_as_own_ident
+    bob = import_ident_bob
 
     msg = pEp.Message(constants.OUTGOING_MSG, alice)
     msg.to = [bob]
@@ -72,7 +70,7 @@ Hi world!
     assert dec_lines[7:] == expected_dec_lines[7:]
 
 
-def test_msg_len_changes(import_identity_alice, import_identity_bob):
+def test_msg_len_changes(pEp, import_ident_alice_as_own_ident, import_ident_bob):
     """Test that the original message is modified after encryption.
 
     Headers are added and therefore the modified unencrypted message length
@@ -82,10 +80,8 @@ def test_msg_len_changes(import_identity_alice, import_identity_bob):
          extra headers and modify the subject returning a new message.
 
     """
-    import pEp
-
-    alice = import_identity_alice
-    bob = import_identity_bob
+    alice = import_ident_alice_as_own_ident
+    bob = import_ident_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
@@ -105,17 +101,15 @@ def test_msg_len_changes(import_identity_alice, import_identity_bob):
     assert msg_after_encrypt_len != msg_len
 
 
-def test_dec_msg_len(import_identity_alice, import_identity_bob):
+def test_dec_msg_len(pEp, import_ident_alice_as_own_ident, import_ident_bob):
     """
     Test that the decrypted message length is different from the original.
 
     Because it adds extra headers.
 
     """
-    import pEp
-
-    alice = import_identity_alice
-    bob = import_identity_bob
+    alice = import_ident_alice_as_own_ident
+    bob = import_ident_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
@@ -155,12 +149,10 @@ Hi world!\r
     assert dec_msg_len - len_extra_headers == msg_len
 
 
-def test_null_char_rmed(import_identity_alice, import_identity_bob):
+def test_null_char_rmed(pEp, import_ident_alice_as_own_ident, import_ident_bob):
     """Test that null characters and anything after them is removed."""
-    import pEp
-
-    alice = import_identity_alice
-    bob = import_identity_bob
+    alice = import_ident_alice_as_own_ident
+    bob = import_ident_bob
 
     msg = pEp.outgoing_message(alice)
     msg.to = [bob]
