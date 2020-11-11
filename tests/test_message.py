@@ -43,8 +43,8 @@ def test_msg_enc_dec_roundtrip(import_identity_alice, import_identity_bob):
     assert rating == pEp._pEp.rating.reliable
 
     # The first 2 keys are Alice's ones, the last is Bob's one.
-    assert key_list[0] == key_list[1] == constants.ALICE_FP
-    assert key_list[-1] == constants.BOB_FP
+    assert key_list[0] == key_list[1] == constants.ALICE_FPR
+    assert key_list[-1] == constants.BOB_FPR
     assert dec_msg.shortmsg == constants.SUBJECT
     assert dec_msg.longmsg.replace("\r", "") == msg.longmsg
     dec_lines = str(dec_msg).replace("\r", "").split("\n")

@@ -11,11 +11,11 @@ def test_create_one_identity_succeed(ctx_init):
     alice = pEp.Identity()
     alice.address = constants.ALICE_ADDRESS
     alice.username = constants.ALICE_NAME
-    alice.fpr = constants.ALICE_FP
+    alice.fpr = constants.ALICE_FPR
 
     expected_alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
-        constants.ALICE_FP, 0, ''
+        constants.ALICE_FPR, 0, ''
     )
 
     # XXX: Can't compare objects
@@ -44,29 +44,29 @@ def test_create_one_identity_succeed(ctx_init):
     assert alice.flags == expected_alice.flags
 
 
-def test_two_identities_succeed(ctx_init, bob_pub_key_data):
+def test_two_identities_succeed(ctx_init, bob_key_pub):
     import pEp
 
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
-        constants.ALICE_FP, 0, ''
+        constants.ALICE_FPR, 0, ''
     )
     assert alice.address == constants.ALICE_ADDRESS
     assert alice.username == constants.ALICE_NAME
-    assert alice.fpr == constants.ALICE_FP
+    assert alice.fpr == constants.ALICE_FPR
     assert alice.user_id == ""
     assert alice.comm_type == 0
     assert alice.flags == 0
 
-    pEp.import_key(bob_pub_key_data)
+    pEp.import_key(bob_key_pub)
 
     bob = pEp.Identity()
     bob.address = constants.BOB_ADDRESS
     bob.username = constants.BOB_NAME
-    bob.fpr = constants.BOB_FP
+    bob.fpr = constants.BOB_FPR
     expected_bob = pEp.Identity(
         constants.BOB_ADDRESS, constants.BOB_NAME, '',
-        constants.BOB_FP, 56, ''
+        constants.BOB_FPR, 56, ''
     )
 
     assert str(bob) == constants.BOB_NAME_ADDR
@@ -88,19 +88,19 @@ def test_two_identities_succeed(ctx_init, bob_pub_key_data):
     assert bob.flags == 0
 
 
-def test_set_own_key(ctx_init, alice_sec_key_data):
+def test_set_own_key(ctx_init, alice_key_sec):
     import pEp
 
-    pEp.import_key(alice_sec_key_data)
+    pEp.import_key(alice_key_sec)
     alice = pEp.Identity()
     alice.address = constants.ALICE_ADDRESS
     alice.username = constants.ALICE_NAME
-    alice.fpr = constants.ALICE_FP
+    alice.fpr = constants.ALICE_FPR
     alice.user_id = constants.ALICE_NAME_ADDR
 
     expected_alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
-        constants.ALICE_FP, 0, ''
+        constants.ALICE_FPR, 0, ''
     )
 
     pEp.set_own_key(alice, alice.fpr)

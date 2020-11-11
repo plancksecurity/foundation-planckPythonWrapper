@@ -42,37 +42,37 @@ def ctx_init(tmpdir_factory, request):
 
 
 @pytest.fixture()
-def alice_sec_key_data(datadir):
+def alice_key_sec(datadir):
     key_data = datadir.read('alice@openpgp.example.sec.asc')
     return key_data
 
 
 @pytest.fixture()
-def bob_pub_key_data(datadir):
+def bob_key_pub(datadir):
     key_data = datadir.read('bob@openpgp.example.pub.asc')
     return key_data
 
 
 @pytest.fixture()
-def import_identity_alice(ctx_init, alice_sec_key_data):
+def import_identity_alice(ctx_init, alice_key_sec):
     import pEp
 
-    pEp.import_key(alice_sec_key_data)
+    pEp.import_key(alice_key_sec)
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME,
-        constants.ALICE_NAME_ADDR, constants.ALICE_FP, 0, ''
+        constants.ALICE_NAME_ADDR, constants.ALICE_FPR, 0, ''
     )
-    pEp.set_own_key(alice, constants.ALICE_FP)
+    pEp.set_own_key(alice, constants.ALICE_FPR)
     return alice
 
 
 @pytest.fixture()
-def import_identity_bob(ctx_init, bob_pub_key_data):
+def import_identity_bob(ctx_init, bob_key_pub):
     import pEp
 
-    pEp.import_key(bob_pub_key_data)
+    pEp.import_key(bob_key_pub)
     bob = pEp.Identity(
         constants.BOB_ADDRESS, constants.BOB_NAME, '',
-        constants.BOB_FP, 56, ''
+        constants.BOB_FPR, 56, ''
     )
     return bob
