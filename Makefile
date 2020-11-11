@@ -60,7 +60,7 @@ install-test: compile
 # TODO: maybe use setup.py test?
 # --forked, because every test needs a separate process, see PYADPT-100
 test:
-	pytest --forked
+	pytest
 
 
 # Development
