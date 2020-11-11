@@ -1,4 +1,5 @@
 """pytest configuration for the unit tests."""
+
 import os
 import pytest
 
@@ -28,14 +29,15 @@ def datadir(request):
     return D(request.fspath.dirpath("data"))
 
 
-@pytest.fixture(scope='function')
-def tmpdir(tmpdir_factory, request):
+@pytest.fixture()
+def ctx_init(tmpdir_factory, request):
     """Create a tmp dir for the tests"""
-    base = str(hash(request.node.nodeid))[:3]
+    base = str(abs(hash(request.node.nodeid)))[:3]
     bn = tmpdir_factory.mktemp(base)
+    print(bn)
     import os
+    os.environ["PEP_HOME"] = str(bn)
     os.environ["HOME"] = str(bn)
-    return bn
 
 
 @pytest.fixture()
@@ -51,27 +53,25 @@ def bob_pub_key_data(datadir):
 
 
 @pytest.fixture()
-def create_alice_identity(tmpdir, alice_sec_key_data, bob_pub_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def create_alice_identity(ctx_init, alice_sec_key_data):
     import pEp
 
     pEp.import_key(alice_sec_key_data)
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME,
         constants.ALICE_NAME_ADDR, constants.ALICE_FP, 0, ''
-        )
+    )
     pEp.set_own_key(alice, constants.ALICE_FP)
     return alice
 
 
 @pytest.fixture()
-def create_bob_identity(tmpdir, bob_pub_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def create_bob_identity(ctx_init, bob_pub_key_data):
     import pEp
 
     pEp.import_key(bob_pub_key_data)
     bob = pEp.Identity(
         constants.BOB_ADDRESS, constants.BOB_NAME, '',
         constants.BOB_FP, 56, ''
-        )
+    )
     return bob

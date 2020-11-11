@@ -4,7 +4,7 @@ import os
 from . import constants
 
 
-def test_create_one_identity_succeed(tmpdir):
+def test_create_one_identity_succeed(ctx_init):
     # It has to be imported here to get the management db initialized,
     import pEp
     alice = pEp.Identity()
@@ -15,7 +15,7 @@ def test_create_one_identity_succeed(tmpdir):
     expected_alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
         constants.ALICE_FP, 0, ''
-        )
+    )
 
     # XXX: Can't compare objects
     # assert alice == expected_alice
@@ -43,14 +43,13 @@ def test_create_one_identity_succeed(tmpdir):
     assert alice.flags == expected_alice.flags
 
 
-def test_two_identities_succeed(tmpdir, bob_pub_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def test_two_identities_succeed(ctx_init, bob_pub_key_data):
     import pEp
 
     alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
         constants.ALICE_FP, 0, ''
-        )
+    )
     assert alice.address == constants.ALICE_ADDRESS
     assert alice.username == constants.ALICE_NAME
     assert alice.fpr == constants.ALICE_FP
@@ -67,7 +66,7 @@ def test_two_identities_succeed(tmpdir, bob_pub_key_data):
     expected_bob = pEp.Identity(
         constants.BOB_ADDRESS, constants.BOB_NAME, '',
         constants.BOB_FP, 56, ''
-        )
+    )
 
     assert str(bob) == constants.BOB_NAME_ADDR
     assert bob.address == expected_bob.address
@@ -88,8 +87,7 @@ def test_two_identities_succeed(tmpdir, bob_pub_key_data):
     assert bob.flags == 0
 
 
-def test_set_own_key(tmpdir, alice_sec_key_data):
-    os.environ["HOME"] = str(tmpdir)
+def test_set_own_key(ctx_init, alice_sec_key_data):
     import pEp
 
     pEp.import_key(alice_sec_key_data)
@@ -102,7 +100,7 @@ def test_set_own_key(tmpdir, alice_sec_key_data):
     expected_alice = pEp.Identity(
         constants.ALICE_ADDRESS, constants.ALICE_NAME, '',
         constants.ALICE_FP, 0, ''
-        )
+    )
 
     pEp.set_own_key(alice, alice.fpr)
     # assert str(alice) == constants.ALICE_NAME_ADDR
