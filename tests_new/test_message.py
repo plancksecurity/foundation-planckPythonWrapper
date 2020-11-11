@@ -30,8 +30,7 @@ def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
     assert str(enc_msg.from_) == constants.ALICE_NAME_ADDR
     assert str(enc_msg.to[0]) == constants.BOB_NAME_ADDR
     assert enc_msg.shortmsg == "p≡p"
-    assert enc_msg.longmsg == \
-        "this message was encrypted with p≡p https://pEp-project.org"
+    assert enc_msg.longmsg == "this message was encrypted with p≡p https://pEp-project.org"
 
     # Decrypt message.
     dec_msg, key_list, rating, r = enc_msg.decrypt()
@@ -54,7 +53,8 @@ def test_msg_enc_dec_roundtrip(create_alice_identity, create_bob_identity):
     # Content-Transfer-Encoding: doesn't print `quoted-printable` anymore.
     # Content-Disposition: is not present anymore.
     # `!` is not replaced by `=21` anymore.
-    expected_dec_lines = """From: Alice Lovelace <alice@openpgp.example>
+    expected_dec_lines = \
+"""From: Alice Lovelace <alice@openpgp.example>
 To: Bob Babagge <bob@openpgp.example>
 Subject: This is a subject
 X-pEp-Version: 2.1
@@ -129,7 +129,8 @@ def test_dec_msg_len(create_alice_identity, create_bob_identity):
     dec_msg_len = len(str(dec_msg))
 
     assert dec_msg.longmsg.replace("\r", "") == constants.BODY  # msg.longmsg
-    expected_dec_msg = """From: Alice Lovelace <alice@openpgp.example>\r
+    expected_dec_msg = \
+"""From: Alice Lovelace <alice@openpgp.example>\r
 To: Bob Babagge <bob@openpgp.example>\r
 Subject: This is a subject\r
 X-pEp-Version: 2.1\r

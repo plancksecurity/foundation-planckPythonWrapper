@@ -57,8 +57,9 @@ envtest:
 install-test: compile
 	pip3 install .[test]
 
+# TODO: maybe use setup.py test?
 test: install-test
-	pytest
+	pytest --forked
 
 
 # Development

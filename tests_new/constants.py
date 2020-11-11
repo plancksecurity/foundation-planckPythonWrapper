@@ -16,8 +16,7 @@ BOB_NAME_ADDR = NAME_ADDR.format(BOB_NAME, ANGLE_ADDR.format(BOB_ADDRESS))
 ALICE_NAME = "Alice Lovelace"
 ALICE_ADDRESS = "alice@openpgp.example"
 ALICE_FP = "EB85BB5FA33A75E15E944E63F231550C4F47E38E"
-ALICE_NAME_ADDR = NAME_ADDR.format(ALICE_NAME,
-                                   ANGLE_ADDR.format(ALICE_ADDRESS))
+ALICE_NAME_ADDR = NAME_ADDR.format(ALICE_NAME, ANGLE_ADDR.format(ALICE_ADDRESS))
 
 SUBJECT = "This is a subject"
 BODY = "Hi world!\n"
