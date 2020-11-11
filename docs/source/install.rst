@@ -73,11 +73,15 @@ To install the extension module into your home dir, use:
 
 Test
 ----
-To run the whole testsuite you need to create/activate the venv, and then invoke the make target 'test'.
-You can do this from a clean clone of the repo, no prior actions required, the whole module and all dependencies
-will be compiled and installed into the venv.
+To run the whole testsuite you need to first create/activate the venv:
 
 ``make venv``
+
+then install the test-dependencies:
+
+``make install-test``
+
+And finally run the test-suite:
 
 ``make test``
 

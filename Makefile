@@ -58,7 +58,8 @@ install-test: compile
 	pip3 install .[test]
 
 # TODO: maybe use setup.py test?
-test: install-test
+# --forked, because every test needs a separate process, see PYADPT-100
+test:
 	pytest --forked
 
 
