@@ -6,6 +6,6 @@ build-backend = "setuptools.build_meta"
 minversion = "6.0"
 addopts = ""
 testpaths = [
-    "tests_new",
+    "tests",
 ]
 
