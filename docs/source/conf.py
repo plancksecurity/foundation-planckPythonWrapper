@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('../../src'))
 # -- Project information -----------------------------------------------------
 
 project = "pEpPythonAdapter"
-copyright = "2020, Volker Birk, heck, juga"
-author = "Volker Birk, heck, juga"
+copyright = "2020, Volker Birk, heck, Hartmut Goebel, juga"
+author = "Volker Birk, heck, Hartmut Goebel, juga"
 
 import pEp
 # The full version, including alpha/beta/rc tags

@@ -1,0 +1,9 @@
+# This is the list of pEpPythonAdapter's significant contributors.
+#
+# This does not necessarily list everyone who has contributed code
+# To see the full list of contributors, see the revision history in
+# source control.
+Volker Birk <vb@pep-project.org>
+Heck <heck@pep.foundation>
+Hartmut Goebel <h.goebel@crazy-compilers.com>
+juga <juga@pep.foundation>
