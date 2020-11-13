@@ -4,7 +4,7 @@
 from . import constants
 
 
-def test_msg_enc_dec_roundtrip(pEp, import_ident_alice_as_own_ident, import_ident_bob):
+def test_msg_enc_dec_roundtrip(pEp, model, import_ident_alice_as_own_ident, import_ident_bob):
     alice = import_ident_alice_as_own_ident
     bob = import_ident_bob
 
@@ -26,8 +26,8 @@ def test_msg_enc_dec_roundtrip(pEp, import_ident_alice_as_own_ident, import_iden
     enc_msg = msg.encrypt()
 
     assert enc_msg.enc_format == 3
-    assert str(enc_msg.from_) == constants.ALICE_NAME_ADDR
-    assert str(enc_msg.to[0]) == constants.BOB_NAME_ADDR
+    assert str(enc_msg.from_) == str(model.alice)
+    assert str(enc_msg.to[0]) == str(model.bob)
     assert enc_msg.shortmsg == "p≡p"
     assert enc_msg.longmsg == "this message was encrypted with p≡p https://pEp-project.org"
 
@@ -41,8 +41,8 @@ def test_msg_enc_dec_roundtrip(pEp, import_ident_alice_as_own_ident, import_iden
     assert rating == pEp._pEp.rating.reliable
 
     # The first 2 keys are Alice's ones, the last is Bob's one.
-    assert key_list[0] == key_list[1] == constants.ALICE_FPR
-    assert key_list[-1] == constants.BOB_FPR
+    assert key_list[0] == key_list[1] == model.alice.fpr
+    assert key_list[-1] == model.bob.fpr
     assert dec_msg.shortmsg == constants.SUBJECT
     assert dec_msg.longmsg.replace("\r", "") == msg.longmsg
     dec_lines = str(dec_msg).replace("\r", "").split("\n")
@@ -53,13 +53,13 @@ def test_msg_enc_dec_roundtrip(pEp, import_ident_alice_as_own_ident, import_iden
     # Content-Disposition: is not present anymore.
     # `!` is not replaced by `=21` anymore.
     expected_dec_lines = \
-"""From: Alice Lovelace <alice@openpgp.example>
-To: Bob Babagge <bob@openpgp.example>
+"""From: alice <alice@peptest.org>
+To: bob <bob@peptest.org>
 Subject: This is a subject
 X-pEp-Version: 2.1
 X-EncStatus: reliable
 X-KeyList:
- X,X,D1A66E1A23B182C9980F788CFBFCC82A015E7330
+ X,X,6A9835699EF1215F1558A496D9C1D4B0984094E5
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
@@ -125,13 +125,13 @@ def test_dec_msg_len(pEp, import_ident_alice_as_own_ident, import_ident_bob):
 
     assert dec_msg.longmsg.replace("\r", "") == constants.BODY  # msg.longmsg
     expected_dec_msg = \
-"""From: Alice Lovelace <alice@openpgp.example>\r
-To: Bob Babagge <bob@openpgp.example>\r
+"""From: alice <alice@peptest.org>\r
+To: bob <bob@peptest.org>\r
 Subject: This is a subject\r
 X-pEp-Version: 2.1\r
 X-EncStatus: reliable\r
 X-KeyList: \r
- EB85BB5FA33A75E15E944E63F231550C4F47E38E,EB85BB5FA33A75E15E944E63F231550C4F47E38E,D1A66E1A23B182C9980F788CFBFCC82A015E7330\r
+ 2D35731B9C754564CBAD15D2D18F7444594F2283,2D35731B9C754564CBAD15D2D18F7444594F2283,6A9835699EF1215F1558A496D9C1D4B0984094E5\r
 MIME-Version: 1.0\r
 Content-Type: text/plain\r
 Content-Transfer-Encoding: 7bit\r
@@ -148,9 +148,9 @@ Hi world!\r
     print("len_extra_headers", len_extra_headers)
     assert dec_msg_len - len_extra_headers == msg_len
 
-
+#@pytest.mark.skip(reason="PYADAPT-91")
 def test_null_char_rmed(pEp, import_ident_alice_as_own_ident, import_ident_bob):
-    """Test that null characters and anything after them is removed."""
+    """Test that null characters and anything after them are not removed."""
     alice = import_ident_alice_as_own_ident
     bob = import_ident_bob
 
