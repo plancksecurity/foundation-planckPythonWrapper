@@ -52,13 +52,6 @@ class Identity:
     - is read-only (const)
     """
 
-    __name = ""
-    __user_id = ""
-    __addr = ""
-    __fpr = ""
-    __key_sec = ""
-    __key_pub = ""
-
     def __init__(self, name="", user_id="", addr="", fpr="", key_sec="", key_pub=""):
         self.__name = name
         self.__user_id = user_id
@@ -67,30 +60,29 @@ class Identity:
         self.__key_sec = key_sec
         self.__key_pub = key_pub
 
-    def get_name(self):
+    @property
+    def name(self):
         return self.__name
 
-    def get_user_id(self):
+    @property
+    def user_id(self):
         return self.__user_id
 
-    def get_addr(self):
+    @property
+    def addr(self):
         return self.__addr
 
-    def get_fpr(self):
+    @property
+    def fpr(self):
         return self.__fpr
 
-    def get_key_sec(self):
+    @property
+    def key_sec(self):
         return self.__key_sec
 
-    def get_key_pub(self):
+    @property
+    def key_pub(self):
         return self.__key_pub
-
-    name = property(get_name)
-    user_id = property(get_user_id)
-    addr = property(get_addr)
-    fpr = property(get_fpr)
-    key_sec = property(get_key_sec)
-    key_pub = property(get_key_pub)
 
     def debug(self) -> str:
         ret = "name:" + self.__name
