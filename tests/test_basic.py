@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# This file is under GNU Affero General Public License 3.0
+# see LICENSE.txt
 
 # from . import constants
 import pytest
