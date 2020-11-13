@@ -2,7 +2,7 @@
 # This file is under GNU Affero General Public License 3.0
 # see LICENSE.txt
 
-# from . import utils
+from . import utils
 
 import pytest
 
@@ -45,8 +45,13 @@ identities = \
         }
     }
 
-# An Identity class that is read-only (const)
 class Identity:
+    """
+    An Identity class that is:
+    - can represent pEp.Identity
+    - is read-only (const)
+    """
+
     __name = ""
     __user_id = ""
     __addr = ""

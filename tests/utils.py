@@ -2,7 +2,7 @@
 # This file is under GNU Affero General Public License 3.0
 # see LICENSE.txt
 
-# from . import constants
+from . import constants
 
 import pathlib
 
