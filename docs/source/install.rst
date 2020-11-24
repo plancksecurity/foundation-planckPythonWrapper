@@ -48,7 +48,7 @@ Virtualenv
 We recommend using a venv to work on/with the pEpPythonAdapter.
 There is a convenience make target that will create and activate a venv that already has the LD_LIBRARY_PATH
 or DYLD_LIBRARY_PATH set according to your ``local.conf``.
-If the venv does not yet it will be created and activated.
+If the venv does not exist yet it will be created and activated.
 If the venv already exists it will only be activated.
 
 ``make venv``
