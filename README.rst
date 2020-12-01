@@ -12,7 +12,7 @@ Issues
 ------
 If you are not pEp internal, please send a mail to: heck@pep.foundation
 
-If you are pEp internal, please open a ticket in our `jira bugtracker <https://pep.foundation/jira/projects/PYADPT/) and for any questions, you are always welome on #adapter>`_.
+If you are pEp internal, please open a ticket in our `jira bugtracker <https://pep.foundation/jira/projects/PYADPT/)`_ and for any questions, you are always welcome on #adapter>.
 
 
 License
