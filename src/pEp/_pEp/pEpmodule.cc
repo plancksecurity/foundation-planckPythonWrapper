@@ -189,7 +189,7 @@ namespace pEp {
                 boost::locale::generator gen;
                 std::locale::global(gen(""));
 
-//    _scope = new scope();
+
                 scope().attr("about") = about();
                 scope().attr("per_user_directory") = per_user_directory();
                 scope().attr("per_machine_directory") = per_machine_directory();

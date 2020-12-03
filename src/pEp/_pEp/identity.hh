@@ -100,12 +100,12 @@ namespace pEp {
             void disable_for_sync();
         };
 
-        class Myself : public Identity {
-        public:
-            Myself(string address, string username, string user_id = "", string lang = "");
-
-            virtual void update();
-        };
+//        class Myself : public Identity {
+//        public:
+//            Myself(string address, string username, string user_id = "", string lang = "");
+//
+//            virtual void update();
+//        };
 
         Identity identity_attr(pEp_identity *&ident);
 

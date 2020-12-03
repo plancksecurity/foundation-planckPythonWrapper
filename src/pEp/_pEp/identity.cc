@@ -166,28 +166,28 @@ namespace pEp {
             _throw_status(status);
         }
 
-        Myself::Myself(string address, string username, string user_id, string lang)
-                : Identity(address, username, user_id, "", 0, lang) {
-            if (!(address.length() && username.length()))
-                throw invalid_argument("address and username must be set");
-            if (lang.length() && lang.length() != 2)
-                throw length_error("lang must be an ISO 639-1 language code or empty");
+//        Myself::Myself(string address, string username, string user_id, string lang)
+//                : Identity(address, username, user_id, "", 0, lang) {
+//            if (!(address.length() && username.length()))
+//                throw invalid_argument("address and username must be set");
+//            if (lang.length() && lang.length() != 2)
+//                throw length_error("lang must be an ISO 639-1 language code or empty");
+//
+//            // FIXME: should set .me
+//            // _ident->me = true;
+//            if (user_id.length())
+//                throw runtime_error("user_id feature not yet implemented for Myself");
+//        }
 
-            // FIXME: should set .me
-            // _ident->me = true;
-            if (user_id.length())
-                throw runtime_error("user_id feature not yet implemented for Myself");
-        }
-
-        void Myself::update() {
-            pEp::PythonAdapter::myself(*this);
-        }
+//        void Myself::update() {
+//            pEp::PythonAdapter::myself(*this);
+//        }
 
         Identity identity_attr(pEp_identity *&ident) {
             if (!ident)
                 throw out_of_range("no identity assigned");
 
-            pEp_identity *_dup = identity_dup(ident);
+            pEp_identity *_dup = ::identity_dup(ident);
             if (!_dup)
                 throw bad_alloc();
 
@@ -200,9 +200,9 @@ namespace pEp {
             pEp_identity *_dup = ::identity_dup(_ident);
             if (!_dup)
                 throw bad_alloc();
-            PEP_STATUS status = update_identity(Adapter::session(), _dup);
+            PEP_STATUS status = ::update_identity(Adapter::session(), _dup);
             _throw_status(status);
-            free_identity(ident);
+            ::free_identity(ident);
             ident = _dup;
         }
 
@@ -220,7 +220,7 @@ namespace pEp {
         }
 
         void identitylist_attr(identity_list *&il, boost::python::list value) {
-            identity_list *_il = new_identity_list(NULL);
+            identity_list *_il = ::new_identity_list(NULL);
             if (!_il)
                 throw bad_alloc();
 
@@ -233,22 +233,22 @@ namespace pEp {
                 pEp_identity *_ident = extract_identity();
                 pEp_identity *_dup = ::identity_dup(_ident);
                 if (!_dup) {
-                    free_identity_list(_il);
+                    ::free_identity_list(_il);
                     throw bad_alloc();
                 }
-                PEP_STATUS status = update_identity(Adapter::session(), _dup);
+                PEP_STATUS status = ::update_identity(Adapter::session(), _dup);
                 if (status != PEP_STATUS_OK) {
-                    free_identity_list(_il);
+                    ::free_identity_list(_il);
                     _throw_status(status);
                 }
-                _i = identity_list_add(_i, _dup);
+                _i = ::identity_list_add(_i, _dup);
                 if (!_i) {
-                    free_identity_list(_il);
+                    ::free_identity_list(_il);
                     throw bad_alloc();
                 }
             }
 
-            free_identity_list(il);
+            ::free_identity_list(il);
             il = _il;
         }
 
