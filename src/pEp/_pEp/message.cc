@@ -23,14 +23,14 @@ namespace pEp {
         using namespace std;
         using namespace boost::python;
 
-        Message::Blob::Blob(bloblist_t *bl, bool chained) :
+        Message::Blob::Blob(::bloblist_t *bl, bool chained) :
                 _bl(bl), part_of_chain(chained) {
             if (!_bl)
                 throw bad_alloc();
         }
 
         Message::Blob::Blob(object data, string mime_type, string filename) :
-                _bl(new_bloblist(NULL, 0, NULL, NULL)), part_of_chain(false) {
+                _bl(::new_bloblist(NULL, 0, NULL, NULL)), part_of_chain(false) {
             if (!_bl)
                 throw bad_alloc();
 
@@ -89,7 +89,7 @@ namespace pEp {
         }
 
         int Message::Blob::getbuffer(PyObject *self, Py_buffer *view, int flags) {
-            bloblist_t *bl = NULL;
+            ::bloblist_t *bl = NULL;
 
             try {
                 Message::Blob &blob = extract<Message::Blob &>(self);
@@ -130,7 +130,7 @@ namespace pEp {
         PyBufferProcs Message::Blob::bp = {getbuffer, NULL};
 
         Message::Message(int dir, Identity *from)
-                : _msg(new_message((PEP_msg_direction) dir), &free_message) {
+                : _msg(new_message((::PEP_msg_direction) dir), &::free_message) {
             if (!_msg)
                 throw bad_alloc();
 
@@ -138,35 +138,35 @@ namespace pEp {
                 _msg->from = ::identity_dup(*from);
                 if (!_msg->from)
                     throw bad_alloc();
-                _msg->dir = (PEP_msg_direction) dir;
+                _msg->dir = (::PEP_msg_direction) dir;
             }
         }
 
         Message::Message(string mimetext)
-                : _msg(NULL, &free_message) {
+                : _msg(NULL, &::free_message) {
             message *_cpy;
-            PEP_STATUS status = mime_decode_message(mimetext.c_str(),
+            ::PEP_STATUS status = ::mime_decode_message(mimetext.c_str(),
                                                     mimetext.size(), &_cpy, NULL);
             switch (status) {
-                case PEP_STATUS_OK:
+                case ::PEP_STATUS_OK:
                     if (_cpy)
-                        _cpy->dir = PEP_dir_outgoing;
+                        _cpy->dir = ::PEP_dir_outgoing;
                     else
-                        _cpy = new_message(PEP_dir_outgoing);
+                        _cpy = new_message(::PEP_dir_outgoing);
 
                     if (!_cpy)
                         throw bad_alloc();
 
-                    _msg = shared_ptr<message>(_cpy);
+                    _msg = shared_ptr<::message>(_cpy);
                     break;
 
-                case PEP_BUFFER_TOO_SMALL:
+                case ::PEP_BUFFER_TOO_SMALL:
                     throw runtime_error("mime_decode_message: buffer too small");
 
-                case PEP_CANNOT_CREATE_TEMP_FILE:
+                case ::PEP_CANNOT_CREATE_TEMP_FILE:
                     throw runtime_error("mime_decode_message: cannot create temp file");
 
-                case PEP_OUT_OF_MEMORY:
+                case ::PEP_OUT_OF_MEMORY:
                     throw bad_alloc();
 
                 default:
@@ -182,8 +182,8 @@ namespace pEp {
                 throw bad_alloc();
         }
 
-        Message::Message(message *msg)
-                : _msg(::message_dup(msg), &free_message) {
+        Message::Message(::message *msg)
+                : _msg(::message_dup(msg), &::free_message) {
 
         }
 
@@ -191,11 +191,11 @@ namespace pEp {
 
         }
 
-        Message::operator message *() {
+        Message::operator ::message *() {
             return _msg.get();
         }
 
-        Message::operator const message *() const {
+        Message::operator const ::message *() const {
             return _msg.get();
         }
 
@@ -206,20 +206,20 @@ namespace pEp {
             char *mimetext;
             string result;
 
-            PEP_STATUS status = mime_encode_message(*this, false, &mimetext, false);
+            ::PEP_STATUS status = ::mime_encode_message(*this, false, &mimetext, false);
             switch (status) {
-                case PEP_STATUS_OK:
+                case ::PEP_STATUS_OK:
                     result = mimetext;
                     free(mimetext);
                     break;
 
-                case PEP_BUFFER_TOO_SMALL:
+                case ::PEP_BUFFER_TOO_SMALL:
                     throw runtime_error("mime_encode_message: buffer too small");
 
-                case PEP_CANNOT_CREATE_TEMP_FILE:
+                case ::PEP_CANNOT_CREATE_TEMP_FILE:
                     throw runtime_error("mime_encode_message: cannot create temp file");
 
-                case PEP_OUT_OF_MEMORY:
+                case ::PEP_OUT_OF_MEMORY:
                     throw bad_alloc();
 
                 default:
@@ -240,7 +240,7 @@ namespace pEp {
         boost::python::tuple Message::attachments() {
             boost::python::list l;
 
-            for (bloblist_t *bl = _msg->attachments; bl && bl->value; bl =
+            for (::bloblist_t *bl = _msg->attachments; bl && bl->value; bl =
                                                                               bl->next) {
                 l.append(Blob(bl, true));
             }
@@ -249,11 +249,11 @@ namespace pEp {
         }
 
         void Message::attachments(boost::python::list value) {
-            bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL);
+            ::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL);
             if (!bl)
                 throw bad_alloc();
 
-            bloblist_t *_l = bl;
+            ::bloblist_t *_l = bl;
             for (int i = 0; i < len(value); i++) {
                 Message::Blob &blob = extract<Message::Blob &>(value[i]);
                 _l = bloblist_add(_l, blob._bl->value, blob._bl->size,
@@ -262,7 +262,7 @@ namespace pEp {
                     for (_l = bl; _l && _l->value;) {
                         free(_l->mime_type);
                         free(_l->filename);
-                        bloblist_t *_ll = _l;
+                        ::bloblist_t *_ll = _l;
                         _l = _l->next;
                         free(_ll);
                     }
@@ -286,12 +286,12 @@ namespace pEp {
 
         Message Message::encrypt() {
             boost::python::list extra;
-            return encrypt_message(*this, extra, PEP_enc_PGP_MIME, 0);
+            return encrypt_message(*this, extra, ::PEP_enc_PGP_MIME, 0);
         }
 
         Message Message::_encrypt(boost::python::list extra, int enc_format, int flags) {
             if (!enc_format)
-                enc_format = PEP_enc_PGP_MIME;
+                enc_format = ::PEP_enc_PGP_MIME;
             return encrypt_message(*this, extra, enc_format, flags);
         }
 
@@ -299,8 +299,8 @@ namespace pEp {
             return pEp::PythonAdapter::decrypt_message(*this, flags);
         }
 
-        PEP_rating Message::outgoing_rating() {
-            if (_msg->dir != PEP_dir_outgoing)
+        ::PEP_rating Message::outgoing_rating() {
+            if (_msg->dir != ::PEP_dir_outgoing)
                 throw invalid_argument("Message.dir must be outgoing");
 
             if (from().address() == "")
@@ -311,22 +311,22 @@ namespace pEp {
             if (len(to()) + len(cc()) == 0)
                 throw invalid_argument("either to or cc needed");
 
-            PEP_STATUS status = myself(Adapter::session(), _msg->from);
+            ::PEP_STATUS status = myself(Adapter::session(), _msg->from);
             _throw_status(status);
 
-            PEP_rating rating = PEP_rating_undefined;
+            ::PEP_rating rating = ::PEP_rating_undefined;
             status = outgoing_message_rating(Adapter::session(), *this, &rating);
             _throw_status(status);
 
             return rating;
         }
 
-        PEP_color Message::outgoing_color() {
+        ::PEP_color Message::outgoing_color() {
             return _color(outgoing_rating());
         }
 
         Message Message::copy() {
-            message *dup = message_dup(*this);
+            ::message *dup = ::message_dup(*this);
             if (!dup)
                 throw bad_alloc();
             return Message(dup);
@@ -341,14 +341,14 @@ namespace pEp {
                 throw runtime_error("at least address and user_id of own user needed");
 
             ::myself(Adapter::session(), me);
-            auto m = Message(PEP_dir_outgoing, &me);
+            auto m = Message(::PEP_dir_outgoing, &me);
             return m;
         }
 
         static object update(Identity ident) {
             if (ident.address().empty())
                 throw runtime_error("at least address needed");
-            update_identity(Adapter::session(), ident);
+            ::update_identity(Adapter::session(), ident);
             return object(ident);
         }
 
@@ -362,7 +362,7 @@ namespace pEp {
 
         Message incoming_message(string mime_text) {
             auto m = Message(mime_text);
-            m.dir(PEP_dir_incoming);
+            m.dir(::PEP_dir_incoming);
 
             try {
                 m.from(update(m.from()));

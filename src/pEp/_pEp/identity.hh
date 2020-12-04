@@ -30,22 +30,22 @@ namespace pEp {
 
         class Identity {
         protected:
-            shared_ptr <pEp_identity> _ident;
+            shared_ptr <::pEp_identity> _ident;
 
         public:
             Identity(string address = "", string username = "",
                      string user_id = "", string fpr = "", int comm_type = 0,
-                     string lang = "", identity_flags_t flags = 0);
+                     string lang = "", ::identity_flags_t flags = 0);
 
             Identity(const Identity &second);
 
-            Identity(pEp_identity *ident);
+            Identity(::pEp_identity *ident);
 
             virtual ~Identity();
 
-            operator pEp_identity *();
+            operator ::pEp_identity *();
 
-            operator const pEp_identity *() const;
+            operator const ::pEp_identity *() const;
 
             string _repr();
 
@@ -67,21 +67,21 @@ namespace pEp {
 
             void username(string value);
 
-            PEP_comm_type comm_type() { return _ident->comm_type; }
+            ::PEP_comm_type comm_type() { return _ident->comm_type; }
 
-            void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
+            void comm_type(::PEP_comm_type value) { _ident->comm_type = value; };
 
             std::string lang();
 
             void lang(std::string value);
 
-            identity_flags_t flags() { return _ident->flags; }
+            ::identity_flags_t flags() { return _ident->flags; }
 
-            void flags(identity_flags_t flags) { _ident->flags = flags; }
+            void flags(::identity_flags_t flags) { _ident->flags = flags; }
 
             int rating();
 
-            PEP_color color();
+            ::PEP_color color();
 
             Identity copy();
 
@@ -107,13 +107,13 @@ namespace pEp {
 //            virtual void update();
 //        };
 
-        Identity identity_attr(pEp_identity *&ident);
+        Identity identity_attr(::pEp_identity *&ident);
 
-        void identity_attr(pEp_identity *&ident, object value);
+        void identity_attr(::pEp_identity *&ident, object value);
 
-        boost::python::list identitylist_attr(identity_list *&il);
+        boost::python::list identitylist_attr(::identity_list *&il);
 
-        void identitylist_attr(identity_list *&il, boost::python::list value);
+        void identitylist_attr(::identity_list *&il, boost::python::list value);
 
     } // namespace PythonAdapter
 } // namespace pEp

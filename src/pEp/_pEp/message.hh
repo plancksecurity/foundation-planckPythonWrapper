@@ -34,11 +34,11 @@ namespace pEp {
             // one depending on part_of_chain
 
             class Blob {
-                bloblist_t *_bl;
+                ::bloblist_t *_bl;
                 bool part_of_chain;
 
             public:
-                Blob(bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL),
+                Blob(::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL),
                      bool chained = false);
 
                 Blob(object data, string mime_type = "", string filename = "");
@@ -71,27 +71,27 @@ namespace pEp {
                 static int getbuffer(PyObject *self, Py_buffer *view, int flags);
             };
 
-            Message(int dir = PEP_dir_outgoing, Identity *from = NULL);
+            Message(int dir = ::PEP_dir_outgoing, Identity *from = NULL);
 
             Message(string mimetext);
 
             Message(const Message &second);
 
-            Message(message *msg);
+            Message(::message *msg);
 
             ~Message();
 
-            operator message *();
+            operator ::message *();
 
-            operator const message *() const;
+            operator const ::message *() const;
 
             string _str();
 
             string _repr();
 
-            PEP_msg_direction dir() { return _msg->dir; }
+            ::PEP_msg_direction dir() { return _msg->dir; }
 
-            void dir(PEP_msg_direction value) { _msg->dir = value; }
+            void dir(::PEP_msg_direction value) { _msg->dir = value; }
 
             string id() { return str_attr(_msg->id); }
 
@@ -165,9 +165,9 @@ namespace pEp {
 
             void opt_fields(dict value) { return strdict_attr(_msg->opt_fields, value); }
 
-            PEP_enc_format enc_format() { return _msg->enc_format; }
+            ::PEP_enc_format enc_format() { return _msg->enc_format; }
 
-            void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
+            void enc_format(::PEP_enc_format value) { _msg->enc_format = value; }
 
             Message encrypt();
 
@@ -175,9 +175,9 @@ namespace pEp {
 
             boost::python::tuple decrypt(int flags = 0);
 
-            PEP_rating outgoing_rating();
+            ::PEP_rating outgoing_rating();
 
-            PEP_color outgoing_color();
+            ::PEP_color outgoing_color();
 
             Message deepcopy(dict &memo);
 

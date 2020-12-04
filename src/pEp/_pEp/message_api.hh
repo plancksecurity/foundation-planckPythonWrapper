@@ -18,7 +18,7 @@ namespace pEp {
 
         boost::python::tuple decrypt_message(Message src, int flags = 0);
 
-        PEP_color _color(int rating);
+        ::PEP_color _color(int rating);
 
         object sync_search(string name);
 

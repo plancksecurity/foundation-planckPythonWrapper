@@ -40,22 +40,22 @@ namespace pEp {
                 throw bad_alloc();
         }
 
-        time_t timestamp_attr(timestamp *&ts) {
+        time_t timestamp_attr(::timestamp *&ts) {
             if (!ts)
                 return 0;
 
             return timegm(ts);
         }
 
-        void timestamp_attr(timestamp *&ts, time_t value) {
+        void timestamp_attr(::timestamp *&ts, time_t value) {
             free_timestamp(ts);
-            ts = new_timestamp(value);
+            ts = ::new_timestamp(value);
         }
 
-        boost::python::list strlist_attr(stringlist_t *&sl) {
+        boost::python::list strlist_attr(::stringlist_t *&sl) {
             boost::python::list result;
 
-            for (stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
+            for (::stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s(_sl->value);
                 result.append(object(s));
             }
@@ -63,12 +63,12 @@ namespace pEp {
             return result;
         }
 
-        void strlist_attr(stringlist_t *&sl, boost::python::list value) {
-            stringlist_t *_sl = new_stringlist(NULL);
+        void strlist_attr(::stringlist_t *&sl, boost::python::list value) {
+            ::stringlist_t *_sl = ::new_stringlist(NULL);
             if (!_sl)
                 throw bad_alloc();
 
-            stringlist_t *_s = _sl;
+            ::stringlist_t *_s = _sl;
             for (int i = 0; i < len(value); i++) {
                 extract <string> extract_string(value[i]);
                 if (!extract_string.check()) {
@@ -87,12 +87,12 @@ namespace pEp {
             sl = _sl;
         }
 
-        dict strdict_attr(stringpair_list_t *&spl) {
+        dict strdict_attr(::stringpair_list_t *&spl) {
             dict result;
 
-            for (stringpair_list_t *_spl = spl; _spl && _spl->value; _spl =
+            for (::stringpair_list_t *_spl = spl; _spl && _spl->value; _spl =
                                                                              _spl->next) {
-                stringpair_t *p = _spl->value;
+                ::stringpair_t *p = _spl->value;
                 if (p->key && p->value) {
                     string key(p->key);
                     string value(p->value);
@@ -104,12 +104,12 @@ namespace pEp {
             return result;
         }
 
-        void strdict_attr(stringpair_list_t *&spl, dict value) {
-            stringpair_list_t *_spl = new_stringpair_list(NULL);
+        void strdict_attr(::stringpair_list_t *&spl, dict value) {
+            ::stringpair_list_t *_spl = ::new_stringpair_list(NULL);
             if (!_spl)
                 throw bad_alloc();
 
-            stringpair_list_t *_s = _spl;
+            ::stringpair_list_t *_s = _spl;
             for (int i = 0; i < len(value); i++) {
                 extract <string> extract_key(value.keys()[i]);
                 extract <string> extract_value(value.values()[i]);
@@ -121,7 +121,7 @@ namespace pEp {
                 key = normalize(key, norm_nfc);
                 string _value = extract_value();
                 _value = normalize(_value, norm_nfc);
-                stringpair_t *pair = new_stringpair(key.c_str(), _value.c_str());
+                ::stringpair_t *pair = ::new_stringpair(key.c_str(), _value.c_str());
                 if (!pair) {
                     free_stringpair_list(_spl);
                     throw bad_alloc();
@@ -137,12 +137,12 @@ namespace pEp {
             spl = _spl;
         }
 
-        stringlist_t *to_stringlist(boost::python::list l) {
-            stringlist_t *result = new_stringlist(NULL);
+        ::stringlist_t *to_stringlist(boost::python::list l) {
+            ::stringlist_t *result = ::new_stringlist(NULL);
             if (!result)
                 throw bad_alloc();
 
-            stringlist_t *_s = result;
+            ::stringlist_t *_s = result;
             for (int i = 0; i < len(l); i++) {
                 extract <string> extract_string(l[i]);
                 if (!extract_string.check())
@@ -158,9 +158,9 @@ namespace pEp {
             return result;
         }
 
-        boost::python::list from_stringlist(const stringlist_t *sl) {
+        boost::python::list from_stringlist(const ::stringlist_t *sl) {
             boost::python::list result;
-            for (const stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
+            for (const ::stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s = _sl->value;
                 result.append(s);
             }

@@ -24,7 +24,7 @@ namespace pEp {
             PEP_OWN_USERID
             "' may only be used for own identities");
 
-            PEP_STATUS status = update_identity(Adapter::session(), ident);
+            ::PEP_STATUS status = ::update_identity(Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -37,7 +37,7 @@ namespace pEp {
             if (ident.user_id() == "")
                 ident.user_id(ident.address());
 
-            PEP_STATUS status = myself(Adapter::session(), ident);
+            ::PEP_STATUS status = ::myself(Adapter::session(), ident);
             _throw_status(status);
         }
 
@@ -50,7 +50,7 @@ namespace pEp {
 
             char *words = NULL;
             size_t size = 0;
-            PEP_STATUS status = get_trustwords(Adapter::session(), me, partner,
+            ::PEP_STATUS status = ::get_trustwords(Adapter::session(), me, partner,
                                                lang.c_str(), &words, &size, full);
             _throw_status(status);
             return words;
@@ -62,27 +62,27 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id must be provided");
 
-            PEP_STATUS status = trust_personal_key(Adapter::session(), ident);
+            ::PEP_STATUS status = ::trust_personal_key(Adapter::session(), ident);
             _throw_status(status);
         }
 
-        void set_identity_flags(Identity ident, identity_flags_t flags) {
+        void set_identity_flags(Identity ident, ::identity_flags_t flags) {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = set_identity_flags(Adapter::session(), ident, flags);
+            ::PEP_STATUS status = ::set_identity_flags(Adapter::session(), ident, flags);
             _throw_status(status);
         }
 
-        void unset_identity_flags(Identity ident, identity_flags_t flags) {
+        void unset_identity_flags(Identity ident, ::identity_flags_t flags) {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = unset_identity_flags(Adapter::session(), ident, flags);
+            ::PEP_STATUS status = ::unset_identity_flags(Adapter::session(), ident, flags);
             _throw_status(status);
         }
 
@@ -94,33 +94,33 @@ namespace pEp {
             if (ident.user_id() == "")
                 throw invalid_argument("user_id needed");
 
-            PEP_STATUS status = key_reset_trust(Adapter::session(), ident);
+            ::PEP_STATUS status = ::key_reset_trust(Adapter::session(), ident);
             _throw_status(status);
         }
 
 
         boost::python::list import_key(string key_data) {
             ::identity_list *private_keys = NULL;
-            PEP_STATUS status = ::import_key(Adapter::session(), key_data.c_str(), key_data.size(), &private_keys);
-            if (status && status != PEP_KEY_IMPORTED)
+            ::PEP_STATUS status = ::import_key(Adapter::session(), key_data.c_str(), key_data.size(), &private_keys);
+            if (status && status != ::PEP_KEY_IMPORTED)
                 _throw_status(status);
 
             auto result = boost::python::list();
             for (::identity_list *il = private_keys; il && il->ident; il = il->next) {
                 ::pEp_identity *ident = ::identity_dup(il->ident);
                 if (!ident) {
-                    free_identity_list(private_keys);
+                    ::free_identity_list(private_keys);
                     throw bad_alloc();
                 }
                 result.append(Identity(ident));
             }
 
-            free_identity_list(private_keys);
+            ::free_identity_list(private_keys);
             return result;
         }
 
         string export_key(Identity ident) {
-            PEP_STATUS status = PEP_STATUS_OK;
+            ::PEP_STATUS status = ::PEP_STATUS_OK;
             char *key_data = NULL;
             size_t size;
             status = ::export_key(Adapter::session(), ident.fpr().c_str(), &key_data, &size);
@@ -130,7 +130,7 @@ namespace pEp {
         }
 
         string export_secret_key(Identity ident) {
-            PEP_STATUS status = PEP_STATUS_OK;
+            ::PEP_STATUS status = ::PEP_STATUS_OK;
             char *key_data = NULL;
             size_t size;
             status = ::export_secret_key(Adapter::session(), ident.fpr().c_str(), &key_data, &size);
@@ -151,7 +151,7 @@ namespace pEp {
 
 
             const char *fpr_c = fpr.c_str();
-            PEP_STATUS status = set_own_key(Adapter::session(), ident, fpr_c);
+            ::PEP_STATUS status = ::set_own_key(Adapter::session(), ident, fpr_c);
             _throw_status(status);
         }
 

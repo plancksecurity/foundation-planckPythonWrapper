@@ -27,9 +27,9 @@ namespace pEp {
         UserInterface_callback::UserInterface_callback(PyObject *self) :
                 UserInterface(), _self(self) {
 //    adapter.ui_object(self);
-//    PEP_STATUS status = ::register_sync_callbacks(Adapter::session(),
+//    ::PEP_STATUS status = ::register_sync_callbacks(Adapter::session(),
 //            (void *) this, _notifyHandshake, retrieve_next_sync_event);
-//    assert(status == PEP_STATUS_OK);
+//    assert(status == ::PEP_STATUS_OK);
 //    if (status)
 //        _throw_status(status);
         }
@@ -38,7 +38,7 @@ namespace pEp {
 //    ::unregister_sync_callbacks(Adapter::session());
         }
 
-        PEP_STATUS UserInterface::_notifyHandshake(
+        ::PEP_STATUS UserInterface::_notifyHandshake(
                 pEp_identity *me, pEp_identity *partner,
                 sync_handshake_signal signal
         ) {
@@ -48,7 +48,7 @@ namespace pEp {
             auto that = dynamic_cast< UserInterface_callback * >(_ui);
             that->notifyHandshake(Identity(me), Identity(partner), signal);
 
-            return PEP_STATUS_OK;
+            return ::PEP_STATUS_OK;
         }
 
         void UserInterface::deliverHandshakeResult(int result, object identities) {
@@ -73,7 +73,7 @@ namespace pEp {
                 }
             }
 
-            PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(),
+            ::PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(),
                                                          (sync_handshake_result) result, shared_identities);
             free_identity_list(shared_identities);
             _throw_status(status);
@@ -82,7 +82,7 @@ namespace pEp {
 //PEP_rating UserInterface::get_key_rating_for_user(string user_id, string fpr)
 //{
 //    PEP_rating result;
-//    PEP_STATUS status =
+//    ::PEP_STATUS status =
 //        ::get_key_rating_for_user(Adapter::session(),
 //                user_id.c_str(), fpr.c_str(), &result);
 //    _throw_status(status);

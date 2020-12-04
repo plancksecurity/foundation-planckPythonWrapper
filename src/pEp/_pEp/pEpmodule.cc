@@ -37,7 +37,7 @@ namespace pEp {
             pEpLog("called");
         }
 
-// hidden init function, wrapped by hello_world.init()
+        // hidden init function, wrapped by hello_world.init()
         void _init_after_main_module() {
             pEpLog("called");
             callback_dispatcher.add(_messageToSend, notifyHandshake, nullptr, nullptr);
@@ -57,8 +57,7 @@ namespace pEp {
             if (user_id == "")
                 throw invalid_argument("user_id required");
 
-            PEP_STATUS status = ::key_reset_user(Adapter::session(),
-                                                 user_id.c_str(), fpr != "" ? fpr.c_str() : nullptr);
+            ::PEP_STATUS status = ::key_reset_user(Adapter::session(), user_id.c_str(), fpr != "" ? fpr.c_str() : nullptr);
             _throw_status(status);
         }
 
@@ -67,7 +66,7 @@ namespace pEp {
         }
 
         void key_reset_all_own_keys() {
-            PEP_STATUS status = ::key_reset_all_own_keys(Adapter::session());
+            ::PEP_STATUS status = ::key_reset_all_own_keys(Adapter::session());
             _throw_status(status);
         }
 
@@ -77,14 +76,14 @@ namespace pEp {
             return version;
         }
 
-        void _throw_status(PEP_STATUS status) {
-            if (status == PEP_STATUS_OK)
+        void _throw_status(::PEP_STATUS status) {
+            if (status == ::PEP_STATUS_OK)
                 return;
             if (status >= 0x400 && status <= 0x4ff)
                 return;
-            if (status == PEP_OUT_OF_MEMORY)
+            if (status == ::PEP_OUT_OF_MEMORY)
                 throw bad_alloc();
-            if (status == PEP_ILLEGAL_VALUE)
+            if (status == ::PEP_ILLEGAL_VALUE)
                 throw invalid_argument("illegal value");
 
             if (string(pEp_status_to_string(status)) == "unknown status code") {
@@ -96,7 +95,7 @@ namespace pEp {
             }
         }
 
-        PEP_STATUS _messageToSend(::message *msg) {
+        ::PEP_STATUS _messageToSend(::message *msg) {
             pEpLog("called");
             try {
                 PyGILState_STATE gil = PyGILState_Ensure();
@@ -108,10 +107,10 @@ namespace pEp {
                 pEpLog("GIL released");
             } catch (exception &e) {}
 
-            return PEP_STATUS_OK;
+            return ::PEP_STATUS_OK;
         }
 
-        PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal) {
+        ::PEP_STATUS notifyHandshake(::pEp_identity *me, ::pEp_identity *partner, ::sync_handshake_signal signal) {
             pEpLog("called");
             try {
                 PyGILState_STATE gil = PyGILState_Ensure();
@@ -123,7 +122,7 @@ namespace pEp {
                 pEpLog("GIL released");
             } catch (exception &e) {}
 
-            return PEP_STATUS_OK;
+            return ::PEP_STATUS_OK;
         }
 
 
@@ -154,26 +153,26 @@ namespace pEp {
         void deliverHandshakeResult(int result, object identities) {
             identity_list *shared_identities = nullptr;
             if (identities != boost::python::api::object() && boost::python::len(identities)) {
-                shared_identities = new_identity_list(nullptr);
+                shared_identities = ::new_identity_list(nullptr);
                 if (!shared_identities)
                     throw bad_alloc();
 
                 try {
-                    identity_list *si = shared_identities;
+                    ::identity_list *si = shared_identities;
                     for (int i = 0; i < boost::python::len(identities); ++i) {
                         Identity ident = extract<Identity>(identities[i]);
-                        si = identity_list_add(si, ident);
+                        si = ::identity_list_add(si, ident);
                         if (!si)
                             throw bad_alloc();
                     }
                 }
                 catch (exception &ex) {
-                    free_identity_list(shared_identities);
+                    ::free_identity_list(shared_identities);
                     throw ex;
                 }
             }
 
-            PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(), (sync_handshake_result) result, shared_identities);
+            ::PEP_STATUS status = ::deliverHandshakeResult(Adapter::session(), (::sync_handshake_result) result, shared_identities);
             free_identity_list(shared_identities);
             _throw_status(status);
         }
@@ -191,10 +190,10 @@ namespace pEp {
 
 
                 scope().attr("about") = about();
-                scope().attr("per_user_directory") = per_user_directory();
-                scope().attr("per_machine_directory") = per_machine_directory();
-                scope().attr("engine_version") = get_engine_version();
-                scope().attr("protocol_version") = get_protocol_version();
+                scope().attr("per_user_directory") = ::per_user_directory();
+                scope().attr("per_machine_directory") = ::per_machine_directory();
+                scope().attr("engine_version") = ::get_engine_version();
+                scope().attr("protocol_version") = ::get_protocol_version();
 
                 def("passive_mode", config_passive_mode,
                 "do not attach pub keys to all messages");
@@ -287,13 +286,13 @@ namespace pEp {
                 .add_property("comm_type", (int(Identity::*)())
                 (PEP_comm_type(Identity::*)()) &Identity::comm_type,
                 (void(Identity::*)(int))
-                (void(Identity::*)(PEP_comm_type)) &Identity::comm_type,
+                (void(Identity::*)(::PEP_comm_type)) &Identity::comm_type,
                 "communication type, first rating level (p≡p internal)")
                 .add_property("lang", (string(Identity::*)()) &Identity::lang,
                 (void(Identity::*)(string)) &Identity::lang,
                 "ISO 639-1 language code")
                 .add_property("flags", (identity_flags_t(Identity::*)()) &Identity::flags,
-                (void(Identity::*)(identity_flags_t)) &Identity::flags,
+                (void(Identity::*)(::identity_flags_t)) &Identity::flags,
                 "flags (p≡p internal)")
                 .add_property("rating", &Identity::rating, "rating of Identity")
                 .add_property("color", &Identity::color, "color of Identity as PEP_color")
@@ -419,7 +418,7 @@ namespace pEp {
                 .add_property("enc_format", (int(Message::*)())
                 (PEP_enc_format(Message::*)()) &Message::enc_format,
                 (void(Message::*)(int))
-                (void(Message::*)(PEP_enc_format)) &Message::enc_format,
+                (void(Message::*)(::PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
                 .def("encrypt", (Message(Message::*)())&Message::encrypt)
                 .def("encrypt", (Message(Message::*)(boost::python::list))&Message::_encrypt)
@@ -470,10 +469,10 @@ namespace pEp {
                 "mark a key as trusted with a person\n"
                 );
 
-                enum_<identity_flags>("identity_flags")
-                .value("PEP_idf_not_for_sync", PEP_idf_not_for_sync)
-                .value("PEP_idf_list", PEP_idf_list)
-                .value("PEP_idf_devicegroup", PEP_idf_devicegroup);
+                enum_<::identity_flags>("identity_flags")
+                .value("PEP_idf_not_for_sync", ::PEP_idf_not_for_sync)
+                .value("PEP_idf_list", ::PEP_idf_list)
+                .value("PEP_idf_devicegroup", ::PEP_idf_devicegroup);
 
                 def("set_identity_flags", &set_identity_flags,
                 "set_identity_flags(ident, flags)\n"
@@ -529,25 +528,25 @@ namespace pEp {
 
                 // message API
 
-                enum_<PEP_rating>("rating")
-                .value("_undefined", PEP_rating_undefined)
-                .value("cannot_decrypt", PEP_rating_cannot_decrypt)
-                .value("have_no_key", PEP_rating_have_no_key)
-                .value("unencrypted", PEP_rating_unencrypted)
-                .value("unreliable", PEP_rating_unreliable)
-                .value("reliable", PEP_rating_reliable)
-                .value("trusted", PEP_rating_trusted)
-                .value("trusted_and_anonymized", PEP_rating_trusted_and_anonymized)
-                .value("fully_anonymous", PEP_rating_fully_anonymous)
-                .value("mistrust", PEP_rating_mistrust)
-                .value("b0rken", PEP_rating_b0rken)
-                .value("under_attack", PEP_rating_under_attack);
+                enum_<::PEP_rating>("rating")
+                .value("_undefined", ::PEP_rating_undefined)
+                .value("cannot_decrypt", ::PEP_rating_cannot_decrypt)
+                .value("have_no_key", ::PEP_rating_have_no_key)
+                .value("unencrypted", ::PEP_rating_unencrypted)
+                .value("unreliable", ::PEP_rating_unreliable)
+                .value("reliable", ::PEP_rating_reliable)
+                .value("trusted", ::PEP_rating_trusted)
+                .value("trusted_and_anonymized", ::PEP_rating_trusted_and_anonymized)
+                .value("fully_anonymous", ::PEP_rating_fully_anonymous)
+                .value("mistrust", ::PEP_rating_mistrust)
+                .value("b0rken", ::PEP_rating_b0rken)
+                .value("under_attack", ::PEP_rating_under_attack);
 
-                enum_<PEP_color>("colorvalue")
-                .value("no_color", PEP_color_no_color)
-                .value("yellow", PEP_color_yellow)
-                .value("green", PEP_color_green)
-                .value("red", PEP_color_red);
+                enum_<::PEP_color>("colorvalue")
+                .value("no_color", ::PEP_color_no_color)
+                .value("yellow", ::PEP_color_yellow)
+                .value("green", ::PEP_color_green)
+                .value("red", ::PEP_color_red);
 
 
                 def("incoming_message", &incoming_message,
@@ -572,17 +571,17 @@ namespace pEp {
 
                 // Sync API
 
-                enum_<sync_handshake_signal>("sync_handshake_signal")
-                .value("SYNC_NOTIFY_UNDEFINED", SYNC_NOTIFY_UNDEFINED)
-                .value("SYNC_NOTIFY_INIT_ADD_OUR_DEVICE", SYNC_NOTIFY_INIT_ADD_OUR_DEVICE)
-                .value("SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE", SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE)
-                .value("SYNC_NOTIFY_INIT_FORM_GROUP", SYNC_NOTIFY_INIT_FORM_GROUP)
-                .value("SYNC_NOTIFY_TIMEOUT", SYNC_NOTIFY_TIMEOUT)
-                .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED", SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED)
-                .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", SYNC_NOTIFY_ACCEPTED_GROUP_CREATED)
-                .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED", SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED)
-                .value("SYNC_NOTIFY_SOLE", SYNC_NOTIFY_SOLE)
-                .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP);
+                enum_<::sync_handshake_signal>("sync_handshake_signal")
+                .value("SYNC_NOTIFY_UNDEFINED", ::SYNC_NOTIFY_UNDEFINED)
+                .value("SYNC_NOTIFY_INIT_ADD_OUR_DEVICE", ::SYNC_NOTIFY_INIT_ADD_OUR_DEVICE)
+                .value("SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE", ::SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE)
+                .value("SYNC_NOTIFY_INIT_FORM_GROUP", ::SYNC_NOTIFY_INIT_FORM_GROUP)
+                .value("SYNC_NOTIFY_TIMEOUT", ::SYNC_NOTIFY_TIMEOUT)
+                .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED", ::SYNC_NOTIFY_ACCEPTED_DEVICE_ADDED)
+                .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", ::SYNC_NOTIFY_ACCEPTED_GROUP_CREATED)
+                .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED", ::SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED)
+                .value("SYNC_NOTIFY_SOLE", ::SYNC_NOTIFY_SOLE)
+                .value("SYNC_NOTIFY_IN_GROUP", ::SYNC_NOTIFY_IN_GROUP);
 
 //    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
 //            "UserInterface",

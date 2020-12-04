@@ -23,11 +23,11 @@ namespace pEp {
 
         void key_reset_all_own_keys();
 
-        void _throw_status(PEP_STATUS status);
+        void _throw_status(::PEP_STATUS status);
 
-        PEP_STATUS _messageToSend(::message *msg);
+        ::PEP_STATUS _messageToSend(::message *msg);
 
-        PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
+        ::PEP_STATUS notifyHandshake(::pEp_identity *me, ::pEp_identity *partner, ::sync_handshake_signal signal);
 
     } /* namespace PythonAdapter */
 } /* namespace pEp */

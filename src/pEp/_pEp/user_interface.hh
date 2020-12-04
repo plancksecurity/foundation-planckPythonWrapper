@@ -37,7 +37,7 @@ namespace pEp {
 //     PEP_rating get_key_rating_for_user(string user_id, string fpr);
 
         protected:
-            static PEP_STATUS _notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
+            static ::PEP_STATUS _notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
         };
 
         class UserInterface_callback : public UserInterface {
