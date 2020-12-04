@@ -4,12 +4,11 @@
 #ifndef BASIC_API_HH
 #define BASIC_API_HH
 
-#include "pEpmodule.hh"
+#include "adapter_main.hh"
 #include "identity.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-namespace bp = boost::python;
 
 void update_identity(Identity &ident);
 
@@ -19,19 +18,19 @@ string _trustwords(Identity me, Identity partner, string lang, bool full);
 
 void trust_personal_key(Identity ident);
 
-void set_identity_flags(Identity ident, ::identity_flags_t flags);
+void set_identity_flags(Identity ident,const ::identity_flags_t &flags);
 
-void unset_identity_flags(Identity ident, ::identity_flags_t flags);
+void unset_identity_flags(Identity ident,const ::identity_flags_t &flags);
 
 void key_reset_trust(Identity ident);
 
-bp::list import_key(string key_data);
+bp::list import_key(const string &key_data);
 
 string export_key(Identity ident);
 
 string export_secret_key(Identity ident);
 
-void set_own_key(Identity &ident, string fpr);
+void set_own_key(Identity &ident, const string &fpr);
 
 } /* namespace PythonAdapter */
 } /* namespace pEp */

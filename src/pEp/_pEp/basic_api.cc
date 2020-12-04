@@ -1,20 +1,10 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// System
-#include <sstream>
-
-// Engine
-#include <pEp/keymanagement.h>
-#include <pEp/message_api.h>
-#include <pEp/Adapter.hh>
-
-// local
 #include "basic_api.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
 
 void update_identity(Identity &ident) {
     if (ident.address() == "") {
@@ -48,7 +38,7 @@ string _trustwords(Identity me, Identity partner, string lang, bool full) {
     if (lang == "" && me.lang() == partner.lang()) {
         lang = me.lang();
     }
-    char *words = NULL;
+    char *words = nullptr;
     size_t size = 0;
     ::PEP_STATUS status = ::get_trustwords(Adapter::session(), me, partner, lang.c_str(), &words, &size, full);
     _throw_status(status);
@@ -66,7 +56,7 @@ void trust_personal_key(Identity ident) {
     _throw_status(status);
 }
 
-void set_identity_flags(Identity ident, ::identity_flags_t flags) {
+void set_identity_flags(Identity ident,const ::identity_flags_t &flags) {
     if (ident.address() == "") {
         throw invalid_argument("address needed");
     }
@@ -77,7 +67,7 @@ void set_identity_flags(Identity ident, ::identity_flags_t flags) {
     _throw_status(status);
 }
 
-void unset_identity_flags(Identity ident, ::identity_flags_t flags) {
+void unset_identity_flags(Identity ident,const ::identity_flags_t &flags) {
     if (ident.address() == "") {
         throw invalid_argument("address needed");
     }
@@ -102,8 +92,8 @@ void key_reset_trust(Identity ident) {
     _throw_status(status);
 }
 
-bp::list import_key(string key_data) {
-    ::identity_list *private_keys = NULL;
+bp::list import_key(const string &key_data) {
+    ::identity_list *private_keys = nullptr;
     ::PEP_STATUS status = ::import_key(Adapter::session(), key_data.c_str(), key_data.size(), &private_keys);
     if (status && status != ::PEP_KEY_IMPORTED) {
         _throw_status(status);
@@ -123,7 +113,7 @@ bp::list import_key(string key_data) {
 
 string export_key(Identity ident) {
     ::PEP_STATUS status = ::PEP_STATUS_OK;
-    char *key_data = NULL;
+    char *key_data = nullptr;
     size_t size;
     status = ::export_key(Adapter::session(), ident.fpr().c_str(), &key_data, &size);
     _throw_status(status);
@@ -139,7 +129,7 @@ string export_secret_key(Identity ident) {
     return key_data;
 }
 
-void set_own_key(Identity &ident, string fpr) {
+void set_own_key(Identity &ident, const string &fpr) {
     if (ident.address() == "") {
         throw invalid_argument("address needed");
     }

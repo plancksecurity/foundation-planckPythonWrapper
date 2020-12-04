@@ -1,25 +1,18 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// System
-#include <cstdlib>
-#include <boost/python.hpp>
-#include <boost/locale.hpp>
-
 // local
 #include "str_attr.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
-namespace bp = boost::python;
-namespace bl = boost::locale;
+
 
 bp::object repr(bp::object s) {
     return s.attr("__repr__")();
 }
 
-string repr(string s) {
+string repr(const string &s) {
     bp::str _s = s.c_str();
     bp::object _r = _s.attr("__repr__")();
     string r = bp::extract<string>(_r);
@@ -33,7 +26,7 @@ string str_attr(char *&str) {
     return string(str);
 }
 
-void str_attr(char *&str, string value) {
+void str_attr(char *&str, const string &value) {
     string normalized = normalize(value, bl::norm_nfc);
     free(str);
     str = strdup(normalized.c_str());
@@ -58,7 +51,7 @@ void timestamp_attr(::timestamp *&ts, time_t value) {
 bp::list strlist_attr(::stringlist_t *&sl) {
     bp::list result;
 
-    for (::stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
+    for (const ::stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
         string s(_sl->value);
         result.append(bp::object(s));
     }
@@ -108,7 +101,7 @@ bp::dict strdict_attr(::stringpair_list_t *&spl) {
 }
 
 void strdict_attr(::stringpair_list_t *&spl, bp::dict value) {
-    ::stringpair_list_t *_spl = ::new_stringpair_list(NULL);
+    ::stringpair_list_t *_spl = ::new_stringpair_list(nullptr);
     if (!_spl) {
         throw bad_alloc();
     }
@@ -143,7 +136,7 @@ void strdict_attr(::stringpair_list_t *&spl, bp::dict value) {
 }
 
 ::stringlist_t *to_stringlist(bp::list l) {
-    ::stringlist_t *result = ::new_stringlist(NULL);
+    ::stringlist_t *result = ::new_stringlist(nullptr);
     if (!result) {
         throw bad_alloc();
     }

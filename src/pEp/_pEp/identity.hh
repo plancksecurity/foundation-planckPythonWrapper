@@ -5,29 +5,13 @@
 #define IDENTITY_HH
 
 // System
-#include <boost/python.hpp>
-#include <string>
-#include <memory>
-#include <cstddef>
-
-// Engine
-#include <pEp/pEpEngine.h>
-#include <pEp/message_api.h>
-
-//libpEpAdapter
-#include "pEp/Adapter.hh"
-
-// local
+#include "adapter_main.hh"
 #include "str_attr.hh"
 
 namespace pEp {
 namespace PythonAdapter {
 
-using std::string;
-using std::shared_ptr;
-
 // Identity is owning a pEp_identity
-
 class Identity {
   protected:
     shared_ptr<::pEp_identity> _ident;
@@ -87,7 +71,7 @@ class Identity {
 
     virtual void update();
 
-    void key_reset(string fpr = "");
+    void key_reset(const string &fpr = "");
 
     void key_mistrusted();
 

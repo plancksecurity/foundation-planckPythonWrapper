@@ -4,26 +4,14 @@
 #ifndef MESSAGE_HH
 #define MESSAGE_HH
 
-// System
-#include <string>
-#include <boost/python.hpp>
-
-// Engine
-#include <pEp/message.h>
-#include <pEp/message_api.h>
-
-// local
+#include "adapter_main.hh"
 #include "str_attr.hh"
 #include "identity.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using std::string;
-using std::runtime_error;
-using std::invalid_argument;
 
 // Message is owning a message struct
-
 class Message {
     shared_ptr<::message> _msg;
 
@@ -36,7 +24,7 @@ class Message {
         bool part_of_chain;
 
       public:
-        Blob(::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL), bool chained = false);
+        Blob(::bloblist_t *bl = ::new_bloblist(nullptr, 0, nullptr, nullptr), bool chained = false);
 
         Blob(bp::object data, string mime_type = "", string filename = "");
 
@@ -68,7 +56,7 @@ class Message {
         static int getbuffer(PyObject *self, Py_buffer *view, int flags);
     };
 
-    Message(int dir = ::PEP_dir_outgoing, Identity *from = NULL);
+    Message(int dir = ::PEP_dir_outgoing, Identity *from = nullptr);
 
     Message(string mimetext);
 

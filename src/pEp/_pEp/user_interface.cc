@@ -1,16 +1,11 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// System
-#include <cassert>
-
-// local
 #include "user_interface.hh"
+
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
-//namespace bp = boost::python;
 
 UserInterface *UserInterface::_ui = nullptr;
 
@@ -40,9 +35,9 @@ UserInterface_callback::~UserInterface_callback() {
     //    ::unregister_sync_callbacks(Adapter::session());
 }
 
-::PEP_STATUS UserInterface::_notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal) {
+::PEP_STATUS UserInterface::_notifyHandshake(::pEp_identity *me, ::pEp_identity *partner, ::sync_handshake_signal signal) {
     if (!(me && partner)) {
-        return PEP_ILLEGAL_VALUE;
+        return ::PEP_ILLEGAL_VALUE;
     }
 
     auto that = dynamic_cast< UserInterface_callback * >(_ui);
@@ -104,7 +99,7 @@ void UserInterface::deliverHandshakeResult(int result, bp::object identities) {
 //            }
 //            i = 0;
 //        }
-//        nanosleep((const struct timespec[]){{0, 100000000L}}, NULL);
+//        nanosleep((const struct timespec[]){{0, 100000000L}}, nullptr);
 //    }
 //
 //    if (timeout)
@@ -118,5 +113,5 @@ void UserInterface_callback::notifyHandshake(Identity me, Identity partner, sync
 }
 
 } // namespace PythonAdapter
-} // namespace pEp {
+} // namespace pEp
 

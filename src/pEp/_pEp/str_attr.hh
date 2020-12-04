@@ -4,27 +4,18 @@
 #ifndef STR_ATTR_HH
 #define STR_ATTR_HH
 
-// System
-#include <string>
-
-// Engine
-#include <pEp/pEpEngine.h>
-#include <pEp/timestamp.h>
-#include <pEp/stringlist.h>
-#include <pEp/stringpair.h>
+#include "adapter_main.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using std::string;
-namespace bp = boost::python;
 
 bp::object repr(bp::object s);
 
-string repr(string s);
+string repr(const string &s);
 
 string str_attr(char *&str);
 
-void str_attr(char *&str, string value);
+void str_attr(char *&str, const string &value);
 
 time_t timestamp_attr(::timestamp *&ts);
 

@@ -1,20 +1,12 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// Engine
-#include <pEp/pEpEngine.h>
-#include <pEp/message_api.h>
-#include <pEp/sync_api.h>
-#include <pEp/sync_codec.h>
-#include <pEp/distribution_codec.h>
-
 // local
 #include "message_api.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
-namespace bp = boost::python;
+
 
 Message encrypt_message(Message src, bp::list extra, int enc_format, int flags) {
     Identity _from = src.from();
@@ -32,7 +24,7 @@ Message encrypt_message(Message src, bp::list extra, int enc_format, int flags) 
     ::stringlist_t *_extra = to_stringlist(extra);
     ::PEP_enc_format _enc_format = (::PEP_enc_format)enc_format;
     ::PEP_encrypt_flags_t _flags = (::PEP_encrypt_flags_t)flags;
-    ::message *_dst = NULL;
+    ::message *_dst = nullptr;
 
     ::message *_src = src;
     ::PEP_STATUS status = ::encrypt_message(Adapter::session(), _src, _extra, &_dst, _enc_format, _flags);
@@ -47,8 +39,8 @@ Message encrypt_message(Message src, bp::list extra, int enc_format, int flags) 
 }
 
 bp::tuple decrypt_message(Message src, int flags) {
-    ::message *_dst = NULL;
-    ::stringlist_t *_keylist = NULL;
+    ::message *_dst = nullptr;
+    ::stringlist_t *_keylist = nullptr;
     ::PEP_rating _rating = ::PEP_rating_undefined;
     ::PEP_decrypt_flags_t _flags = (::PEP_decrypt_flags_t)flags;
     ::message *_src = src;
@@ -77,7 +69,7 @@ bp::tuple sync_decode(bp::object buffer) {
         throw invalid_argument("need a contiguous buffer to read");
     }
 
-    char *dst = NULL;
+    char *dst = nullptr;
     ::PEP_STATUS status = ::PER_to_XER_Sync_msg((char *)src.buf, src.len, &dst);
     PyBuffer_Release(&src);
     _throw_status(status);
@@ -88,7 +80,7 @@ bp::tuple sync_decode(bp::object buffer) {
 }
 
 static bp::tuple sync_encode(string text) {
-    char *data = NULL;
+    char *data = nullptr;
     size_t size = 0;
     ::PEP_STATUS status = ::XER_to_PER_Sync_msg(text.c_str(), &data, &size);
     _throw_status(status);
@@ -109,7 +101,7 @@ bp::tuple Distribution_decode(bp::object buffer) {
         throw invalid_argument("need a contiguous buffer to read");
     }
 
-    char *dst = NULL;
+    char *dst = nullptr;
     ::PEP_STATUS status = ::PER_to_XER_Distribution_msg((char *)src.buf, src.len, &dst);
     PyBuffer_Release(&src);
     _throw_status(status);
@@ -120,7 +112,7 @@ bp::tuple Distribution_decode(bp::object buffer) {
 }
 
 static bp::tuple Distribution_encode(string text) {
-    char *data = NULL;
+    char *data = nullptr;
     size_t size = 0;
     ::PEP_STATUS status = ::XER_to_PER_Distribution_msg(text.c_str(), &data, &size);
     _throw_status(status);
@@ -163,4 +155,4 @@ bp::object distribution_search(string name) {
 }
 
 } // namespace PythonAdapter
-} // namespace pEp {
+} // namespace pEp

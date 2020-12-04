@@ -201,6 +201,7 @@ if sys.version_info[0] < 3:
 module_pEp = Extension(
     'pEp._pEp',
     sources=[
+        'src/pEp/_pEp/adapter_main.cc',
         'src/pEp/_pEp/pEpmodule.cc',
         'src/pEp/_pEp/basic_api.cc',
         'src/pEp/_pEp/identity.cc',

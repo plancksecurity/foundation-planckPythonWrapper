@@ -1,25 +1,13 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// System
-#include <typeinfo>
-#include <sstream>
-
-// Engine
-#include <pEp/identity_list.h>
-#include <pEp/keymanagement.h>
-#include <pEp/key_reset.h>
-
-// local
 #include "identity.hh"
-#include "pEpmodule.hh"
 #include "basic_api.hh"
 #include "message_api.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
-namespace bp = boost::python;
+
 
 Identity::Identity(string address, string username, string user_id, string fpr, int comm_type, string lang, ::identity_flags_t flags)
     : _ident(::new_identity(address.c_str(), fpr.c_str(), user_id.c_str(), username.c_str()), &::free_identity) {
@@ -147,7 +135,7 @@ void Identity::update() {
     update_identity(*this);
 }
 
-void Identity::key_reset(string fpr) {
+void Identity::key_reset(const string &fpr) {
     ::PEP_STATUS status = ::key_reset_identity(Adapter::session(), *this, fpr != "" ? fpr.c_str() : nullptr);
     _throw_status(status);
 }
@@ -232,7 +220,7 @@ bp::list identitylist_attr(::identity_list *&il) {
 }
 
 void identitylist_attr(::identity_list *&il, bp::list value) {
-    ::identity_list *_il = ::new_identity_list(NULL);
+    ::identity_list *_il = ::new_identity_list(nullptr);
     if (!_il) {
         throw bad_alloc();
     }

@@ -1,27 +1,13 @@
 // This file is under GNU Affero General Public License 3.0
 // see LICENSE.txt
 
-// System
-#include <cstdlib>
-#include <cstring>
-#include <stdexcept>
-#include <sstream>
-#include <vector>
-#include <Python.h>
-
-// Engine
-#include <pEp/mime.h>
-#include <pEp/keymanagement.h>
-#include <pEp/message_api.h>
-
 // local
 #include "message.hh"
 #include "message_api.hh"
 
 namespace pEp {
 namespace PythonAdapter {
-using namespace std;
-namespace bp = boost::python;
+
 
 Message::Blob::Blob(::bloblist_t *bl, bool chained)
     : _bl(bl),
@@ -32,7 +18,7 @@ Message::Blob::Blob(::bloblist_t *bl, bool chained)
 }
 
 Message::Blob::Blob(bp::object data, string mime_type, string filename)
-    : _bl(::new_bloblist(NULL, 0, NULL, NULL)),
+    : _bl(::new_bloblist(nullptr, 0, nullptr, nullptr)),
       part_of_chain(false) {
     if (!_bl) {
         throw bad_alloc();
@@ -96,20 +82,20 @@ string Message::Blob::_repr() {
 }
 
 int Message::Blob::getbuffer(PyObject *self, Py_buffer *view, int flags) {
-    ::bloblist_t *bl = NULL;
+    ::bloblist_t *bl = nullptr;
 
     try {
         Message::Blob &blob = bp::extract<Message::Blob &>(self);
         bl = blob._bl;
     } catch (exception &e) {
         PyErr_SetString(PyExc_RuntimeError, "extract not possible");
-        view->obj = NULL;
+        view->obj = nullptr;
         return -1;
     }
 
     if (!(bl && bl->value)) {
         PyErr_SetString(PyExc_RuntimeError, "no data available");
-        view->obj = NULL;
+        view->obj = nullptr;
         return -1;
     }
 
@@ -135,7 +121,7 @@ string Message::Blob::decode(string encoding) {
     return bp::call<string>(_decode.ptr(), this, encoding);
 }
 
-PyBufferProcs Message::Blob::bp = {getbuffer, NULL};
+PyBufferProcs Message::Blob::bp = {getbuffer, nullptr};
 
 Message::Message(int dir, Identity *from)
     : _msg(new_message((::PEP_msg_direction)dir), &::free_message) {
@@ -153,9 +139,9 @@ Message::Message(int dir, Identity *from)
 }
 
 Message::Message(string mimetext)
-    : _msg(NULL, &::free_message) {
-    message *_cpy;
-    ::PEP_STATUS status = ::mime_decode_message(mimetext.c_str(), mimetext.size(), &_cpy, NULL);
+    : _msg(nullptr, &::free_message) {
+    ::message *_cpy;
+    ::PEP_STATUS status = ::mime_decode_message(mimetext.c_str(), mimetext.size(), &_cpy, nullptr);
     switch (status) {
     case ::PEP_STATUS_OK:
         if (_cpy) {
@@ -257,7 +243,7 @@ bp::tuple Message::attachments() {
 }
 
 void Message::attachments(bp::list value) {
-    ::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL);
+    ::bloblist_t *bl = ::new_bloblist(nullptr, 0, nullptr, nullptr);
     if (!bl) {
         throw bad_alloc();
     }
@@ -280,12 +266,12 @@ void Message::attachments(bp::list value) {
 
     for (int i = 0; i < len(value); i++) {
         Message::Blob &blob = bp::extract<Message::Blob &>(value[i]);
-        blob._bl->value = NULL;
+        blob._bl->value = nullptr;
         blob._bl->size = 0;
         free(blob._bl->mime_type);
-        blob._bl->mime_type = NULL;
+        blob._bl->mime_type = nullptr;
         free(blob._bl->filename);
-        blob._bl->filename = NULL;
+        blob._bl->filename = nullptr;
     }
 
     free_bloblist(_msg->attachments);

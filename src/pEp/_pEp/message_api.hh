@@ -4,7 +4,8 @@
 #ifndef MESSAGE_API_HH
 #define MESSAGE_API_HH
 
-#include "pEpmodule.hh"
+#include "adapter_main.hh"
+#include "message.hh"
 
 namespace pEp {
 namespace PythonAdapter {
