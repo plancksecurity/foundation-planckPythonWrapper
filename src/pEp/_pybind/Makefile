@@ -1,11 +1,11 @@
 include ../Makefile.conf
-TARGET=$(TARGET_PEP)
+TARGET=$(TARGET_PYBIND)
 
 # Specific Build settings
-CXXFLAGS+=-Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -dynamic -g -fwrapv -O3 -Wall -pipe -Os -isysroot/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk
+CXXFLAGS+=
 INCLUDES+=
 LIB_DIRS+=
-LIBS+=-lboost_python38-mt -lboost_locale-mt
+LIBS+=
 LDFLAGS+=
 
 
