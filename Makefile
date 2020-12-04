@@ -11,6 +11,9 @@ compile:
 compile-inplace:
 	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT) --inplace
 
+make-compile:
+	$(MAKE) -C src/pEp/_pEp
+
 # Packaging
 # =========
 # create wheel and egg package in dist/
@@ -88,3 +91,6 @@ clean: clean-docs
 
 clean-docs:
 	make clean -C docs/
+
+make-clean:
+	$(MAKE) -C src/pEp/_pEp clean
