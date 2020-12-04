@@ -16,10 +16,9 @@
 namespace pEp {
 namespace PythonAdapter {
 using std::string;
-using boost::python::object;
-using boost::python::dict;
+namespace bp = boost::python;
 
-object repr(object s);
+bp::object repr(bp::object s);
 
 string repr(string s);
 
@@ -31,17 +30,17 @@ time_t timestamp_attr(::timestamp *&ts);
 
 void timestamp_attr(::timestamp *&ts, time_t value);
 
-boost::python::list strlist_attr(::stringlist_t *&sl);
+bp::list strlist_attr(::stringlist_t *&sl);
 
-void strlist_attr(::stringlist_t *&sl, boost::python::list value);
+void strlist_attr(::stringlist_t *&sl, bp::list value);
 
-dict strdict_attr(::stringpair_list_t *&spl);
+bp::dict strdict_attr(::stringpair_list_t *&spl);
 
-void strdict_attr(::stringpair_list_t *&spl, dict value);
+void strdict_attr(::stringpair_list_t *&spl, bp::dict value);
 
-::stringlist_t *to_stringlist(boost::python::list l);
+::stringlist_t *to_stringlist(bp::list l);
 
-boost::python::list from_stringlist(const ::stringlist_t *sl);
+bp::list from_stringlist(const ::stringlist_t *sl);
 
 } /* namespace PythonAdapter */
 } /* namespace pEp */

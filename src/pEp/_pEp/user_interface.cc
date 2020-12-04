@@ -10,7 +10,7 @@
 namespace pEp {
 namespace PythonAdapter {
 using namespace std;
-using namespace boost::python;
+//namespace bp = boost::python;
 
 UserInterface *UserInterface::_ui = nullptr;
 
@@ -51,9 +51,9 @@ UserInterface_callback::~UserInterface_callback() {
     return ::PEP_STATUS_OK;
 }
 
-void UserInterface::deliverHandshakeResult(int result, object identities) {
+void UserInterface::deliverHandshakeResult(int result, bp::object identities) {
     identity_list *shared_identities = nullptr;
-    if (identities != boost::python::api::object() && boost::python::len(identities)) {
+    if (identities != bp::api::object() && bp::len(identities)) {
         shared_identities = new_identity_list(nullptr);
         if (!shared_identities) {
             throw bad_alloc();
@@ -61,8 +61,8 @@ void UserInterface::deliverHandshakeResult(int result, object identities) {
 
         try {
             identity_list *si = shared_identities;
-            for (int i = 0; i < boost::python::len(identities); ++i) {
-                Identity ident = extract<Identity>(identities[i]);
+            for (int i = 0; i < bp::len(identities); ++i) {
+                Identity ident = bp::extract<Identity>(identities[i]);
                 si = identity_list_add(si, ident);
                 if (!si) {
                     throw bad_alloc();
@@ -114,7 +114,7 @@ void UserInterface::deliverHandshakeResult(int result, object identities) {
 //}
 
 void UserInterface_callback::notifyHandshake(Identity me, Identity partner, sync_handshake_signal signal) {
-    call_method<void>(_self, "notifyHandshake", me, partner, signal);
+    bp::call_method<void>(_self, "notifyHandshake", me, partner, signal);
 }
 
 } // namespace PythonAdapter

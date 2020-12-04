@@ -9,6 +9,7 @@
 
 namespace pEp {
 namespace PythonAdapter {
+namespace bp = boost::python;
 
 void update_identity(Identity &ident);
 
@@ -24,7 +25,7 @@ void unset_identity_flags(Identity ident, ::identity_flags_t flags);
 
 void key_reset_trust(Identity ident);
 
-boost::python::list import_key(string key_data);
+bp::list import_key(string key_data);
 
 string export_key(Identity ident);
 

@@ -28,7 +28,7 @@ class UserInterface {
         throw runtime_error("override this method");
     }
 
-    virtual void deliverHandshakeResult(int result, object identities);
+    virtual void deliverHandshakeResult(int result, bp::object identities);
 
     //     PEP_rating get_key_rating_for_user(string user_id, string fpr);
 

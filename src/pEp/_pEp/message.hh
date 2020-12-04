@@ -7,7 +7,6 @@
 // System
 #include <string>
 #include <boost/python.hpp>
-#include <boost/lexical_cast.hpp>
 
 // Engine
 #include <pEp/message.h>
@@ -22,7 +21,6 @@ namespace PythonAdapter {
 using std::string;
 using std::runtime_error;
 using std::invalid_argument;
-using boost::lexical_cast;
 
 // Message is owning a message struct
 
@@ -40,7 +38,7 @@ class Message {
       public:
         Blob(::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL), bool chained = false);
 
-        Blob(object data, string mime_type = "", string filename = "");
+        Blob(bp::object data, string mime_type = "", string filename = "");
 
         Blob(const Blob &second);
 
@@ -108,9 +106,9 @@ class Message {
 
     void longmsg_formatted(string value) { str_attr(_msg->longmsg_formatted, value); }
 
-    boost::python::tuple attachments();
+    bp::tuple attachments();
 
-    void attachments(boost::python::list value);
+    void attachments(bp::list value);
 
     time_t sent() { return timestamp_attr(_msg->sent); }
 
@@ -122,47 +120,47 @@ class Message {
 
     Identity from() { return identity_attr(_msg->from); }
 
-    void from(object value) { identity_attr(_msg->from, value); }
+    void from(bp::object value) { identity_attr(_msg->from, value); }
 
-    boost::python::list to() { return identitylist_attr(_msg->to); }
+    bp::list to() { return identitylist_attr(_msg->to); }
 
-    void to(boost::python::list value) { identitylist_attr(_msg->to, value); }
+    void to(bp::list value) { identitylist_attr(_msg->to, value); }
 
     Identity recv_by() { return identity_attr(_msg->recv_by); }
 
-    void recv_by(object value) { identity_attr(_msg->recv_by, value); }
+    void recv_by(bp::object value) { identity_attr(_msg->recv_by, value); }
 
-    boost::python::list cc() { return identitylist_attr(_msg->cc); }
+    bp::list cc() { return identitylist_attr(_msg->cc); }
 
-    void cc(boost::python::list value) { identitylist_attr(_msg->cc, value); }
+    void cc(bp::list value) { identitylist_attr(_msg->cc, value); }
 
-    boost::python::list bcc() { return identitylist_attr(_msg->bcc); }
+    bp::list bcc() { return identitylist_attr(_msg->bcc); }
 
-    void bcc(boost::python::list value) { identitylist_attr(_msg->bcc, value); }
+    void bcc(bp::list value) { identitylist_attr(_msg->bcc, value); }
 
-    boost::python::list reply_to() { return identitylist_attr(_msg->reply_to); }
+    bp::list reply_to() { return identitylist_attr(_msg->reply_to); }
 
-    void reply_to(boost::python::list value) { identitylist_attr(_msg->reply_to, value); }
+    void reply_to(bp::list value) { identitylist_attr(_msg->reply_to, value); }
 
-    boost::python::list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
+    bp::list in_reply_to() { return strlist_attr(_msg->in_reply_to); }
 
-    void in_reply_to(boost::python::list value) { strlist_attr(_msg->in_reply_to, value); }
+    void in_reply_to(bp::list value) { strlist_attr(_msg->in_reply_to, value); }
 
-    boost::python::list references() { return strlist_attr(_msg->references); }
+    bp::list references() { return strlist_attr(_msg->references); }
 
-    void references(boost::python::list value) { strlist_attr(_msg->references, value); }
+    void references(bp::list value) { strlist_attr(_msg->references, value); }
 
-    boost::python::list keywords() { return strlist_attr(_msg->keywords); }
+    bp::list keywords() { return strlist_attr(_msg->keywords); }
 
-    void keywords(boost::python::list value) { strlist_attr(_msg->keywords, value); }
+    void keywords(bp::list value) { strlist_attr(_msg->keywords, value); }
 
     string comments() { return str_attr(_msg->comments); }
 
     void comments(string value) { str_attr(_msg->comments, value); }
 
-    dict opt_fields() { return strdict_attr(_msg->opt_fields); }
+    bp::dict opt_fields() { return strdict_attr(_msg->opt_fields); }
 
-    void opt_fields(dict value) { return strdict_attr(_msg->opt_fields, value); }
+    void opt_fields(bp::dict value) { return strdict_attr(_msg->opt_fields, value); }
 
     ::PEP_enc_format enc_format() { return _msg->enc_format; }
 
@@ -170,15 +168,15 @@ class Message {
 
     Message encrypt();
 
-    Message _encrypt(boost::python::list extra, int enc_format = 4, int flags = 0);
+    Message _encrypt(bp::list extra, int enc_format = 4, int flags = 0);
 
-    boost::python::tuple decrypt(int flags = 0);
+    bp::tuple decrypt(int flags = 0);
 
     ::PEP_rating outgoing_rating();
 
     ::PEP_color outgoing_color();
 
-    Message deepcopy(dict &memo);
+    Message deepcopy(bp::dict &memo);
 
     Message copy();
 };

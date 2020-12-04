@@ -10,15 +10,13 @@
 
 // local
 #include "message_api.hh"
-#include "basic_api.hh"
 
 namespace pEp {
 namespace PythonAdapter {
 using namespace std;
-using namespace boost::python;
+namespace bp = boost::python;
 
-//        namespace bp = boost::python;
-Message encrypt_message(Message src, boost::python::list extra, int enc_format, int flags) {
+Message encrypt_message(Message src, bp::list extra, int enc_format, int flags) {
     Identity _from = src.from();
     if (_from.address() == "") {
         throw invalid_argument("encrypt_message: src.from_.address empty");
@@ -48,7 +46,7 @@ Message encrypt_message(Message src, boost::python::list extra, int enc_format, 
     return Message(_dst);
 }
 
-boost::python::tuple decrypt_message(Message src, int flags) {
+bp::tuple decrypt_message(Message src, int flags) {
     ::message *_dst = NULL;
     ::stringlist_t *_keylist = NULL;
     ::PEP_rating _rating = ::PEP_rating_undefined;
@@ -58,21 +56,21 @@ boost::python::tuple decrypt_message(Message src, int flags) {
     ::PEP_STATUS status = ::decrypt_message(Adapter::session(), _src, &_dst, &_keylist, &_rating, &_flags);
     _throw_status(status);
 
-    boost::python::list keylist;
+    bp::list keylist;
     if (_keylist) {
         keylist = from_stringlist(_keylist);
         ::free_stringlist(_keylist);
     }
 
     Message dst = _dst ? Message(_dst) : Message(src);
-    return boost::python::make_tuple(dst, keylist, _rating, _flags);
+    return bp::make_tuple(dst, keylist, _rating, _flags);
 }
 
 ::PEP_color _color(int rating) {
     return ::color_from_rating((::PEP_rating)rating);
 }
 
-boost::python::tuple sync_decode(object buffer) {
+bp::tuple sync_decode(bp::object buffer) {
     Py_buffer src;
     int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
     if (result) {
@@ -86,10 +84,10 @@ boost::python::tuple sync_decode(object buffer) {
 
     string _dst(dst);
     free(dst);
-    return boost::python::make_tuple(_dst, 0);
+    return bp::make_tuple(_dst, 0);
 }
 
-static boost::python::tuple sync_encode(string text) {
+static bp::tuple sync_encode(string text) {
     char *data = NULL;
     size_t size = 0;
     ::PEP_STATUS status = ::XER_to_PER_Sync_msg(text.c_str(), &data, &size);
@@ -101,10 +99,10 @@ static boost::python::tuple sync_encode(string text) {
         throw bad_alloc();
     }
 
-    return boost::python::make_tuple(object(handle<>(ba)), 0);
+    return bp::make_tuple(bp::object(bp::handle<>(ba)), 0);
 }
 
-boost::python::tuple Distribution_decode(object buffer) {
+bp::tuple Distribution_decode(bp::object buffer) {
     Py_buffer src;
     int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
     if (result) {
@@ -118,10 +116,10 @@ boost::python::tuple Distribution_decode(object buffer) {
 
     string _dst(dst);
     free(dst);
-    return boost::python::make_tuple(_dst, 0);
+    return bp::make_tuple(_dst, 0);
 }
 
-static boost::python::tuple Distribution_encode(string text) {
+static bp::tuple Distribution_encode(string text) {
     char *data = NULL;
     size_t size = 0;
     ::PEP_STATUS status = ::XER_to_PER_Distribution_msg(text.c_str(), &data, &size);
@@ -133,34 +131,34 @@ static boost::python::tuple Distribution_encode(string text) {
         throw bad_alloc();
     }
 
-    return boost::python::make_tuple(object(handle<>(ba)), 0);
+    return bp::make_tuple(bp::object(bp::handle<>(ba)), 0);
 }
 
-object sync_search(string name) {
+bp::object sync_search(string name) {
     if (name != "pep.sync") {
-        return object();
+        return bp::object();
     } else {
-        object codecs = import("codecs");
-        object CodecInfo = codecs.attr("CodecInfo");
+        bp::object codecs = bp::import("codecs");
+        bp::object CodecInfo = codecs.attr("CodecInfo");
 
-        object _sync_decode = make_function(sync_decode);
-        object _sync_encode = make_function(sync_encode);
+        bp::object _sync_decode = make_function(sync_decode);
+        bp::object _sync_encode = make_function(sync_encode);
 
-        return call<object>(CodecInfo.ptr(), _sync_encode, _sync_decode);
+        return bp::call<bp::object>(CodecInfo.ptr(), _sync_encode, _sync_decode);
     }
 }
 
-object distribution_search(string name) {
+bp::object distribution_search(string name) {
     if (name != "pep.distribution") {
-        return object();
+        return bp::object();
     } else {
-        object codecs = import("codecs");
-        object CodecInfo = codecs.attr("CodecInfo");
+        bp::object codecs = bp::import("codecs");
+        bp::object CodecInfo = codecs.attr("CodecInfo");
 
-        object _distribution_decode = make_function(Distribution_decode);
-        object _distribution_encode = make_function(Distribution_encode);
+        bp::object _distribution_decode = make_function(Distribution_decode);
+        bp::object _distribution_encode = make_function(Distribution_encode);
 
-        return call<object>(CodecInfo.ptr(), _distribution_encode, _distribution_decode);
+        return bp::call<bp::object>(CodecInfo.ptr(), _distribution_encode, _distribution_decode);
     }
 }
 

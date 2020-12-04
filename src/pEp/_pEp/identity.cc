@@ -19,7 +19,7 @@
 namespace pEp {
 namespace PythonAdapter {
 using namespace std;
-using namespace boost::python;
+namespace bp = boost::python;
 
 Identity::Identity(string address, string username, string user_id, string fpr, int comm_type, string lang, ::identity_flags_t flags)
     : _ident(::new_identity(address.c_str(), fpr.c_str(), user_id.c_str(), username.c_str()), &::free_identity) {
@@ -139,7 +139,7 @@ Identity Identity::copy() {
     return Identity(dup);
 }
 
-Identity Identity::deepcopy(dict &) {
+Identity Identity::deepcopy(bp::dict &) {
     return copy();
 }
 
@@ -205,8 +205,8 @@ Identity identity_attr(::pEp_identity *&ident) {
     return _ident;
 }
 
-void identity_attr(::pEp_identity *&ident, object value) {
-    Identity &_ident = extract<Identity &>(value);
+void identity_attr(::pEp_identity *&ident, bp::object value) {
+    Identity &_ident = bp::extract<Identity &>(value);
     ::pEp_identity *_dup = ::identity_dup(_ident);
     if (!_dup) {
         throw bad_alloc();
@@ -217,21 +217,21 @@ void identity_attr(::pEp_identity *&ident, object value) {
     ident = _dup;
 }
 
-boost::python::list identitylist_attr(::identity_list *&il) {
-    boost::python::list result;
+bp::list identitylist_attr(::identity_list *&il) {
+    bp::list result;
 
     for (::identity_list *_il = il; _il && _il->ident; _il = _il->next) {
         ::pEp_identity *ident = ::identity_dup(_il->ident);
         if (!ident) {
             throw bad_alloc();
         }
-        result.append(object(Identity(ident)));
+        result.append(bp::object(Identity(ident)));
     }
 
     return result;
 }
 
-void identitylist_attr(::identity_list *&il, boost::python::list value) {
+void identitylist_attr(::identity_list *&il, bp::list value) {
     ::identity_list *_il = ::new_identity_list(NULL);
     if (!_il) {
         throw bad_alloc();
@@ -239,7 +239,7 @@ void identitylist_attr(::identity_list *&il, boost::python::list value) {
 
     ::identity_list *_i = _il;
     for (int i = 0; i < len(value); i++) {
-        extract<Identity &> extract_identity(value[i]);
+        bp::extract<Identity &> extract_identity(value[i]);
         if (!extract_identity.check()) {
             ::free_identity_list(_il);
         }

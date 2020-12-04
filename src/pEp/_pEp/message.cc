@@ -21,7 +21,7 @@
 namespace pEp {
 namespace PythonAdapter {
 using namespace std;
-using namespace boost::python;
+namespace bp = boost::python;
 
 Message::Blob::Blob(::bloblist_t *bl, bool chained)
     : _bl(bl),
@@ -31,7 +31,7 @@ Message::Blob::Blob(::bloblist_t *bl, bool chained)
     }
 }
 
-Message::Blob::Blob(object data, string mime_type, string filename)
+Message::Blob::Blob(bp::object data, string mime_type, string filename)
     : _bl(::new_bloblist(NULL, 0, NULL, NULL)),
       part_of_chain(false) {
     if (!_bl) {
@@ -99,7 +99,7 @@ int Message::Blob::getbuffer(PyObject *self, Py_buffer *view, int flags) {
     ::bloblist_t *bl = NULL;
 
     try {
-        Message::Blob &blob = extract<Message::Blob &>(self);
+        Message::Blob &blob = bp::extract<Message::Blob &>(self);
         bl = blob._bl;
     } catch (exception &e) {
         PyErr_SetString(PyExc_RuntimeError, "extract not possible");
@@ -130,9 +130,9 @@ string Message::Blob::decode(string encoding) {
         }
 
     }
-    object codecs = import("codecs");
-    object _decode = codecs.attr("decode");
-    return call<string>(_decode.ptr(), this, encoding);
+    bp::object codecs = bp::import("codecs");
+    bp::object _decode = codecs.attr("decode");
+    return bp::call<string>(_decode.ptr(), this, encoding);
 }
 
 PyBufferProcs Message::Blob::bp = {getbuffer, NULL};
@@ -246,17 +246,17 @@ string Message::_repr() {
     return build.str();
 }
 
-boost::python::tuple Message::attachments() {
-    boost::python::list l;
+bp::tuple Message::attachments() {
+    bp::list l;
 
     for (::bloblist_t *bl = _msg->attachments; bl && bl->value; bl = bl->next) {
         l.append(Blob(bl, true));
     }
 
-    return boost::python::tuple(l);
+    return bp::tuple(l);
 }
 
-void Message::attachments(boost::python::list value) {
+void Message::attachments(bp::list value) {
     ::bloblist_t *bl = ::new_bloblist(NULL, 0, NULL, NULL);
     if (!bl) {
         throw bad_alloc();
@@ -264,7 +264,7 @@ void Message::attachments(boost::python::list value) {
 
     ::bloblist_t *_l = bl;
     for (int i = 0; i < len(value); i++) {
-        Message::Blob &blob = extract<Message::Blob &>(value[i]);
+        Message::Blob &blob = bp::extract<Message::Blob &>(value[i]);
         _l = bloblist_add(_l, blob._bl->value, blob._bl->size, blob._bl->mime_type, blob._bl->filename);
         if (!_l) {
             for (_l = bl; _l && _l->value;) {
@@ -279,7 +279,7 @@ void Message::attachments(boost::python::list value) {
     }
 
     for (int i = 0; i < len(value); i++) {
-        Message::Blob &blob = extract<Message::Blob &>(value[i]);
+        Message::Blob &blob = bp::extract<Message::Blob &>(value[i]);
         blob._bl->value = NULL;
         blob._bl->size = 0;
         free(blob._bl->mime_type);
@@ -293,18 +293,18 @@ void Message::attachments(boost::python::list value) {
 }
 
 Message Message::encrypt() {
-    boost::python::list extra;
+    bp::list extra;
     return encrypt_message(*this, extra, ::PEP_enc_PGP_MIME, 0);
 }
 
-Message Message::_encrypt(boost::python::list extra, int enc_format, int flags) {
+Message Message::_encrypt(bp::list extra, int enc_format, int flags) {
     if (!enc_format) {
         enc_format = ::PEP_enc_PGP_MIME;
     }
     return encrypt_message(*this, extra, enc_format, flags);
 }
 
-boost::python::tuple Message::decrypt(int flags) {
+bp::tuple Message::decrypt(int flags) {
     return pEp::PythonAdapter::decrypt_message(*this, flags);
 }
 
@@ -346,7 +346,7 @@ Message Message::copy() {
     return Message(dup);
 }
 
-Message Message::deepcopy(dict &) {
+Message Message::deepcopy(bp::dict &) {
     return copy();
 }
 
@@ -360,17 +360,17 @@ Message outgoing_message(Identity me) {
     return m;
 }
 
-static object update(Identity ident) {
+static bp::object update(Identity ident) {
     if (ident.address().empty()) {
         throw runtime_error("at least address needed");
     }
     ::update_identity(Adapter::session(), ident);
-    return object(ident);
+    return bp::object(ident);
 }
 
-static boost::python::list update(boost::python::list il) {
+static bp::list update(bp::list il) {
     for (int i = 0; i < len(il); i++) {
-        update(extract<Identity>(il[i]));
+        update(bp::extract<Identity>(il[i]));
     }
 
     return il;

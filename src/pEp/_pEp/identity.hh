@@ -83,7 +83,7 @@ class Identity {
 
     Identity copy();
 
-    Identity deepcopy(dict &memo);
+    Identity deepcopy(bp::dict &memo);
 
     virtual void update();
 
@@ -107,11 +107,11 @@ class Identity {
 
 Identity identity_attr(::pEp_identity *&ident);
 
-void identity_attr(::pEp_identity *&ident, object value);
+void identity_attr(::pEp_identity *&ident, bp::object value);
 
-boost::python::list identitylist_attr(::identity_list *&il);
+bp::list identitylist_attr(::identity_list *&il);
 
-void identitylist_attr(::identity_list *&il, boost::python::list value);
+void identitylist_attr(::identity_list *&il, bp::list value);
 
 } // namespace PythonAdapter
 } // namespace pEp
