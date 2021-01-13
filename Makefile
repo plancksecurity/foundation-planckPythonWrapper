@@ -94,8 +94,8 @@ clean-docs:
 # ======================================
 makefile-build:
 	$(MAKE) -C src/pEp/_pEp
-	$(MAKE) -C src/pEp/_pybind
+	$(MAKE) -C src/pEp/_gen
 
 makefile-clean:
 	$(MAKE) -C src/pEp/_pEp clean
-	$(MAKE) -C src/pEp/_pybind clean
+	$(MAKE) -C src/pEp/_gen clean

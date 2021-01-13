@@ -1,5 +1,5 @@
 include ../Makefile.conf
-TARGET=$(TARGET_PYBIND)
+TARGET=$(TARGET_GEN)
 
 # Specific Build settings
 CXXFLAGS+=

@@ -174,11 +174,11 @@ class BuildExtCommand(build_ext):
         module_pEp.libraries = libs
         module_pEp.extra_compile_args = compile_flags
 
-        global module_pybind11
-        module_pybind11.include_dirs = includes
-        module_pybind11.library_dirs = libdirs
-        # module_pybind11.libraries = libs
-        module_pybind11.extra_compile_args = compile_flags
+        global module_gen
+        module_gen.include_dirs = includes
+        module_gen.library_dirs = libdirs
+        # module_gen.libraries = libs
+        module_gen.extra_compile_args = compile_flags
 
         pEpLog("Include Dirs:", module_pEp.include_dirs)
         pEpLog("Libs Dirs:", module_pEp.library_dirs)
@@ -212,10 +212,10 @@ module_pEp = Extension(
     ],
 )
 
-module_pybind11 = Extension(
-    'pEp._pybind',
+module_gen = Extension(
+    'pEp._gen',
     sources=[
-        'src/pEp/_pybind/pEpmodule.cc',
+        'src/pEp/_gen/pEpmodule.cc',
     ],
 )
 
@@ -224,7 +224,7 @@ module_pybind11 = Extension(
 setup(
     package_dir={'': 'src'},
     packages=['pEp'],
-    ext_modules=[module_pEp, module_pybind11],
+    ext_modules=[module_pEp, module_gen],
     cmdclass={
         'build_ext': BuildExtCommand,
     },

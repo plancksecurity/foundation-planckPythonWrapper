@@ -25,12 +25,12 @@ except ImportError:
 
 # Imports all symbols EXCEPT the ones beginning with underscore
 from ._pEp import *
-from ._pybind import *
+from ._gen import *
 
 # import the native module into the current namespace because we also need to access the names beginning
 # with an underscore (of _pEp), but we dont want to import them into this module
 import pEp._pEp
-import pEp._pybind
+import pEp._gen
 
 # Executed on module import
 def init():
