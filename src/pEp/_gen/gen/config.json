@@ -1,0 +1,13 @@
+{
+    "module_name": "_gen",
+    "header_filename": "../../_pEp/adapter_main.hh",
+    "libclang_path": "/opt/local/libexec/llvm-9.0/lib/libclang.dylib",
+    "variables": [
+    ],
+    "functions": [
+        "myself"
+    ],
+    "debug_ast" : "True",
+    "debug_acid" : "True",
+    "debug_yml" : "True"
+}

@@ -3,12 +3,20 @@ include Makefile.conf
 .PHONY: all compile compile-inplace dist dist-egg dist-whl install install-user venv envtest install-test test develop docs  clean clean-all clean-docs
 all: dist
 
+
+# Install pEpACIDgen from local repo clone, not from pypi
+install-pepacidgen:
+	pip3 install -r requirements.txt --find-links ../pEpACIDgen/dist
+
 # Build
 # =====
-compile:
+gen: install-pepacidgen
+	$(MAKE) -C src/pEp/_gen gen
+
+compile: gen
 	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT)
 
-compile-inplace:
+compile-inplace: gen
 	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT) --inplace
 
 # Packaging

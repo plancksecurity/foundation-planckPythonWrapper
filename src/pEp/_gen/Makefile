@@ -1,32 +1,46 @@
-include ../Makefile.conf
-TARGET=$(TARGET_GEN)
+include Makefile.conf
 
-# Specific Build settings
-CXXFLAGS+=
-INCLUDES+=
-LIB_DIRS+=
-LIBS+=
-LDFLAGS+=
+TARGET=_gen.so
 
+TARGET_MODULE_DYN=$(TARGET)
+TARGET_MODULE_STATIC=$(TARGET)
 
+CXX=clang
+CXXFLAGS+=-std=c++11 -g
 
-# Combine Settings
+SRCS+=$(wildcard *.cc)
+OBJS+=$(SRCS:.cc=.o)
+
 CXXFLAGS+=$(INCLUDES)
-LDFLAGS+=$(LIB_DIRS)
-LDFLAGS+=$(LIBS)
+LDFLAGS_DYN+=-undefined dynamic_lookup $(LIBS_PATH) $(LIBS)
+LDFLAGS_STATIC+=-undefined dynamic_lookup
 
-SRCS:=$(wildcard *.cc)
-OBJS:=$(SRCS:.cc=.o)
+$(info -----BUILD INFO----)
+$(info SRCS 	$(SRCS))
+$(info OBJS 	$(OBJS))
 
-.PHONY: clean
+.PHONY: all gen module_dyn module_static clean
 
-all: $(TARGET)
+all: static
 
-# Using implicit compile target
-# And explicit link taget
-$(TARGET): $(OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+static: gen module_static
+
+dyn: gen module_dyn
+
+gen:
+	$(MAKE) -C gen
+
+module_dyn: $(TARGET_MODULE_DYN)
+
+$(TARGET_MODULE_DYN) : $(OBJS)
+	$(CXX) $(LDFLAGS_DYN) -o $@ $^
+
+module_static: $(TARGET_MODULE_STATIC)
+
+$(TARGET_MODULE_STATIC) : $(OBJS) $(LIBS_STATIC)
+	$(CXX) $(LDFLAGS_STATIC) -o $@ $^
 
 clean:
-	rm -rf $(TARGET)
-	rm -rf $(OBJS)
+	$(MAKE) -C gen clean
+	rm -f $(TARGET)
+	rm -f $(OBJS)

@@ -47,4 +47,9 @@ __pycache__/
 .DS_store
 
 
-
+# pEpACIDgen generated files
+/src/pEp/_gen/gen/adapter_main.hh.acid.json
+/src/pEp/_gen/gen/adapter_main.hh.acid.yml
+/src/pEp/_gen/gen/adapter_main.hh.ast.json
+/src/pEp/_gen/gen/py_module.pybind11
+/src/pEp/_gen/gen/py_module.yml2
