@@ -16,7 +16,7 @@ $(info CC_FILE 		$(PYBIND11_FILE))
 
 all: pybind
 
-yml: $(YML2_FILE))
+yml: $(YML2_FILE)
 
 pybind: $(PYBIND11_FILE)
 

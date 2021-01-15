@@ -43,4 +43,4 @@ clean:
 	rm -f $(OBJS)
 
 clean-all: clean
-	$(MAKE) gen clean
+	$(MAKE) -C gen clean
