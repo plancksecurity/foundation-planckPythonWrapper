@@ -2,8 +2,9 @@ include Makefile.conf
 
 TARGET=_gen.so
 
+# Swap here, for static vs dyn linking
 TARGET_MODULE_DYN=$(TARGET)
-TARGET_MODULE_STATIC=$(TARGET)
+TARGET_MODULE_STATIC=
 
 CXX=clang
 CXXFLAGS+=-std=c++11 -g
@@ -19,28 +20,27 @@ $(info -----BUILD INFO----)
 $(info SRCS 	$(SRCS))
 $(info OBJS 	$(OBJS))
 
-.PHONY: all gen module_dyn module_static clean
+.PHONY: all gen gen-pybind module_dyn module_static clean
 
-all: static
-
-static: gen module_static
-
-dyn: gen module_dyn
+all: gen compile
 
 gen:
 	$(MAKE) -C gen
 
-module_dyn: $(TARGET_MODULE_DYN)
+gen-pybind:
+	$(MAKE) -C gen pybind
+
+compile: $(TARGET)
 
 $(TARGET_MODULE_DYN) : $(OBJS)
 	$(CXX) $(LDFLAGS_DYN) -o $@ $^
-
-module_static: $(TARGET_MODULE_STATIC)
 
 $(TARGET_MODULE_STATIC) : $(OBJS) $(LIBS_STATIC)
 	$(CXX) $(LDFLAGS_STATIC) -o $@ $^
 
 clean:
-	$(MAKE) -C gen clean
 	rm -f $(TARGET)
 	rm -f $(OBJS)
+
+clean-all: clean
+	$(MAKE) gen clean
