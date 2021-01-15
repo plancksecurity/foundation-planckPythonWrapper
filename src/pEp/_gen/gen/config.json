@@ -5,7 +5,7 @@
     "variables": [
     ],
     "functions": [
-        "myself"
+        "log_event"
     ],
     "debug_ast" : "True",
     "debug_acid" : "True",
