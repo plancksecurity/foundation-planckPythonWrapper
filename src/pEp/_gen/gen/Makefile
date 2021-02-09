@@ -18,7 +18,7 @@ all: pybind
 
 yml: $(YML2_FILE)
 
-pybind: $(PYBIND11_FILE)
+pybind: $(YML2_FILE) $(PYBIND11_FILE)
 
 $(YML2_FILE): config.json
 	pEp_acid_gen $^
