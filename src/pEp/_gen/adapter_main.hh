@@ -14,6 +14,8 @@
 #include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
+#include <pEp/distribution_codec.h>
+#include <pEp/sync_codec.h>
 /// =======
 
 // #include <pEp/identity_list.h>
