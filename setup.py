@@ -7,7 +7,6 @@
 from __future__ import print_function
 
 import sys
-
 import os
 from os import environ
 from os.path import join
@@ -176,6 +175,8 @@ class BuildExtCommand(build_ext):
 
         global module_gen
         module_gen.include_dirs = includes
+        import pybind11
+        module_gen.include_dirs += [pybind11.commands.get_include()]
         module_gen.library_dirs = libdirs
         # module_gen.libraries = libs
         module_gen.extra_compile_args = compile_flags
