@@ -54,5 +54,6 @@ __pycache__/
 /src/pEp/_gen/gen/py_module.pybind11
 /src/pEp/_gen/gen/py_module.yml2
 /src/pEp/_gen.cpython-38-darwin.so
+/src/pEp/_pEp.cpython-38-darwin.so
 /src/pEp/_gen/pEpModule.o
 /src/pEp/_gen/_gen.so
