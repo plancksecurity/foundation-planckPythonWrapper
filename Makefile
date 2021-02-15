@@ -65,8 +65,6 @@ envtest:
 install-test: compile
 	pip3 install .[test]
 
-# TODO: maybe use setup.py test?
-# --forked, because every test needs a separate process, see PYADPT-100
 test:
 	pytest
 
@@ -88,6 +86,7 @@ clean-all: clean
 	rm -rf $(VENV_DIR)
 
 clean: clean-docs
+	$(MAKE) -C src/pEp/_gen clean-all
 	rm -rf $(BUILD_DIR)
 	rm -rf $(DIST_DIR)
 	rm -rf $(PYTHON_ARTIFACTS)

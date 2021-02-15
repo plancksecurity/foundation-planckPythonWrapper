@@ -13,6 +13,9 @@ Welcome to pEpPythonAdapter's documentation!
    install
    software_using
    api/pEp
+   api/pEp._pEp
+   api/pEp._gen
+
 Indices and tables
 ==================
 
