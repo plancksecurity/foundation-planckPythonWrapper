@@ -81,7 +81,13 @@ class BuildExtCommand(build_ext):
             'boost_python38-vc142-mt-x32-1_72',
             'boost_locale-vc142-mt-x32-1_72'
         ]
-        return (home, sys_includes, sys_libdirs, libs)
+        compile_flags = ['/std:c++14', '/permissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['/O0', '/g', '/UNDEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
+
 
     def get_build_info_darwin(self):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
@@ -97,7 +103,13 @@ class BuildExtCommand(build_ext):
             'boost_python38-mt',
             'boost_locale-mt'
         ]
-        return (home, sys_includes, sys_libdirs, libs)
+        compile_flags = ['-std=c++14', '-fpermissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['-O0', '-g', '-UNDEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
+
 
     def get_build_info_linux(self):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
@@ -116,7 +128,13 @@ class BuildExtCommand(build_ext):
             'boost_python3',
             'boost_locale'
         ]
-        return (home, sys_includes, sys_libdirs, libs)
+        compile_flags = ['-std=c++14', '-fpermissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['-O0', '-g', '-UNDEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
+
 
     def finalize_options(self):
         build_ext.finalize_options(self)
@@ -124,6 +142,7 @@ class BuildExtCommand(build_ext):
         pEpLog("local: ", self.local)
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
+
 
         # get build information for platform
         if sys.platform == 'win32':
@@ -136,7 +155,7 @@ class BuildExtCommand(build_ext):
             pEpLog("Platform not supported:" + sys.platform)
             exit()
 
-        (home, sys_includes, sys_libdirs, libs) = build_info
+        (home, sys_includes, sys_libdirs, libs, compile_flags) = build_info
 
         # Build the Includes -I and Library paths -L
         # Start empty
@@ -161,12 +180,6 @@ class BuildExtCommand(build_ext):
         # Append default system dirs
         includes += sys_includes
         libdirs += sys_libdirs
-
-        # Compile flags
-        compile_flags = ['/std:c++14', '/permissive'] if sys.platform == 'win32' else [ '--std:c++14', '--fpermissive' ]
-        if self.debug:
-            pEpLog("debug mode")
-            compile_flags += ['-O0', '-g', '-UNDEBUG']
 
         # Apply the build information
         global module_pEp
