@@ -42,53 +42,44 @@ class BuildExtCommand(build_ext):
         self.prefix = getattr(self, "prefix=", None)
 
     def windowsGetInstallLocation(self):
-        # Note: should be installed to 'C:\Program Files (x86)' while a 32-bit distro
-        # TODO: Try desktop adapter location first, then COM server
-        # FIXME: This is wrong, we should chase the COM server, not the Outlook Plugin (even if they're in the same place)
-        reg_path = "Software\\Microsoft\\Office\\Outlook\\Addins\\pEp"
-        KeyName = 'FileName'
+        reg_path = "SOFTWARE\\Classes\\TypeLib\\{564A4350-419E-47F1-B0DF-6FCCF0CD0BBC}\\1.0\\0\\win32"
+        KeyName = None
         regKey = None
         pEpLog("Registry Lookup:", reg_path, KeyName)
         try:
             regKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path, 0, winreg.KEY_READ)
             # Keys: Description, FileName, FriendlyName, LoadBehavior
-            com_server, regtype = winreg.QueryValueEx(regKey, KeyName)
-            winreg.CloseKey(regKey)
-        except WindowsError:
-            pEpLog("Unknown Error")
+            com_server, _ = winreg.QueryValueEx(regKey, KeyName)
+        except WindowsError as error:
+            pEpLog("Error ocurred: " + error)
             com_server = None
         finally:
             if winreg:
                 winreg.CloseKey(regKey)
-        # <install-base>\\bin\\COM_Server.exe
         dirname = os.path.dirname
         ret = dirname(dirname(com_server))
         pEpLog("Value:", ret)
         return ret
 
-    def get_build_info_winnt(self):
+    def windowsGetBoostDirs(self):
+        for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', 'packages')) if f.is_dir()]:
+            if 'boost.' in dir or 'boost_python' in dir or 'boost_locale' in dir:
+                yield join(dir, 'lib', 'native'), join(dir, 'lib', 'native', 'include')
+
+    def get_build_info_win32(self):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
-        sys_root = environ.get('SystemRoot')
-        profile_root = environ.get('AppData')
-        local_root = environ.get('LocalAppData')
         inst_prefix = self.windowsGetInstallLocation()
         sys_includes = [
-            join(inst_prefix, 'include'),
-            join(profile_root, 'pEp', 'include'),
-            join(local_root, 'pEp', 'include'),
-            join(sys_root, 'pEp', 'include'),
-        ]
+            join(inst_prefix),
+        ] + [d[1] for d in self.windowsGetBoostDirs()]
         sys_libdirs = [
-            join(inst_prefix, 'bin'),
-            join(profile_root, 'pEp', 'bin'),
-            join(local_root, 'pEp', 'bin'),
-            join(sys_root, 'pEp', 'bin'),
-        ]
+            join(inst_prefix, 'Release')
+        ] + [d[0] for d in self.windowsGetBoostDirs()]
         libs = [
             'pEpEngine',
-            'pEpAdapter',
-            'boost_python37-mt',
-            'boost_locale-mt'
+            'libpEpAdapter',
+            'boost_python38-vc142-mt-x32-1_72',
+            'boost_locale-vc142-mt-x32-1_72'
         ]
         return (home, sys_includes, sys_libdirs, libs)
 
@@ -135,8 +126,8 @@ class BuildExtCommand(build_ext):
         pEpLog("sys.platform: ", sys.platform)
 
         # get build information for platform
-        if sys.platform == 'winnt':
-            build_info = self.get_build_info_winnt()
+        if sys.platform == 'win32':
+            build_info = self.get_build_info_win32()
         elif sys.platform == 'darwin':
             build_info = self.get_build_info_darwin()
         elif sys.platform == 'linux':
@@ -172,7 +163,7 @@ class BuildExtCommand(build_ext):
         libdirs += sys_libdirs
 
         # Compile flags
-        compile_flags = ['-std=c++14', '-fpermissive']
+        compile_flags = ['/std:c++14', '/permissive'] if sys.platform == 'win32' else [ '--std:c++14', '--fpermissive' ]
         if self.debug:
             pEpLog("debug mode")
             compile_flags += ['-O0', '-g', '-UNDEBUG']
@@ -193,8 +184,8 @@ class BuildExtCommand(build_ext):
         build_ext.run(self)
 
 
-if sys.platform == 'winnt':
-    if  sys.version_info[0] >= 3:
+if sys.platform == 'win32':
+    if sys.version_info[0] >= 3:
         import winreg
     else:
         import _winreg as winreg
