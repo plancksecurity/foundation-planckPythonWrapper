@@ -9,7 +9,7 @@ system dependencies already installed:
 * pEp-base (sequoia, libetpan, asn1c, yml2, pEpEngine, libpEpAdapter)
 * boost-python
 
-These `build instructions <https://dev.pep.foundation/Common%20Adapter%20Documentation/Adapter_Build_Instructions>`_ will get you all setup.
+These `build instructions <https://dev.pep.foundation/Common%20Adapter%20Documentation/Adapter%20Build%20Instructions>`_ will get you all setup.
 
 Additionally, there is a `build script <http://pep-security.lu/gitlab/juga/Internal-Deployment/-/blob/master/build-pep-stack.sh>`_
 that executes these build instructions automatically (Debian and MacOS):
