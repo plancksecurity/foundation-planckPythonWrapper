@@ -5,8 +5,8 @@ Python adapter for the `pEpEngine <https://pep.foundation/dev/repos/pEpEngine/>`
 
 Documentation
 -------------
-Please find the documentation in the ``docs`` directory.
-
+The build instructions can be found in ``docs/source/install.rst``.
+These build instruction also cover how to generate the complete documentation using sphinx.
 
 Issues
 ------
