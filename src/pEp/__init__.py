@@ -56,7 +56,7 @@ def notify_handshake(me, partner, signal):
     overwrite this method with an implementation of a handshake dialog
     GIL CAVEAT
     """
-    print("message_to_send() - default callback\n")
+    print("notify_handshake() - default callback\n")
     print("overwrite this method")
 
 
