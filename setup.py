@@ -70,9 +70,8 @@ class BuildExtCommand(build_ext):
         sys_includes = [
             join(inst_prefix),
         ] + [d[1] for d in self.windowsGetBoostDirs()]
-        sys_libdirs = [
-            join(inst_prefix, 'Release')
-        ] + [d[0] for d in self.windowsGetBoostDirs()]
+        sys_libdirs = [ join(inst_prefix, 'Debug')] if self.debug else [ join(inst_prefix, 'Release')]
+        sys_libdirs += [d[0] for d in self.windowsGetBoostDirs()]
         libs = [
             'pEpEngine',
             'libpEpAdapter',
@@ -82,7 +81,7 @@ class BuildExtCommand(build_ext):
         compile_flags = ['/std:c++14', '/permissive']
         if self.debug:
             pEpLog("debug mode")
-            compile_flags += ['/O0', '/g', '/UNDEBUG']
+            compile_flags += ['/Od', '/Zi', '/DEBUG']
 
         return (home, sys_includes, sys_libdirs, libs, compile_flags)
 
