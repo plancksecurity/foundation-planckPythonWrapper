@@ -16,12 +16,24 @@ dist-egg: compile
 # build the module into build
 compile:
     CD..
-    PY -3.8-32 setup.py build_ext
+    PY -3.8-32 setup.py build_ext --debug
 
 # delete output directories
 clean:
- @if exist $(BUILD_DIR) rmdir /S /Q $(BUILD_DIR)
- @if exist $(DIST_DIR) rmdir /S /Q $(DIST_DIR)
+    @if exist $(BUILD_DIR) rmdir /S /Q $(BUILD_DIR)
+    @if exist $(DIST_DIR) rmdir /S /Q $(DIST_DIR)
 
 # create directories and build application
 all: clean dist
+
+# release build
+release: clean
+    CD..
+    PY -3.8-32 setup.py build_ext
+    PY -3.8-32 setup.py bdist_wheel
+
+#debug build
+debug: clean
+    CD..
+    PY -3.8-32 setup.py build_ext --debug
+    PY -3.8-32 setup.py bdist_wheel

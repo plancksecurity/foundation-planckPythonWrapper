@@ -63,7 +63,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
@@ -76,7 +76,7 @@
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>

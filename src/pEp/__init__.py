@@ -54,7 +54,7 @@ def shutdown_sync() -> None :
 
 def is_sync_active() -> bool:
     """True if sync is active, False otherwise"""
-    return Sync.getInstance().isAlive()
+    return Sync.getInstance().is_alive()
 
 
 def message_to_send(msg):
@@ -123,7 +123,7 @@ class Sync(Thread):
     @staticmethod
     def shutdown_sync():
         if Sync.__instance:
-            if Sync.__instance.isAlive():
+            if Sync.__instance.is_alive():
                 pEp.inject_sync_shutdown()
                 Sync.__instance.join()
                 Sync.__instance = None
