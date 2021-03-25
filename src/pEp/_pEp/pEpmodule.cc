@@ -37,11 +37,12 @@ namespace pEp {
             pEpLog("called");
         }
 
-// hidden init function, wrapped by hello_world.init()
+        // hidden init function, wrapped by _pEp.init()
         void _init_after_main_module() {
             pEpLog("called");
-            callback_dispatcher.add(_messageToSend, notifyHandshake, nullptr, nullptr);
+            callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
             Adapter::_messageToSend = CallbackDispatcher::messageToSend;
+            Adapter::_notifyHandshake = CallbackDispatcher::notifyHandshake;
         }
 
 
@@ -96,6 +97,7 @@ namespace pEp {
             }
         }
 
+        // TODO: GIL handling isnt really required here, i think
         PEP_STATUS _messageToSend(::message *msg) {
             pEpLog("called");
             try {
@@ -103,7 +105,7 @@ namespace pEp {
                 pEpLog("GIL Aquired");
                 object modref = import("pEp");
                 object funcref = modref.attr("message_to_send");
-                call<void>(funcref.ptr(), Message());
+                call<void>(funcref.ptr(), Message(msg));
                 PyGILState_Release(gil);
                 pEpLog("GIL released");
             } catch (exception &e) {}
@@ -111,14 +113,15 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal) {
+        // TODO: GIL handling isnt really required here, i think
+        PEP_STATUS _notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal) {
             pEpLog("called");
             try {
                 PyGILState_STATE gil = PyGILState_Ensure();
                 pEpLog("GIL Aquired");
                 object modref = import("pEp");
                 object funcref = modref.attr("notify_handshake");
-                call<void>(funcref.ptr(), me, partner, signal);
+                call<void>(funcref.ptr(), Identity(me), Identity(partner), signal);
                 PyGILState_Release(gil);
                 pEpLog("GIL released");
             } catch (exception &e) {}
@@ -126,13 +129,43 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-
-        void start_sync() {
-            CallbackDispatcher::start_sync();
+        bool do_protocol_step() {
+            pEpLog("called");
+            SYNC_EVENT event = Adapter::_retrieve_next_sync_event(nullptr, 0);
+            if (event != NULL) {
+                ::do_sync_protocol_step(Adapter::session(), (void *)&callback_dispatcher, event);
+                return true;
+            } else {
+                pEpLog("null event, signaling sync shutdown");
+                return false;
+            }
         }
 
-        void shutdown_sync() {
-            CallbackDispatcher::stop_sync();
+        void register_sync_callbacks() {
+            pEpLog("called");
+            PEP_STATUS status = ::register_sync_callbacks(Adapter::session(), nullptr, Adapter::_notifyHandshake, Adapter::_retrieve_next_sync_event);
+            _throw_status(status);
+        }
+
+        void unregister_sync_callbacks() {
+            ::unregister_sync_callbacks(Adapter::session());
+        }
+
+        void inject_sync_shutdown() {
+            pEpLog("injecting null event");
+            Adapter::_inject_sync_event(nullptr,nullptr);
+        }
+
+        // TODO: Integrate this (currently SEGFAULTING)
+        void notifyHandshake_sync_start() {
+            pEpLog("all targets signal: SYNC_NOTIFY_START");
+            CallbackDispatcher::notifyHandshake(nullptr, nullptr, SYNC_NOTIFY_START);
+        }
+
+        // TODO: Integrate this (currently SEGFAULTING)
+        void notifyHandshake_sync_stop() {
+            pEpLog("all targets signal: SYNC_NOTIFY_STOP");
+            CallbackDispatcher::notifyHandshake(nullptr, nullptr, SYNC_NOTIFY_STOP);
         }
 
         void debug_color(int ansi_color) {
@@ -141,10 +174,6 @@ namespace pEp {
 
         void leave_device_group() {
             ::leave_device_group(Adapter::session());
-        }
-
-        bool is_sync_active() {
-            return Adapter::is_sync_running();
         }
 
         void testfunc() {
@@ -195,6 +224,27 @@ namespace pEp {
                 scope().attr("per_machine_directory") = per_machine_directory();
                 scope().attr("engine_version") = get_engine_version();
                 scope().attr("protocol_version") = get_protocol_version();
+
+                def("set_debug_log_enabled", &Adapter::pEpLog::set_enabled,
+                "Switch debug logging on/off");
+
+                def("register_sync_callbacks", register_sync_callbacks,
+                "");
+
+                def("unregister_sync_callbacks", unregister_sync_callbacks,
+                "");
+
+                def("do_protocol_step", do_protocol_step,
+                "");
+
+                def("inject_sync_shutdown", inject_sync_shutdown,
+                "");
+
+                def("notifyHandshake_sync_start", notifyHandshake_sync_start,
+                "");
+
+                def("notifyHandshake_sync_stop", notifyHandshake_sync_stop,
+                "");
 
                 def("passive_mode", config_passive_mode,
                 "do not attach pub keys to all messages");
@@ -584,32 +634,6 @@ namespace pEp {
                 .value("SYNC_NOTIFY_SOLE", SYNC_NOTIFY_SOLE)
                 .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP);
 
-//    auto user_interface_class = class_<UserInterface, UserInterface_callback, boost::noncopyable>(
-//            "UserInterface",
-//    "class MyUserInterface(UserInterface):\n"
-//    "   def notifyHandshake(self, me, partner):\n"
-//    "       ...\n"
-//    "\n"
-//    "p≡p User Interface class\n"
-//    "To be used as a mixin\n"
-//    )
-//        .def("notifyHandshake", &UserInterface::notifyHandshake,
-//    "notifyHandshake(self, me, partner)\n"
-//    "\n"
-//    "   me              own identity\n"
-//    "   partner         identity of communication partner\n"
-//    "\n"
-//    "overwrite this method with an implementation of a handshake dialog")
-//        .def("deliverHandshakeResult", &UserInterface::deliverHandshakeResult,
-//                boost::python::arg("identities")=object(),
-//    "deliverHandshakeResult(self, result, identities=None)\n"
-//    "\n"
-//    "   result          -1: cancel, 0: accepted, 1: rejected\n"
-//    "   identities      list of identities to share or None for all\n"
-//    "\n"
-//    "call to deliver the handshake result of the handshake dialog"
-//    );
-
                 def("deliver_handshake_result", &deliverHandshakeResult, boost::python::arg("identities")=object(),
                 "deliverHandshakeResult(self, result, identities=None)\n"
                 "\n"
@@ -617,18 +641,6 @@ namespace pEp {
                 "   identities      list of identities to share or None for all\n"
                 "\n"
                 "call to deliver the handshake result of the handshake dialog"
-                );
-
-                def("start_sync", &start_sync,
-                "start_sync()\n"
-                "\n"
-                "starts the sync thread"
-                );
-
-                def("shutdown_sync", &shutdown_sync,
-                "shutdown_sync()\n"
-                "\n"
-                "call this from another thread to shut down the sync thread\n"
                 );
 
                 def("debug_color", &debug_color,
@@ -639,13 +651,6 @@ namespace pEp {
                 "\n"
                 "call this for a grouped device, which should leave\n"
                 );
-
-                def("is_sync_active", &is_sync_active,
-                "is_sync_active()\n"
-                "\n"
-                "True if sync is active, False otherwise\n"
-                );
-
 
                 // codecs
                 call< object >(((object)(import("codecs").attr("register"))).ptr(), make_function(sync_search));
