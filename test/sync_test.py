@@ -36,8 +36,6 @@ def test_for(path, color=None, end_on=None, mt=False, imap=False, own_ident=1):
 
     sync_handshake.run(path, color, imap, own_ident)
 
-    os.chdir(cwd)
-
 
 def setup(path):
     cwd = os.getcwd();
