@@ -77,3 +77,4 @@ __pycache__/
 
 # platform artifacts
 .DS_store
+/src/pEp/_pEp.cpython-38-darwin.so
