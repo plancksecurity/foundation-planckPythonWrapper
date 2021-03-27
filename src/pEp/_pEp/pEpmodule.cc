@@ -41,8 +41,16 @@ namespace pEp {
         void _init_after_main_module() {
             pEpLog("called");
             callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
-            Adapter::_messageToSend = CallbackDispatcher::messageToSend;
-            Adapter::_notifyHandshake = CallbackDispatcher::notifyHandshake;
+//            Adapter::sync_initialize(
+//                    Adapter::SyncModes::Off,
+//                    CallbackDispatcher::messageToSend,
+//                    CallbackDispatcher::notifyHandshake,
+//                    true);
+            Adapter::sync_initialize(
+                    Adapter::SyncModes::Off,
+                    _messageToSend,
+                    _notifyHandshake,
+                    true);
         }
 
 
@@ -129,7 +137,7 @@ namespace pEp {
             return PEP_STATUS_OK;
         }
 
-        bool do_protocol_step() {
+        bool _do_protocol_step() {
             pEpLog("called");
             SYNC_EVENT event = Adapter::_retrieve_next_sync_event(nullptr, 0);
             if (event != NULL) {
@@ -141,29 +149,31 @@ namespace pEp {
             }
         }
 
-        void register_sync_callbacks() {
+        void _register_sync_callbacks() {
             pEpLog("called");
+            Adapter::session();
             PEP_STATUS status = ::register_sync_callbacks(Adapter::session(), nullptr, Adapter::_notifyHandshake, Adapter::_retrieve_next_sync_event);
             _throw_status(status);
         }
 
-        void unregister_sync_callbacks() {
+        void _unregister_sync_callbacks() {
             ::unregister_sync_callbacks(Adapter::session());
+//            Adapter::session(release);
         }
 
-        void inject_sync_shutdown() {
+        void _inject_sync_shutdown() {
             pEpLog("injecting null event");
-            Adapter::_inject_sync_event(nullptr,nullptr);
+            Adapter::_queue_sync_event(nullptr,nullptr);
         }
 
         // TODO: Integrate this (currently SEGFAULTING)
-        void notifyHandshake_sync_start() {
+        void _notifyHandshake_sync_start() {
             pEpLog("all targets signal: SYNC_NOTIFY_START");
             CallbackDispatcher::notifyHandshake(nullptr, nullptr, SYNC_NOTIFY_START);
         }
 
         // TODO: Integrate this (currently SEGFAULTING)
-        void notifyHandshake_sync_stop() {
+        void _notifyHandshake_sync_stop() {
             pEpLog("all targets signal: SYNC_NOTIFY_STOP");
             CallbackDispatcher::notifyHandshake(nullptr, nullptr, SYNC_NOTIFY_STOP);
         }
@@ -228,23 +238,31 @@ namespace pEp {
                 def("set_debug_log_enabled", &Adapter::pEpLog::set_enabled,
                 "Switch debug logging on/off");
 
-                def("register_sync_callbacks", register_sync_callbacks,
+                def("_register_sync_callbacks", _register_sync_callbacks,
                 "");
 
-                def("unregister_sync_callbacks", unregister_sync_callbacks,
+                def("_unregister_sync_callbacks", _unregister_sync_callbacks,
                 "");
 
-                def("do_protocol_step", do_protocol_step,
+                def("_do_protocol_step", _do_protocol_step,
                 "");
 
-                def("inject_sync_shutdown", inject_sync_shutdown,
+                def("_inject_sync_shutdown", _inject_sync_shutdown,
                 "");
 
-                def("notifyHandshake_sync_start", notifyHandshake_sync_start,
+                def("_notifyHandshake_sync_start", _notifyHandshake_sync_start,
                 "");
 
-                def("notifyHandshake_sync_stop", notifyHandshake_sync_stop,
+                def("_notifyHandshake_sync_stop", _notifyHandshake_sync_stop,
                 "");
+
+                def("_set_sync_mode", pEp::Adapter::set_sync_mode,
+                "");
+
+                enum_<pEp::Adapter::SyncModes>("SyncModes")
+                .value("Off", pEp::Adapter::SyncModes::Off)
+                .value("Async", pEp::Adapter::SyncModes::Async)
+                .value("Sync", pEp::Adapter::SyncModes::Sync);
 
                 def("passive_mode", config_passive_mode,
                 "do not attach pub keys to all messages");
