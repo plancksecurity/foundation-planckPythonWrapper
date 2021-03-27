@@ -186,16 +186,11 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
         pEp.message_to_send = messageToSend
 
     if multithreaded:
-        from threading import Thread
-        def sync_thread():
-            print(colored("********* ", "yellow") + colored("sync_thread entered", color))
-            print(colored("********* ", "yellow") + colored("UserInterface object created", color))
-            pEp.Sync.run()
-            print(colored("********* ", "yellow") + colored("leaving sync_thread", color))
-        sync = Thread(target=sync_thread)
-        sync.start()
+        print("Sync Start multi-threaded")
+        pEp.set_sync_mode(pEp.SyncModes.Async)
     else:
-        pEp.start_sync();
+        print("Sync Start single-threaded")
+        pEp.set_sync_mode(pEp.SyncModes.Sync);
 
     try:
         if leave:
