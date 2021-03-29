@@ -90,6 +90,8 @@ def print_msg(p):
 
 
 def messageToSend(msg):
+    assert msg.from_.address == "alice@peptest.ch"
+    assert msg.to[0].address == "alice@peptest.ch"
     msg = add_debug_info(msg)
     minimail.send(inbox, msg, device_name)
 
