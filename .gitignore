@@ -74,6 +74,8 @@ __pycache__/
 .idea
 .spyproject
 *.code-workspace
+tags
+ws
 
 # platform artifacts
 .DS_store

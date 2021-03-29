@@ -186,6 +186,10 @@ namespace pEp {
             ::leave_device_group(Adapter::session());
         }
 
+        void disable_all_sync_channels() {
+            ::disable_all_sync_channels(Adapter::session());
+        }
+
         void testfunc() {
             _messageToSend(NULL);
         }
@@ -668,6 +672,12 @@ namespace pEp {
                 "leave_device_group()\n"
                 "\n"
                 "call this for a grouped device, which should leave\n"
+                );
+
+                def("disable_all_sync_channels", &disable_all_sync_channels,
+                "disable_all_sync_channels()\n"
+                "\n"
+                "Disable sync for all identities\n"
                 );
 
                 // codecs

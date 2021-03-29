@@ -164,6 +164,16 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
         elif color == "cyan":
             pEp.debug_color(36)
 
+    if own_ident >= 2:
+        me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
+        pEp.myself(me2)
+
+    if own_ident == 3:
+        me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
+        pEp.myself(me3)    
+
+    pEp.disable_all_sync_channels()
+
     if imap:
         import miniimap
         import imap_settings
@@ -174,15 +184,6 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
     else:
         me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
         pEp.myself(me)
-
-        if own_ident >= 2:
-            me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
-            pEp.myself(me2)
-
-        if own_ident == 3:
-            me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
-            pEp.myself(me3)    
-
         pEp.message_to_send = messageToSend
 
     if multithreaded:
