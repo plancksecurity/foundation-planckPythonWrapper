@@ -1,5 +1,37 @@
 syntax: glob
 
+ws/
+pEp.egg-info/
+dist/
+build/
+.pythonhist
+.gnupg
+.lldb
+.so
+.pEp_management.db*
+.python_history
+__pycache__/
+test/Laptop/
+test/Library/
+test/Phone/
+test/TestInbox/
+test/Backup/
+test/lib/
+test/imap_settings.py
+venv/
+build-windows/Debug/
+build-windows/Release/
+build-windows/packages/
+build-windows/.vs/
+build-windows/pEpPythonAdapter.vcxproj.*
+launch.json
+settings.json
+# Default ignored files
+.idea/
+docs/build/
+.eggs/
+.tox/
+=======
 # Build config
 local.conf
 
@@ -42,9 +74,9 @@ __pycache__/
 .idea
 .spyproject
 *.code-workspace
+tags
+ws
 
 # platform artifacts
 .DS_store
-
-
-
+/src/pEp/_pEp.cpython-38-darwin.so

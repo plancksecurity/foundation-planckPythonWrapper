@@ -1,5 +1,7 @@
 = Tests in this directory =
 
+more doc under: https://dev.pep.foundation/Engine/Testing%20p%e2%89%a1p%20Sync
+
 $ HOME=$PWD python3 basic_doctest.py -v
     do some basic tests of p≡p
 

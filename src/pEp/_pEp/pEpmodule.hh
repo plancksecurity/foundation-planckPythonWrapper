@@ -27,7 +27,7 @@ namespace pEp {
 
         PEP_STATUS _messageToSend(::message *msg);
 
-        PEP_STATUS notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
+        PEP_STATUS _notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal);
 
     } /* namespace PythonAdapter */
 } /* namespace pEp */

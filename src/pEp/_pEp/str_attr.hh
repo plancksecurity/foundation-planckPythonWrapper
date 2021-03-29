@@ -12,6 +12,7 @@
 #include <pEp/timestamp.h>
 #include <pEp/stringlist.h>
 #include <pEp/stringpair.h>
+#include <pEp/platform.h>
 
 namespace pEp {
 namespace PythonAdapter {

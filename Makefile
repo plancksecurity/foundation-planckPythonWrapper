@@ -1,7 +1,7 @@
 include Makefile.conf
 
 .PHONY: all compile compile-inplace dist dist-egg dist-whl install install-user venv envtest install-test test develop docs  clean clean-all clean-docs
-all: dist
+all: install
 
 # Build
 # =====
@@ -57,8 +57,6 @@ envtest:
 install-test: compile
 	pip3 install .[test]
 
-# TODO: maybe use setup.py test?
-# --forked, because every test needs a separate process, see PYADPT-100
 test:
 	pytest
 

@@ -112,37 +112,36 @@ def add_debug_info(msg):
     return msg
 
 
-class UserInterface(pEp.UserInterface):
-    def notifyHandshake(self, me, partner, signal):
-        print(colored(str(signal), "yellow"), end=" ")
-        output("on " + device_name + "" if not me.fpr else
-                "for identities " + str(me.fpr) + " " + str(partner.fpr))
-        if me.fpr and partner.fpr:
-            assert me.fpr != partner.fpr
 
-        if signal in (
-                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
-                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
-                pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
-            ):
-            if isinstance(end_on, list):
-                end_on.extend([
-                        pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
-                        pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
-                    ])
-            sleep(.5) # user is reading message
-            try:
-                if not options.noanswer:
-                    if options.reject:
-                        self.deliverHandshakeResult(SYNC_HANDSHAKE_REJECTED)
-                    else:
-                        self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
+def this_notifyHandshake(me, partner, signal):
+    print(colored(str(signal), "yellow"), end=" ")
+    output("on " + device_name + "" if not me.fpr else
+           "for identities " + str(me.fpr) + " " + str(partner.fpr))
+    if me.fpr and partner.fpr:
+        assert me.fpr != partner.fpr
 
-            except NameError:
-                self.deliverHandshakeResult(SYNC_HANDSHAKE_ACCEPTED)
-        if signal in end_on:
-            global the_end
-            the_end = True
+    if signal in (
+        pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OTHER_DEVICE,
+        pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_ADD_OUR_DEVICE,
+        pEp.sync_handshake_signal.SYNC_NOTIFY_INIT_FORM_GROUP
+    ):
+        if isinstance(end_on, list):
+            end_on.extend([
+                pEp.sync_handshake_signal.SYNC_NOTIFY_SOLE,
+                pEp.sync_handshake_signal.SYNC_NOTIFY_IN_GROUP,
+            ])
+        sleep(.5) # user is reading message
+        try:
+            if not options.noanswer:
+                if options.reject:
+                    pEp.deliver_handshake_result(SYNC_HANDSHAKE_REJECTED)
+                else:
+                    pEp.deliver_handshake_result(SYNC_HANDSHAKE_ACCEPTED)
+        except NameError:
+            pEp.deliver_handshake_result(SYNC_HANDSHAKE_ACCEPTED)
+    if signal in end_on:
+        global the_end
+        the_end = True
 
 
 def shutdown_sync():
@@ -153,6 +152,7 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
 
     global device_name
     device_name = name
+    pEp.notify_handshake = this_notifyHandshake
 
     if color:
         global output
@@ -164,41 +164,34 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
         elif color == "cyan":
             pEp.debug_color(36)
 
+    if own_ident >= 2:
+        me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
+        pEp.myself(me2)
+
+    if own_ident == 3:
+        me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
+        pEp.myself(me3)    
+
+    pEp.disable_all_sync_channels()
+
     if imap:
         import miniimap
         import imap_settings
         
         me = pEp.Identity(imap_settings.IMAP_EMAIL, name + " of " + imap_settings.IMAP_USER, name)
         pEp.myself(me)
-        pEp.messageToSend = messageImapToSend
+        pEp.message_to_send = messageImapToSend
     else:
         me = pEp.Identity("alice@peptest.ch", name + " of Alice Neuman", name)
         pEp.myself(me)
-
-        if own_ident >= 2:
-            me2 = pEp.Identity("alice@pep.security", name + " of Alice Neuman", name)
-            pEp.myself(me2)
-
-        if own_ident == 3:
-            me3 = pEp.Identity("alice@pep.foundation", name + " of Alice Neuman", name)
-            pEp.myself(me3)    
-
-        pEp.messageToSend = messageToSend
+        pEp.message_to_send = messageToSend
 
     if multithreaded:
-        from threading import Thread
-        def sync_thread():
-            print(colored("********* ", "yellow") + colored("sync_thread entered", color))
-            ui = UserInterface()
-            print(colored("********* ", "yellow") + colored("UserInterface object created", color))
-            pEp.do_sync_protocol()
-            print(colored("********* ", "yellow") + colored("leaving sync_thread", color))
-        sync = Thread(target=sync_thread)
-        sync.start()
+        print("Sync Start multi-threaded")
+        pEp.set_sync_mode(pEp.SyncModes.Async)
     else:
-        pEp.script_is_implementing_sync()
-        sync = None
-        ui = UserInterface()
+        print("Sync Start single-threaded")
+        pEp.set_sync_mode(pEp.SyncModes.Sync);
 
     try:
         if leave:
