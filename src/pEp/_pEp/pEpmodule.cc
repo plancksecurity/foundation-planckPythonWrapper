@@ -161,11 +161,6 @@ namespace pEp {
 //            Adapter::session(release);
         }
 
-        void _inject_sync_shutdown() {
-            pEpLog("injecting null event");
-            Adapter::_queue_sync_event(nullptr,nullptr);
-        }
-
         // TODO: Integrate this (currently SEGFAULTING)
         void _notifyHandshake_sync_start() {
             pEpLog("all targets signal: SYNC_NOTIFY_START");
@@ -251,7 +246,7 @@ namespace pEp {
                 def("_do_protocol_step", _do_protocol_step,
                 "");
 
-                def("_inject_sync_shutdown", _inject_sync_shutdown,
+                def("_inject_sync_shutdown", Adapter::inject_sync_shutdown,
                 "");
 
                 def("_notifyHandshake_sync_start", _notifyHandshake_sync_start,
