@@ -45,6 +45,7 @@ inbox = pathlib.Path("..") / "TestInbox"
 device_name = ""
 output = print
 multithreaded = False
+debug_log = False
 
 DONT_TRIGGER_SYNC = 0x200
 SYNC_HANDSHAKE_ACCEPTED = 0
@@ -151,9 +152,10 @@ def shutdown_sync():
 
 
 def run(name, color=None, imap=False, own_ident=1, leave=False):
-
     global device_name
     device_name = name
+
+    pEp.set_debug_log_enabled(debug_log)
     pEp.notify_handshake = this_notifyHandshake
 
     if color:
@@ -250,7 +252,9 @@ if __name__=="__main__":
             dest="leave",
             help="after a successful sync run this to make the device leave the "
             "device group again")
-
+    optParser.add_option("-d", "--debuglog", action="store_true",
+            dest="debug_log",
+            help="print extra verbose pEpPythonAdater debug log")
     options, args = optParser.parse_args()
 
     if not options.exec_for:
@@ -272,4 +276,5 @@ if __name__=="__main__":
         raise ValueError("Multiple own identities not supported for imap mode")        
 
     multithreaded = options.multithreaded
+    debug_log = options.debug_log
     run(options.exec_for, options.color, options.imap, options.own_ident, options.leave)
