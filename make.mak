@@ -31,9 +31,11 @@ release: clean
     CD..
     PY -3.8-32 setup.py build_ext
     PY -3.8-32 setup.py bdist_wheel
+    PY -3.8-32 build-windows/add_windows_libraries.py
 
 #debug build
 debug: clean
     CD..
     PY -3.8-32 setup.py build_ext --debug
     PY -3.8-32 setup.py bdist_wheel
+    PY -3.8-32 build-windows/add_windows_libraries.py --debug
