@@ -138,7 +138,6 @@ def main():
     if os.path.isfile(pEp_python_library):
         os.remove(pEp_python_library)
         dir = os.path.dirname(pEp_python_library)
-        d = dir[-3:]
         if dir[-3:].lower() == 'pep' and os.path.isdir(dir):
             os.rmdir(dir)
 
