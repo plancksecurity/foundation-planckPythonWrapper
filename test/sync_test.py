@@ -22,7 +22,7 @@ import shutil
 import pathlib
 
 
-def test_for(path, color=None, end_on=None, mt=False, imap=False, own_ident=1):
+def test_for(path, color=None, end_on=None, mt=False, imap=False, debuglog=False, own_ident=1):
 
     cwd = os.getcwd();
     os.chdir(path)
@@ -33,7 +33,7 @@ def test_for(path, color=None, end_on=None, mt=False, imap=False, own_ident=1):
     if end_on:
         sync_handshake.end_on = end_on
     sync_handshake.multithreaded = mt
-
+    sync_handshake.debug_log = debuglog
     sync_handshake.run(path, color, imap, own_ident)
 
 
@@ -105,6 +105,9 @@ if __name__ == "__main__":
     optParser.add_option("-A", "--add-account-after-sync", action="store_true",
             dest="add_account",
             help="after sync add an account")
+    optParser.add_option("-d", "--debuglog", action="store_true",
+            dest="debug_log",
+            help="print extra verbose pEpPythonAdater debug log")
 
     options, args = optParser.parse_args()
 
@@ -211,14 +214,14 @@ if __name__ == "__main__":
 
             # Phone runs with own_ident = 2
             Phone = Process(target=test_for, args=("Phone", "red", end_on,
-                options.multithreaded, options.imap, 2))
+                options.multithreaded, options.imap, options.debug_log, 2))
 
             # others run with own_ident = 1
             Laptop = Process(target=test_for, args=("Laptop", "green", end_on,
-                options.multithreaded, options.imap))
+                options.multithreaded, options.imap, options.debug_log))
             if options.third:
                 Pad = Process(target=test_for, args=("Pad", "cyan", end_on,
-                    options.multithreaded, options.imap))
+                    options.multithreaded, options.imap, options.debug_log))
 
             Phone.start()
             Laptop.start()
