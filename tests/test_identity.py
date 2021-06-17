@@ -29,6 +29,18 @@ def test_identity_constructor(pEp, model):
     assert str(alice) == str(model.alice)
 
 
+# Covers PYADPT-124
+def test_identity_update_cpt(pEp,model):
+    bob = pEp.Identity(model.bob.addr, model.bob.name)
+    bob.update()
+    assert bob.address == model.bob.addr
+    assert bob.username == model.bob.name
+    assert bob.user_id == 'TOFU_bob@peptest.org'
+    assert bob.fpr == ''
+    assert bob.comm_type == 0
+    assert bob.lang == ''
+
+
 # TODO:
 # These here are actually plenty of individual tests
 # Identity.update
