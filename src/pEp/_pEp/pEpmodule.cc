@@ -399,7 +399,10 @@ namespace pEp {
                 "MIME type of object in Blob")
                 .add_property("filename", (string(Message::Blob::*)()) &Message::Blob::filename,
                 (void(Message::Blob::*)(string)) &Message::Blob::filename,
-                "filename of object in Blob");
+                "filename of object in Blob")
+                .add_property("data", (object(Message::Blob::*)()) &Message::Blob::data,
+                (void(Message::Blob::*)(object)) &Message::Blob::data,
+                "data of object in Blob");
 
                 ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
