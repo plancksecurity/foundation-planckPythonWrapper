@@ -34,24 +34,8 @@ namespace pEp {
             if (!_bl)
                 throw bad_alloc();
 
-            Py_buffer src;
-            int result = PyObject_GetBuffer(data.ptr(), &src, PyBUF_CONTIG_RO);
-            if (result)
-                throw invalid_argument("need a contiguous buffer to read");
 
-            char *mem = (char *) malloc(src.len);
-            if (!mem) {
-                PyBuffer_Release(&src);
-                throw bad_alloc();
-            }
-
-            memcpy(mem, src.buf, src.len);
-            free(_bl->value);
-            _bl->size = src.len;
-            _bl->value = mem;
-
-            PyBuffer_Release(&src);
-
+            this->data(data);
             this->mime_type(mime_type);
             this->filename(filename);
         }
@@ -108,6 +92,30 @@ namespace pEp {
             }
 
             return PyBuffer_FillInfo(view, self, bl->value, bl->size, 0, flags);
+        }
+
+        object Message::Blob::data() {
+            return object(handle<>(PyBytes_FromString(_bl->value)));
+        }
+
+        void Message::Blob::data(object data) {
+            Py_buffer src;
+            int result = PyObject_GetBuffer(data.ptr(), &src, PyBUF_CONTIG_RO);
+            if (result)
+                throw invalid_argument("need a contiguous buffer to read");
+
+            char *mem = (char *) malloc(src.len);
+            if (!mem) {
+                PyBuffer_Release(&src);
+                throw bad_alloc();
+            }
+
+            memcpy(mem, src.buf, src.len);
+            free(_bl->value);
+            _bl->size = src.len;
+            _bl->value = mem;
+
+            PyBuffer_Release(&src);
         }
 
         string Message::Blob::decode(string encoding) {

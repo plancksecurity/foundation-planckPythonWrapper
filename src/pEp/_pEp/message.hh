@@ -59,6 +59,10 @@ namespace pEp {
 
                 size_t size() { return _bl->size; }
 
+                object data();
+
+                void data(object data);
+
                 string decode(string encoding);
 
                 string decode() { return decode(""); }
