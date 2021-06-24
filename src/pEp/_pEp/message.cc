@@ -95,7 +95,8 @@ namespace pEp {
         }
 
         object Message::Blob::data() {
-            return object(handle<>(PyBytes_FromString(_bl->value)));
+	  return object(handle<>(PyBytes_FromStringAndSize(_bl->value,
+							   _bl->size)));
         }
 
         void Message::Blob::data(object data) {
