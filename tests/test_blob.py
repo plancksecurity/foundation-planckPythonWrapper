@@ -4,6 +4,10 @@
 
 """Blob unit tests."""
 
+import pytest
+
+from . import constants
+from . import model
 
 def test_blob_data_constructor(pEp):
     bdata = b'this is binary \x00\x01\xbb\xa7\xa4\xab test data'
