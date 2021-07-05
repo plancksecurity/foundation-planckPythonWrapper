@@ -1,6 +1,6 @@
 # build dirs
-BUILD_DIR = $(ProjectDir)..\build
-DIST_DIR = $(ProjectDir)..\dist
+BUILD_DIR = build
+DIST_DIR = dist
 
 # create wheel and egg package in dist
 dist: dist-whl dist-egg
@@ -31,11 +31,13 @@ release: clean
     CD..
     PY -3.8-32 setup.py build_ext
     PY -3.8-32 setup.py bdist_wheel
-    PY -3.8-32 build-windows/add_windows_libraries.py
+    PY -3.8-32 build-windows\add_windows_libraries.py
+    COPY dist\pEp* ..\Release\
 
 #debug build
 debug: clean
     CD..
     PY -3.8-32 setup.py build_ext --debug
     PY -3.8-32 setup.py bdist_wheel
-    PY -3.8-32 build-windows/add_windows_libraries.py --debug
+    PY -3.8-32 build-windows\add_windows_libraries.py --debug
+    COPY dist\pEp* ..\Debug\

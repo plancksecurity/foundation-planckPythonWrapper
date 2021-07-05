@@ -24,6 +24,7 @@ build-windows/Release/
 build-windows/packages/
 build-windows/.vs/
 build-windows/pEpPythonAdapter.vcxproj.*
+.vscode/
 launch.json
 settings.json
 # Default ignored files
