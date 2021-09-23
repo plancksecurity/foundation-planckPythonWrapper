@@ -488,6 +488,11 @@ namespace pEp {
                 (void(Message::*)(int))
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
+                .add_property("rating", (int(Message::*)())
+                (PEP_rating(Message::*)()) &Message::rating,
+                (void(Message::*)(int))
+                (void(Message::*)(PEP_rating)) &Message::rating,
+                "the message rating as computed on this endpoint")
                 .def("encrypt", (Message(Message::*)())&Message::encrypt)
                 .def("encrypt", (Message(Message::*)(boost::python::list))&Message::_encrypt)
                 .def("encrypt", (Message(Message::*)(boost::python::list, int))&Message::_encrypt)
