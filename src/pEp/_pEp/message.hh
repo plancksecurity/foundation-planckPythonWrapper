@@ -169,6 +169,10 @@ namespace pEp {
 
             void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
 
+            PEP_rating rating() { return _msg->rating; }
+
+            void rating(PEP_rating value) { _msg->rating = value; }
+
             Message encrypt();
 
             Message _encrypt(boost::python::list extra, int enc_format = 4, int flags = 0);

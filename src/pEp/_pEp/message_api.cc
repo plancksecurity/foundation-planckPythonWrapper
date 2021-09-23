@@ -47,12 +47,11 @@ namespace pEp {
         boost::python::tuple decrypt_message(Message src, int flags) {
             message *_dst = NULL;
             stringlist_t *_keylist = NULL;
-            PEP_rating _rating = PEP_rating_undefined;
             PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t) flags;
             message *_src = src;
 
             PEP_STATUS status = ::decrypt_message(Adapter::session(), _src, &_dst, &_keylist,
-                                                  &_rating, &_flags);
+                                                  &_flags);
             _throw_status(status);
 
             boost::python::list keylist;
@@ -62,6 +61,7 @@ namespace pEp {
             }
 
             Message dst = _dst ? Message(_dst) : Message(src);
+            PEP_rating _rating = dst.rating ();
             return boost::python::make_tuple(dst, keylist, _rating, _flags);
         }
 
