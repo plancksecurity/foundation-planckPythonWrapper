@@ -6,7 +6,7 @@ import time
 
 def message_to_send(msg):
     print("User defined message_to_send() called")
-    m, keys, rating, flags = msg.decrypt()
+    m, keys, flags = msg.decrypt()
     try:
         print(m.attachments[0].decode())
     except UnicodeDecodeError as e:

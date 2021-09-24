@@ -20,8 +20,8 @@ import pytest
 # >>> m.longmsg = "Please call me back"
 # >>> m2 = m.encrypt()
 # >>> print(m2)
-# >>> m3, keys, rating, flags = m2.decrypt()
-# >>> rating
+# >>> m3, keys, flags = m2.decrypt()
+# >>> m3.rating
 # pEp.rating.reliable
 # """
 #
@@ -50,6 +50,6 @@ def test_basic(pEp, model):
     m.longmsg = constants.BODY
     #TODO: encrypt needs to return message type
     m2 = m.encrypt()
-    m3, keys, rating, flags = m2.decrypt()
+    m3, keys, flags = m2.decrypt()
     #TODO: fix pEp.rating
-    # assert rating == pEp.
+    # assert m3.rating == pEp.

@@ -514,7 +514,6 @@ namespace pEp {
                 "\n"
                 "   msg             the decrypted p≡p message\n"
                 "   keys            a list of keys being used\n"
-                "   rating          the rating of the message as integer\n"
                 "   flags           flags set while decryption\n"
                 )
                 .add_property("outgoing_rating", &Message::outgoing_rating, "rating outgoing message will have")

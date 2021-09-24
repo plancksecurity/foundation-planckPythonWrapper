@@ -103,7 +103,7 @@ def messageImapToSend(msg):
 
 def add_debug_info(msg):
     if msg.enc_format:
-        m, keys, rating, flags = msg.decrypt(DONT_TRIGGER_SYNC)
+        m, keys, flags = msg.decrypt(DONT_TRIGGER_SYNC)
     else:
         m = msg
     try:    
@@ -212,7 +212,7 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
                 msg = pEp.Message(m)
                 output("*** Reading")
                 print_msg(msg)
-                msg2, keys, rating, flags = msg.decrypt()
+                msg2, keys, flags = msg.decrypt()
 
     except KeyboardInterrupt:
         shutdown_sync()

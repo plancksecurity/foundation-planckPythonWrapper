@@ -62,7 +62,7 @@ namespace pEp {
 
             Message dst = _dst ? Message(_dst) : Message(src);
             PEP_rating _rating = dst.rating ();
-            return boost::python::make_tuple(dst, keylist, _rating, _flags);
+            return boost::python::make_tuple(dst, keylist, _flags);
         }
 
         PEP_color _color(int rating) {

@@ -35,13 +35,13 @@ def test_msg_enc_dec_roundtrip(pEp, model, import_ident_alice_as_own_ident, impo
     assert enc_msg.longmsg == "this message was encrypted with p≡p https://pEp-project.org"
 
     # Decrypt message.
-    dec_msg, key_list, rating, r = enc_msg.decrypt()
+    dec_msg, key_list, r = enc_msg.decrypt()
     assert r == 0
     # pEp version 2.2 throws this error:
     # AttributeError: module 'pEp' has no attribute 'PEP_rating'
-    # assert rating == pEp.PEP_rating.PEP_rating_reliable
+    # assert dec_msg.rating == pEp.PEP_rating.PEP_rating_reliable
     # It seems to have changed to the following.
-    assert rating == pEp._pEp.rating.reliable
+    assert dec_msg.rating == pEp._pEp.rating.reliable
 
     # The first 2 keys are Alice's ones, the last is Bob's one.
     assert key_list[0] == key_list[1] == model.alice.fpr
@@ -123,7 +123,7 @@ def test_dec_msg_len(pEp, import_ident_alice_as_own_ident, import_ident_bob):
     enc_msg = msg.encrypt()
 
     # Decrypt message.
-    dec_msg, _key_list, _rating, _r = enc_msg.decrypt()
+    dec_msg, _key_list, _r = enc_msg.decrypt()
     dec_msg_len = len(str(dec_msg))
 
     assert dec_msg.longmsg.replace("\r", "") == constants.BODY  # msg.longmsg

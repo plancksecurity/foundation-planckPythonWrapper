@@ -127,5 +127,5 @@ def parse_serialized_message(transport_message):
                     pEp_attachs.append(
                         pEp.Blob(attach.text.encode(), TAG2CT[tagname]))
             msg1.attachments = pEp_attachs
-    msg2, keys, rating, flags = msg1.decrypt()
-    return msg2, rating
+    msg2, keys, flags = msg1.decrypt()
+    return msg2, msg2.rating
