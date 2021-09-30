@@ -13,6 +13,7 @@ build/
 __pycache__/
 test/Laptop/
 test/Library/
+test/Pad/
 test/Phone/
 test/TestInbox/
 test/Backup/
