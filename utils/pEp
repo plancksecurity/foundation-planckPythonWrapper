@@ -56,7 +56,7 @@ def crlf(line):
 
 try:
     if len(args.files) == 0:
-        print("No files")
+        # No filename was supplied: read from stdin.
         args.files = ['-']
 
     for filename in args.files:
