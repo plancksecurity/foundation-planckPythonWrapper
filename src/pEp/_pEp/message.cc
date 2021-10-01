@@ -284,14 +284,30 @@ namespace pEp {
             _msg->attachments = bl;
         }
 
-        Message Message::encrypt() {
-            boost::python::list extra;
-            return encrypt_message(*this, extra, PEP_enc_PGP_MIME, 0);
+        /* It would make sense to replace these macros by static const
+           attributes.  However the obvious solution, in the case of the
+           list, of course does not play well with Python's garbage
+           collector.
+           Factoring syntactically is enough. */
+#       define _ENCRYPT_DEFAULT_EXTRA       (boost::python::list())
+#       define _ENCRYPT_DEFAULT_ENC_FORMAT  PEP_enc_PEP
+#       define _ENCRYPT_DEFAULT_FLAGS       0
+        Message Message::encrypt0() {
+            return encrypt(_ENCRYPT_DEFAULT_EXTRA,
+                           _ENCRYPT_DEFAULT_ENC_FORMAT,
+                           _ENCRYPT_DEFAULT_FLAGS);
         }
-
-        Message Message::_encrypt(boost::python::list extra, int enc_format, int flags) {
-            if (!enc_format)
-                enc_format = PEP_enc_PGP_MIME;
+        Message Message::encrypt1(boost::python::list extra) {
+            return encrypt(extra,
+                           _ENCRYPT_DEFAULT_ENC_FORMAT,
+                           _ENCRYPT_DEFAULT_FLAGS);
+        }
+        Message Message::encrypt2(boost::python::list extra, int enc_format) {
+            return encrypt(extra,
+                           enc_format,
+                           _ENCRYPT_DEFAULT_FLAGS);
+        }
+        Message Message::encrypt(boost::python::list extra, int enc_format, int flags) {
             return encrypt_message(*this, extra, enc_format, flags);
         }
 

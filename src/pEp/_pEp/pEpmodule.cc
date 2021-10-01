@@ -488,19 +488,31 @@ namespace pEp {
                 (void(Message::*)(int))
                 (void(Message::*)(PEP_enc_format)) &Message::enc_format,
                 "0: unencrypted, 1: inline PGP, 2: S/MIME, 3: PGP/MIME, 4: p≡p format")
-                .def("encrypt", (Message(Message::*)())&Message::encrypt)
-                .def("encrypt", (Message(Message::*)(boost::python::list))&Message::_encrypt)
-                .def("encrypt", (Message(Message::*)(boost::python::list, int))&Message::_encrypt)
-                .def("encrypt", (Message(Message::*)(boost::python::list, int, int))&Message::_encrypt,
-                "msg2 = msg1.encrypt(extra_keys=[], enc_format='pEp', flags=0)\n"
+                .def("encrypt", (Message(Message::*)())&Message::encrypt0)
+                .def("encrypt", (Message(Message::*)(boost::python::list))&Message::encrypt1)
+                .def("encrypt", (Message(Message::*)(boost::python::list, int))&Message::encrypt2)
+                .def("encrypt", (Message(Message::*)(boost::python::list, int, int))&Message::encrypt,
+                "msg2 = msg1.encrypt()\n"
+                "msg2 = msg1.encrypt(extra_keys)\n"
+                "msg2 = msg1.encrypt(extra_keys, enc_format)\n"
+                "msg2 = msg1.encrypt(extra_keys, enc_format, flags)\n"
                 "\n"
                 "encrypts a p≡p message and returns the encrypted message\n"
                 "\n"
                 "   extra_keys      list of strings with fingerprints for extra keys to use\n"
                 "                   for encryption\n"
-                "   enc_format      0 for none, 1 for partitioned, 2 for S/MIME,\n"
-                "                   3 for PGP/MIME, 4 for pEp\n"
-                "   flags           1 is force encryption\n"
+                "   enc_format      integer, any value correct for PEP_enc_PEP .  Default PEP_enc_PEP .\n"
+                "                   A few useful examples:\n"
+                "                     0      PEP_enc_none\n"
+                "                     1      PEP_enc_inline\n"
+                "                     2      PEP_enc_S_MIME\n"
+                "                     3      PEP_enc_PGP_MIME\n"
+                "                     4      PEP_enc_PEP\n"
+                "   flags           integer, any combination of valid PEP_encrypt_flags values\n"
+                "                   in bitwise or.  Default 0 .\n"
+                "                   A few useful examples:\n"
+                "                     1  PEP_encrypt_flag_force_encryption\n"
+                "                     4  PEP_encrypt_flag_force_no_attached_key\n"
                 )
                 .def("decrypt", &Message::decrypt, boost::python::arg("flags")=0,
                 "msg2, keys, rating, flags = msg1.decrypt()\n"

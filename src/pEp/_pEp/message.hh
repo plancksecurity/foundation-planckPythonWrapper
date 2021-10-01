@@ -169,9 +169,10 @@ namespace pEp {
 
             void enc_format(PEP_enc_format value) { _msg->enc_format = value; }
 
-            Message encrypt();
-
-            Message _encrypt(boost::python::list extra, int enc_format = 4, int flags = 0);
+            Message encrypt0();
+            Message encrypt1(boost::python::list extra);
+            Message encrypt2(boost::python::list extra, int enc_format);
+            Message encrypt(boost::python::list extra, int enc_format, int flags);
 
             boost::python::tuple decrypt(int flags = 0);
 
