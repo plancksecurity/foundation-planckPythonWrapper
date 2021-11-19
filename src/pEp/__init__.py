@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # pEp package
 #
 # The names that are in _pEp that do not begin with an underscore, will be be imported into, and "re-exported" from this module.
