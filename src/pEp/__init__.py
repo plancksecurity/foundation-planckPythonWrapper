@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # pEp package
 #
 # The names that are in _pEp that do not begin with an underscore, will be be imported into, and "re-exported" from this module.
@@ -30,7 +30,7 @@ from ._pEp import *
 
 # import the native module into the current namespace because we also need to access the names beginning
 # with an underscore (of _pEp), but we dont want to import them into this module
-import pEp._pEp
+from . import _pEp
 
 # 3rd party imports
 from threading import Thread, Barrier
