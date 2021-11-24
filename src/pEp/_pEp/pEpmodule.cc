@@ -40,19 +40,22 @@ namespace pEp {
         // hidden init function, wrapped by _pEp.init()
         void _init_after_main_module() {
             pEpLog("called");
-            callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
+//            callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
 //            Adapter::sync_initialize(
 //                    Adapter::SyncModes::Off,
 //                    CallbackDispatcher::messageToSend,
 //                    CallbackDispatcher::notifyHandshake,
 //                    true);
-            Adapter::sync_initialize(
-                    Adapter::SyncModes::Off,
-                    _messageToSend,
-                    _notifyHandshake,
-                    true);
+//            Adapter::session.initialize(Adapter::SyncModes::Sync, true);
         }
 
+        void _session_init(bool mode_async) {
+          if(mode_async) {
+              Adapter::session.initialize(pEp::Adapter::SyncModes::Async, true);
+          } else {
+              Adapter::session.initialize(pEp::Adapter::SyncModes::Sync, true);
+          }
+        }
 
         void config_passive_mode(bool enable) {
             ::config_passive_mode(Adapter::session(), enable);
@@ -149,12 +152,12 @@ namespace pEp {
             }
         }
 
-        void _register_sync_callbacks() {
-            pEpLog("called");
-            Adapter::session();
-            PEP_STATUS status = ::register_sync_callbacks(Adapter::session(), nullptr, Adapter::_notifyHandshake, Adapter::_retrieve_next_sync_event);
-            _throw_status(status);
-        }
+//        void _register_sync_callbacks() {
+//            pEpLog("called");
+//            Adapter::session();
+//            PEP_STATUS status = ::register_sync_callbacks(Adapter::session(), nullptr, Adapter::_notifyHandshake, Adapter::_retrieve_next_sync_event);
+//            _throw_status(status);
+//        }
 
         void _unregister_sync_callbacks() {
             ::unregister_sync_callbacks(Adapter::session());
@@ -237,8 +240,10 @@ namespace pEp {
                 def("set_debug_log_enabled", &Adapter::pEpLog::set_enabled,
                 "Switch debug logging on/off");
 
-                def("_register_sync_callbacks", _register_sync_callbacks,
-                "");
+
+                def("_session_init", _session_init);
+//                def("_register_sync_callbacks", _register_sync_callbacks,
+//                "");
 
                 def("_unregister_sync_callbacks", _unregister_sync_callbacks,
                 "");
@@ -255,13 +260,12 @@ namespace pEp {
                 def("_notifyHandshake_sync_stop", _notifyHandshake_sync_stop,
                 "");
 
-                def("_set_sync_mode", pEp::Adapter::set_sync_mode,
-                "");
+//                def("_set_sync_mode", pEp::Adapter::set_sync_mode,
+//                "");
 
-                enum_<pEp::Adapter::SyncModes>("SyncModes")
-                .value("Off", pEp::Adapter::SyncModes::Off)
-                .value("Async", pEp::Adapter::SyncModes::Async)
-                .value("Sync", pEp::Adapter::SyncModes::Sync);
+//                enum_<pEp::Adapter::SyncModes>("SyncModes")
+//                .value("Async", pEp::Adapter::SyncModes::Async)
+//                .value("Sync", pEp::Adapter::SyncModes::Sync);
 
                 def("passive_mode", config_passive_mode,
                 "do not attach pub keys to all messages");

@@ -41,26 +41,28 @@ from time import sleep
 def init():
     # print(init, "called")
     _pEp._init_after_main_module()
+    _pEp._session_init(True);
 
 
 def start_sync() -> None:
     """starts the sync thread"""
-    set_sync_mode(SyncModes.Async)
+    Sync.start_sync()
 
 
 def shutdown_sync() -> None:
     """call this to shut down the sync thread"""
-    set_sync_mode(SyncModes.Off)
+    Sync.shutdown_sync()
+    # set_sync_mode(SyncModes.Off)
 
 
-def set_sync_mode(mode):
-    _pEp._set_sync_mode(mode)
-    if mode == SyncModes.Sync:
-        Sync.shutdown_sync()
-    if mode == SyncModes.Async:
-        Sync.start_sync()
-    if mode == SyncModes.Off:
-        Sync.shutdown_sync()
+# def set_sync_mode(mode):
+    # _pEp._set_sync_mode(mode)
+    # if mode == SyncModes.Sync:
+    #     Sync.shutdown_sync()
+    # if mode == SyncModes.Async:
+    #     Sync.start_sync()
+    # if mode == SyncModes.Off:
+    #     Sync.shutdown_sync()
 
 
 
@@ -122,7 +124,8 @@ class Sync(Thread):
         * NOPE 7. Execute registered shutdown function
         """
         # TODO catch exception, and rethrow in start()
-        _pEp._register_sync_callbacks()
+        # _pEp._register_sync_callbacks()
+        _pEp._session_init(True)
         self.barr.wait()
 
         while _pEp._do_protocol_step():
