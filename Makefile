@@ -74,10 +74,10 @@ docs: compile-inplace
 
 # Housekeeping
 # ============
-clean-all: clean
+clean-all:
 	rm -rf $(VENV_DIR)
 
-clean: clean-docs
+clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(DIST_DIR)
 	rm -rf $(PYTHON_ARTIFACTS)
