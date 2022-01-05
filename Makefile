@@ -11,6 +11,9 @@ compile:
 compile-inplace:
 	python3 setup.py build_ext $(DEBUG_OPT) $(PREFIX_OPT) --inplace
 
+makefile-build:
+	$(MAKE) -C src/pEp/_pEp/
+
 # Packaging
 # =========
 # create wheel and egg package in dist/
@@ -74,10 +77,10 @@ docs: compile-inplace
 
 # Housekeeping
 # ============
-clean-all:
+clean-all: clean clean-docs
 	rm -rf $(VENV_DIR)
 
-clean:
+clean: clean-makefile-build
 	rm -rf $(BUILD_DIR)
 	rm -rf $(DIST_DIR)
 	rm -rf $(PYTHON_ARTIFACTS)
@@ -86,3 +89,6 @@ clean:
 
 clean-docs:
 	make clean -C docs/
+
+clean-makefile-build:
+	$(MAKE) -C src/pEp/_pEp clean
