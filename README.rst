@@ -1,6 +1,6 @@
 pEpPythonAdapter
 ================
-Python adapter for the `pEpEngine <https://pep.foundation/dev/repos/pEpEngine/>`_
+Python adapter for the `pEpEngine <https://gitea.pep.foundation/pEp.foundation/pEpEngine>`_
 
 
 Documentation
