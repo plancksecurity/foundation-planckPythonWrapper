@@ -669,6 +669,15 @@ namespace pEp {
                 "me->address must not be an alias\n"
                 "me->fpr will be ignored and replaced by fpr\n");
 
+            def("set_comm_partner_key",
+                &set_comm_partner_key,
+                "set_comm_partner_key(ident, fpr)\n"
+                "\n"
+                "Mark a key the default for a comm partner\n"
+                "\n"
+                "ident      partner identity this key is used for\n"
+                "fpr        fingerprint of the key to set as the identity default\n");
+
             // message API
 
             enum_<PEP_rating>("rating")

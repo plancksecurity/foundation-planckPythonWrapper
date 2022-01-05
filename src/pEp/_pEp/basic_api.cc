@@ -175,5 +175,12 @@ namespace pEp {
             _throw_status(status);
         }
 
+        void set_comm_partner_key(Identity &ident, string fpr)
+        {
+            const char *fpr_c = fpr.c_str();
+            PEP_STATUS status = ::set_comm_partner_key(Adapter::session(), ident, fpr_c);
+            _throw_status(status);
+        }
+
     } // namespace PythonAdapter
 } // namespace pEp
