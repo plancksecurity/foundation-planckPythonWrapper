@@ -33,23 +33,13 @@ namespace pEp {
 
         static const char *version_string = "p≡p Python adapter version 0.3";
 
-        void init_before_main_module() {
+        void _init_callbackdispatcher() {
             pEpLog("called");
+            callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
         }
 
-        // hidden init function, wrapped by _pEp.init()
-        void _init_after_main_module() {
+        void _init_session(bool mode_async) {
             pEpLog("called");
-//            callback_dispatcher.add(_messageToSend, _notifyHandshake, nullptr, nullptr);
-//            Adapter::sync_initialize(
-//                    Adapter::SyncModes::Off,
-//                    CallbackDispatcher::messageToSend,
-//                    CallbackDispatcher::notifyHandshake,
-//                    true);
-//            Adapter::session.initialize(Adapter::SyncModes::Sync, true);
-        }
-
-        void _session_init(bool mode_async) {
           if(mode_async) {
               Adapter::session.initialize(pEp::Adapter::SyncModes::Async, true);
           } else {
@@ -72,10 +62,6 @@ namespace pEp {
             PEP_STATUS status = ::key_reset_user(Adapter::session(),
                                                  user_id.c_str(), fpr != "" ? fpr.c_str() : nullptr);
             _throw_status(status);
-        }
-
-        void key_reset_user2(string user_id) {
-            key_reset_user(user_id, "");
         }
 
         void key_reset_all_own_keys() {
@@ -152,16 +138,9 @@ namespace pEp {
             }
         }
 
-//        void _register_sync_callbacks() {
-//            pEpLog("called");
-//            Adapter::session();
-//            PEP_STATUS status = ::register_sync_callbacks(Adapter::session(), nullptr, Adapter::_notifyHandshake, Adapter::_retrieve_next_sync_event);
-//            _throw_status(status);
-//        }
-
-        void _unregister_sync_callbacks() {
+        void _free_session() {
             ::unregister_sync_callbacks(Adapter::session());
-//            Adapter::session(release);
+            Adapter::session.release();
         }
 
         // TODO: Integrate this (currently SEGFAULTING)
@@ -186,10 +165,6 @@ namespace pEp {
 
         void disable_all_sync_channels() {
             ::disable_all_sync_channels(Adapter::session());
-        }
-
-        void testfunc() {
-            _messageToSend(NULL);
         }
 
         void deliverHandshakeResult(int result, object identities) {
@@ -220,16 +195,11 @@ namespace pEp {
         }
 
         BOOST_PYTHON_MODULE(_pEp) {
-                init_before_main_module();
-
-                // Module init function called by pEp.init()
-                def("_init_after_main_module", _init_after_main_module);
-                def("testfunc", &testfunc);
+                def("_init_callbackdispatcher", _init_callbackdispatcher);
 
                 docstring_options doc_options(true, false, false);
                 boost::locale::generator gen;
                 std::locale::global(gen(""));
-
 
                 scope().attr("about") = about();
                 scope().attr("per_user_directory") = per_user_directory();
@@ -241,31 +211,12 @@ namespace pEp {
                 "Switch debug logging on/off");
 
 
-                def("_session_init", _session_init);
-//                def("_register_sync_callbacks", _register_sync_callbacks,
-//                "");
-
-                def("_unregister_sync_callbacks", _unregister_sync_callbacks,
-                "");
-
-                def("_do_protocol_step", _do_protocol_step,
-                "");
-
-                def("_inject_sync_shutdown", Adapter::inject_sync_shutdown,
-                "");
-
-                def("_notifyHandshake_sync_start", _notifyHandshake_sync_start,
-                "");
-
-                def("_notifyHandshake_sync_stop", _notifyHandshake_sync_stop,
-                "");
-
-//                def("_set_sync_mode", pEp::Adapter::set_sync_mode,
-//                "");
-
-//                enum_<pEp::Adapter::SyncModes>("SyncModes")
-//                .value("Async", pEp::Adapter::SyncModes::Async)
-//                .value("Sync", pEp::Adapter::SyncModes::Sync);
+                def("_init_session", _init_session);
+                def("_free_session", _free_session);
+                def("_do_protocol_step", _do_protocol_step);
+                def("_inject_sync_shutdown", Adapter::inject_sync_shutdown);
+                def("_notifyHandshake_sync_start", _notifyHandshake_sync_start);
+                def("_notifyHandshake_sync_stop", _notifyHandshake_sync_stop);
 
                 def("passive_mode", config_passive_mode,
                 "do not attach pub keys to all messages");
@@ -274,12 +225,6 @@ namespace pEp {
                 "do not encrypt the subject of messages");
 
                 def("key_reset", key_reset_user,
-                "reset the default database status for the user / keypair provided\n"
-                "This will effectively perform key_reset on each identity\n"
-                "associated with the key and user_id, if a key is provided, and for\n"
-                "each key (and all of their identities) if an fpr is not.");
-
-                def("key_reset", key_reset_user2,
                 "reset the default database status for the user / keypair provided\n"
                 "This will effectively perform key_reset on each identity\n"
                 "associated with the key and user_id, if a key is provided, and for\n"

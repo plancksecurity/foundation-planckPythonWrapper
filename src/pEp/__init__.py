@@ -35,13 +35,13 @@ import pEp._pEp
 # 3rd party imports
 from threading import Thread, Barrier
 from time import sleep
+from enum import Enum
 
 
 # Executed on module import
 def init():
-    # print(init, "called")
-    _pEp._init_after_main_module()
-    _pEp._session_init(True);
+    _pEp._init_callbackdispatcher()
+    _pEp._init_session(True)
 
 
 def start_sync() -> None:
@@ -125,13 +125,13 @@ class Sync(Thread):
         """
         # TODO catch exception, and rethrow in start()
         # _pEp._register_sync_callbacks()
-        _pEp._session_init(True)
+        _pEp._init_session(True)
         self.barr.wait()
 
         while _pEp._do_protocol_step():
             sleep(1)
 
-        _pEp._unregister_sync_callbacks()
+        _pEp._free_session()
 
     def start(self):
         """
