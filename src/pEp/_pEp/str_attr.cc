@@ -15,44 +15,54 @@ namespace pEp {
         using namespace boost::python;
         using namespace boost::locale;
 
-        object repr(object s) {
+        object repr(object s)
+        {
             return s.attr("__repr__")();
         }
 
-        string repr(string s) {
+        string repr(string s)
+        {
             str _s = s.c_str();
             object _r = _s.attr("__repr__")();
             string r = extract<string>(_r);
             return r;
         }
 
-        string str_attr(char *&str) {
-            if (!str)
+        string str_attr(char *&str)
+        {
+            if (!str) {
                 return string("");
+            }
             return string(str);
         }
 
-        void str_attr(char *&str, string value) {
+        void str_attr(char *&str, string value)
+        {
             string normalized = normalize(value, norm_nfc);
             free(str);
             str = strdup(normalized.c_str());
-            if (!str)
+            if (!str) {
                 throw bad_alloc();
+            }
         }
 
-        time_t timestamp_attr(timestamp *&ts) {
-            if (!ts)
+        time_t timestamp_attr(timestamp *&ts)
+        {
+            if (!ts) {
                 return 0;
+            }
 
             return timegm(ts);
         }
 
-        void timestamp_attr(timestamp *&ts, time_t value) {
+        void timestamp_attr(timestamp *&ts, time_t value)
+        {
             free_timestamp(ts);
             ts = new_timestamp(value);
         }
 
-        boost::python::list strlist_attr(stringlist_t *&sl) {
+        boost::python::list strlist_attr(stringlist_t *&sl)
+        {
             boost::python::list result;
 
             for (stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
@@ -63,14 +73,16 @@ namespace pEp {
             return result;
         }
 
-        void strlist_attr(stringlist_t *&sl, boost::python::list value) {
+        void strlist_attr(stringlist_t *&sl, boost::python::list value)
+        {
             stringlist_t *_sl = new_stringlist(NULL);
-            if (!_sl)
+            if (!_sl) {
                 throw bad_alloc();
+            }
 
             stringlist_t *_s = _sl;
             for (int i = 0; i < len(value); i++) {
-                extract <string> extract_string(value[i]);
+                extract<string> extract_string(value[i]);
                 if (!extract_string.check()) {
                     free_stringlist(_sl);
                 }
@@ -87,11 +99,11 @@ namespace pEp {
             sl = _sl;
         }
 
-        dict strdict_attr(stringpair_list_t *&spl) {
+        dict strdict_attr(stringpair_list_t *&spl)
+        {
             dict result;
 
-            for (stringpair_list_t *_spl = spl; _spl && _spl->value; _spl =
-                                                                             _spl->next) {
+            for (stringpair_list_t *_spl = spl; _spl && _spl->value; _spl = _spl->next) {
                 stringpair_t *p = _spl->value;
                 if (p->key && p->value) {
                     string key(p->key);
@@ -104,18 +116,21 @@ namespace pEp {
             return result;
         }
 
-        void strdict_attr(stringpair_list_t *&spl, dict value) {
+        void strdict_attr(stringpair_list_t *&spl, dict value)
+        {
             stringpair_list_t *_spl = new_stringpair_list(NULL);
-            if (!_spl)
+            if (!_spl) {
                 throw bad_alloc();
+            }
 
             stringpair_list_t *_s = _spl;
             for (int i = 0; i < len(value); i++) {
-                extract <string> extract_key(value.keys()[i]);
-                extract <string> extract_value(value.values()[i]);
+                extract<string> extract_key(value.keys()[i]);
+                extract<string> extract_value(value.values()[i]);
 
-                if (!(extract_key.check() && extract_value.check()))
+                if (!(extract_key.check() && extract_value.check())) {
                     free_stringpair_list(_spl);
+                }
 
                 string key = extract_key();
                 key = normalize(key, norm_nfc);
@@ -137,16 +152,19 @@ namespace pEp {
             spl = _spl;
         }
 
-        stringlist_t *to_stringlist(boost::python::list l) {
+        stringlist_t *to_stringlist(boost::python::list l)
+        {
             stringlist_t *result = new_stringlist(NULL);
-            if (!result)
+            if (!result) {
                 throw bad_alloc();
+            }
 
             stringlist_t *_s = result;
             for (int i = 0; i < len(l); i++) {
-                extract <string> extract_string(l[i]);
-                if (!extract_string.check())
+                extract<string> extract_string(l[i]);
+                if (!extract_string.check()) {
                     free_stringlist(result);
+                }
                 string s = extract_string();
                 _s = stringlist_add(_s, s.c_str());
                 if (!_s) {
@@ -158,7 +176,8 @@ namespace pEp {
             return result;
         }
 
-        boost::python::list from_stringlist(const stringlist_t *sl) {
+        boost::python::list from_stringlist(const stringlist_t *sl)
+        {
             boost::python::list result;
             for (const stringlist_t *_sl = sl; _sl && _sl->value; _sl = _sl->next) {
                 string s = _sl->value;
@@ -168,5 +187,4 @@ namespace pEp {
         }
 
     } // namespace PythonAdapter
-} // namespace pEp {
-
+} // namespace pEp

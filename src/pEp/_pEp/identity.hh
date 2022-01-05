@@ -23,19 +23,24 @@
 namespace pEp {
     namespace PythonAdapter {
 
-        using std::string;
         using std::shared_ptr;
+        using std::string;
 
-// Identity is owning a pEp_identity
+        // Identity is owning a pEp_identity
 
         class Identity {
         protected:
-            shared_ptr <pEp_identity> _ident;
+            shared_ptr<pEp_identity> _ident;
 
         public:
-            Identity(string address = "", string username = "",
-                     string user_id = "", string fpr = "", int comm_type = 0,
-                     string lang = "", identity_flags_t flags = 0);
+            Identity(
+                string address = "",
+                string username = "",
+                string user_id = "",
+                string fpr = "",
+                int comm_type = 0,
+                string lang = "",
+                identity_flags_t flags = 0);
 
             Identity(const Identity &second);
 
@@ -51,33 +56,66 @@ namespace pEp {
 
             string _str();
 
-            string address() { return str_attr(_ident->address); }
+            string address()
+            {
+                return str_attr(_ident->address);
+            }
 
-            void address(string value) { str_attr(_ident->address, value); }
+            void address(string value)
+            {
+                str_attr(_ident->address, value);
+            }
 
-            string fpr() { return str_attr(_ident->fpr); }
+            string fpr()
+            {
+                return str_attr(_ident->fpr);
+            }
 
-            void fpr(string value) { str_attr(_ident->fpr, value); }
+            void fpr(string value)
+            {
+                str_attr(_ident->fpr, value);
+            }
 
-            string user_id() { return str_attr(_ident->user_id); }
+            string user_id()
+            {
+                return str_attr(_ident->user_id);
+            }
 
-            void user_id(string value) { str_attr(_ident->user_id, value); }
+            void user_id(string value)
+            {
+                str_attr(_ident->user_id, value);
+            }
 
-            string username() { return str_attr(_ident->username); }
+            string username()
+            {
+                return str_attr(_ident->username);
+            }
 
             void username(string value);
 
-            PEP_comm_type comm_type() { return _ident->comm_type; }
+            PEP_comm_type comm_type()
+            {
+                return _ident->comm_type;
+            }
 
-            void comm_type(PEP_comm_type value) { _ident->comm_type = value; };
+            void comm_type(PEP_comm_type value)
+            {
+                _ident->comm_type = value;
+            };
 
             std::string lang();
 
             void lang(std::string value);
 
-            identity_flags_t flags() { return _ident->flags; }
+            identity_flags_t flags()
+            {
+                return _ident->flags;
+            }
 
-            void flags(identity_flags_t flags) { _ident->flags = flags; }
+            void flags(identity_flags_t flags)
+            {
+                _ident->flags = flags;
+            }
 
             int rating();
 
@@ -99,13 +137,6 @@ namespace pEp {
 
             void disable_for_sync();
         };
-
-//        class Myself : public Identity {
-//        public:
-//            Myself(string address, string username, string user_id = "", string lang = "");
-//
-//            virtual void update();
-//        };
 
         Identity identity_attr(pEp_identity *&ident);
 

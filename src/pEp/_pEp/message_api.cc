@@ -17,42 +17,58 @@ namespace pEp {
         using namespace std;
         using namespace boost::python;
 
-        Message encrypt_message(Message src, boost::python::list extra, int enc_format, int flags) {
+        Message encrypt_message(Message src, boost::python::list extra, int enc_format, int flags)
+        {
             Identity _from = src.from();
-            if (_from.address() == "")
+            if (_from.address() == "") {
                 throw invalid_argument("encrypt_message: src.from_.address empty");
-            if (_from.username() == "")
+            }
+            if (_from.username() == "") {
                 throw invalid_argument("encrypt_message: src.from_.username empty");
+            }
 
-            if (_from.user_id() == "")
+            if (_from.user_id() == "") {
                 src.from().user_id(_from.address());
+            }
 
             stringlist_t *_extra = to_stringlist(extra);
-            PEP_enc_format _enc_format = (PEP_enc_format) enc_format;
-            PEP_encrypt_flags_t _flags = (PEP_encrypt_flags_t) flags;
+            PEP_enc_format _enc_format = (PEP_enc_format)enc_format;
+            PEP_encrypt_flags_t _flags = (PEP_encrypt_flags_t)flags;
             message *_dst = NULL;
 
             message *_src = src;
-            PEP_STATUS status = encrypt_message(Adapter::session(), _src, _extra, &_dst,
-                                                _enc_format, _flags);
+            PEP_STATUS status = encrypt_message(
+                Adapter::session(),
+                _src,
+                _extra,
+                &_dst,
+                _enc_format,
+                _flags);
             free_stringlist(_extra);
             _throw_status(status);
 
-            if (!_dst || _dst == _src)
+            if (!_dst || _dst == _src) {
                 return Message(_src);
+            }
 
             return Message(_dst);
         }
 
-        boost::python::tuple decrypt_message(Message src, int flags) {
+        boost::python::tuple decrypt_message(Message src, int flags)
+        {
             message *_dst = NULL;
             stringlist_t *_keylist = NULL;
             PEP_rating _rating = PEP_rating_undefined;
-            PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t) flags;
+            PEP_decrypt_flags_t _flags = (PEP_decrypt_flags_t)flags;
             message *_src = src;
 
-            PEP_STATUS status = ::decrypt_message(Adapter::session(), _src, &_dst, &_keylist,
-                                                  &_rating, &_flags);
+            PEP_STATUS status = ::decrypt_message(
+                Adapter::session(),
+                _src,
+                &_dst,
+                &_keylist,
+                &_rating,
+                &_flags);
             _throw_status(status);
 
             boost::python::list keylist;
@@ -65,18 +81,21 @@ namespace pEp {
             return boost::python::make_tuple(dst, keylist, _rating, _flags);
         }
 
-        PEP_color _color(int rating) {
-            return ::color_from_rating((PEP_rating) rating);
+        PEP_color _color(int rating)
+        {
+            return ::color_from_rating((PEP_rating)rating);
         }
 
-        boost::python::tuple sync_decode(object buffer) {
+        boost::python::tuple sync_decode(object buffer)
+        {
             Py_buffer src;
             int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
-            if (result)
+            if (result) {
                 throw invalid_argument("need a contiguous buffer to read");
+            }
 
             char *dst = NULL;
-            PEP_STATUS status = PER_to_XER_Sync_msg((char *) src.buf, src.len, &dst);
+            PEP_STATUS status = PER_to_XER_Sync_msg((char *)src.buf, src.len, &dst);
             PyBuffer_Release(&src);
             _throw_status(status);
 
@@ -85,7 +104,8 @@ namespace pEp {
             return boost::python::make_tuple(_dst, 0);
         }
 
-        static boost::python::tuple sync_encode(string text) {
+        static boost::python::tuple sync_encode(string text)
+        {
             char *data = NULL;
             size_t size = 0;
             PEP_STATUS status = XER_to_PER_Sync_msg(text.c_str(), &data, &size);
@@ -93,20 +113,23 @@ namespace pEp {
 
             PyObject *ba = PyBytes_FromStringAndSize(data, size);
             free(data);
-            if (!ba)
+            if (!ba) {
                 throw bad_alloc();
+            }
 
             return boost::python::make_tuple(object(handle<>(ba)), 0);
         }
 
-        boost::python::tuple Distribution_decode(object buffer) {
+        boost::python::tuple Distribution_decode(object buffer)
+        {
             Py_buffer src;
             int result = PyObject_GetBuffer(buffer.ptr(), &src, PyBUF_CONTIG_RO);
-            if (result)
+            if (result) {
                 throw invalid_argument("need a contiguous buffer to read");
+            }
 
             char *dst = NULL;
-            PEP_STATUS status = PER_to_XER_Distribution_msg((char *) src.buf, src.len, &dst);
+            PEP_STATUS status = PER_to_XER_Distribution_msg((char *)src.buf, src.len, &dst);
             PyBuffer_Release(&src);
             _throw_status(status);
 
@@ -115,7 +138,8 @@ namespace pEp {
             return boost::python::make_tuple(_dst, 0);
         }
 
-        static boost::python::tuple Distribution_encode(string text) {
+        static boost::python::tuple Distribution_encode(string text)
+        {
             char *data = NULL;
             size_t size = 0;
             PEP_STATUS status = XER_to_PER_Distribution_msg(text.c_str(), &data, &size);
@@ -123,13 +147,14 @@ namespace pEp {
 
             PyObject *ba = PyBytes_FromStringAndSize(data, size);
             free(data);
-            if (!ba)
+            if (!ba) {
                 throw bad_alloc();
-
+            }
             return boost::python::make_tuple(object(handle<>(ba)), 0);
         }
 
-        object sync_search(string name) {
+        object sync_search(string name)
+        {
             if (name != "pep.sync") {
                 return object();
             } else {
@@ -143,7 +168,8 @@ namespace pEp {
             }
         }
 
-        object distribution_search(string name) {
+        object distribution_search(string name)
+        {
             if (name != "pep.distribution") {
                 return object();
             } else {
@@ -158,4 +184,4 @@ namespace pEp {
         }
 
     } // namespace PythonAdapter
-} // namespace pEp {
+} // namespace pEp

@@ -16,19 +16,20 @@ namespace pEp {
     namespace PythonAdapter {
         using namespace std;
 
-        void update_identity(Identity &ident) {
+        void update_identity(Identity &ident)
+        {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == PEP_OWN_USERID)
-                throw runtime_error("update_identity: '"
-            PEP_OWN_USERID
-            "' may only be used for own identities");
+                throw runtime_error("update_identity: '" PEP_OWN_USERID
+                                    "' may only be used for own identities");
 
             PEP_STATUS status = update_identity(Adapter::session(), ident);
             _throw_status(status);
         }
 
-        void myself(Identity &ident) {
+        void myself(Identity &ident)
+        {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.username() == "")
@@ -41,7 +42,8 @@ namespace pEp {
             _throw_status(status);
         }
 
-        string _trustwords(Identity me, Identity partner, string lang, bool full) {
+        string _trustwords(Identity me, Identity partner, string lang, bool full)
+        {
             if (me.fpr() == "" || partner.fpr() == "")
                 throw invalid_argument("fingerprint needed in Identities");
 
@@ -50,13 +52,20 @@ namespace pEp {
 
             char *words = NULL;
             size_t size = 0;
-            PEP_STATUS status = get_trustwords(Adapter::session(), me, partner,
-                                               lang.c_str(), &words, &size, full);
+            PEP_STATUS status = get_trustwords(
+                Adapter::session(),
+                me,
+                partner,
+                lang.c_str(),
+                &words,
+                &size,
+                full);
             _throw_status(status);
             return words;
         }
 
-        void trust_personal_key(Identity ident) {
+        void trust_personal_key(Identity ident)
+        {
             if (ident.fpr() == "")
                 throw invalid_argument("fingerprint needed in Identities");
             if (ident.user_id() == "")
@@ -66,7 +75,8 @@ namespace pEp {
             _throw_status(status);
         }
 
-        void set_identity_flags(Identity ident, identity_flags_t flags) {
+        void set_identity_flags(Identity ident, identity_flags_t flags)
+        {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == "")
@@ -76,7 +86,8 @@ namespace pEp {
             _throw_status(status);
         }
 
-        void unset_identity_flags(Identity ident, identity_flags_t flags) {
+        void unset_identity_flags(Identity ident, identity_flags_t flags)
+        {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.user_id() == "")
@@ -86,7 +97,8 @@ namespace pEp {
             _throw_status(status);
         }
 
-        void key_reset_trust(Identity ident) {
+        void key_reset_trust(Identity ident)
+        {
             if (ident.fpr() == "")
                 throw invalid_argument("fpr needed");
             if (ident.address() == "")
@@ -99,9 +111,14 @@ namespace pEp {
         }
 
 
-        boost::python::list import_key(string key_data) {
+        boost::python::list import_key(string key_data)
+        {
             ::identity_list *private_keys = NULL;
-            PEP_STATUS status = ::import_key(Adapter::session(), key_data.c_str(), key_data.size(), &private_keys);
+            PEP_STATUS status = ::import_key(
+                Adapter::session(),
+                key_data.c_str(),
+                key_data.size(),
+                &private_keys);
             if (status && status != PEP_KEY_IMPORTED)
                 _throw_status(status);
 
@@ -119,7 +136,8 @@ namespace pEp {
             return result;
         }
 
-        string export_key(Identity ident) {
+        string export_key(Identity ident)
+        {
             PEP_STATUS status = PEP_STATUS_OK;
             char *key_data = NULL;
             size_t size;
@@ -129,7 +147,8 @@ namespace pEp {
             return key_data;
         }
 
-        string export_secret_key(Identity ident) {
+        string export_secret_key(Identity ident)
+        {
             PEP_STATUS status = PEP_STATUS_OK;
             char *key_data = NULL;
             size_t size;
@@ -139,7 +158,8 @@ namespace pEp {
             return key_data;
         }
 
-        void set_own_key(Identity &ident, string fpr) {
+        void set_own_key(Identity &ident, string fpr)
+        {
             if (ident.address() == "")
                 throw invalid_argument("address needed");
             if (ident.username() == "")
@@ -157,5 +177,3 @@ namespace pEp {
 
     } // namespace PythonAdapter
 } // namespace pEp
-
-
