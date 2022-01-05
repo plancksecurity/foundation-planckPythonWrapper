@@ -80,3 +80,9 @@ ws
 # platform artifacts
 .DS_store
 /src/pEp/_pEp.cpython-38-darwin.so
+/src/pEp/_pEp/basic_api.o
+/src/pEp/_pEp/identity.o
+/src/pEp/_pEp/message.o
+/src/pEp/_pEp/message_api.o
+/src/pEp/_pEp/pEpmodule.o
+/src/pEp/_pEp/str_attr.o
