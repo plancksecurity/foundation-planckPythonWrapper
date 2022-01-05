@@ -28,7 +28,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
         using namespace boost::python;
 
         static const char *version_string = "p≡p Python adapter version 0.3";
@@ -93,14 +92,14 @@ namespace pEp {
                 return;
             }
             if (status == PEP_OUT_OF_MEMORY) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
             if (status == PEP_ILLEGAL_VALUE) {
                 throw invalid_argument("illegal value");
             }
             if (string(pEp_status_to_string(status)) == "unknown status code") {
-                stringstream build;
-                build << setfill('0') << "p≡p 0x" << setw(4) << hex << status;
+                std::stringstream build;
+                build << std::setfill('0') << "p≡p 0x" << std::setw(4) << std::hex << status;
                 throw runtime_error(build.str());
             } else {
                 throw runtime_error(pEp_status_to_string(status));
@@ -119,7 +118,7 @@ namespace pEp {
                 call<void>(funcref.ptr(), Message(msg));
                 PyGILState_Release(gil);
                 pEpLog("GIL released");
-            } catch (exception &e) {
+            } catch (std::exception &e) {
             }
 
             return PEP_STATUS_OK;
@@ -137,7 +136,7 @@ namespace pEp {
                 call<void>(funcref.ptr(), Identity(me), Identity(partner), signal);
                 PyGILState_Release(gil);
                 pEpLog("GIL released");
-            } catch (exception &e) {
+            } catch (std::exception &e) {
             }
 
             return PEP_STATUS_OK;
@@ -197,7 +196,7 @@ namespace pEp {
             if (identities != boost::python::api::object() && boost::python::len(identities)) {
                 shared_identities = new_identity_list(nullptr);
                 if (!shared_identities) {
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
 
                 try {
@@ -206,9 +205,9 @@ namespace pEp {
                         Identity ident = extract<Identity>(identities[i]);
                         si = identity_list_add(si, ident);
                         if (!si)
-                            throw bad_alloc();
+                            throw std::bad_alloc();
                     }
-                } catch (exception &ex) {
+                } catch (std::exception &ex) {
                     free_identity_list(shared_identities);
                     throw ex;
                 }

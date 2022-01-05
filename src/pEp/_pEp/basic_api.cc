@@ -14,7 +14,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
 
         void update_identity(Identity &ident)
         {
@@ -127,7 +126,7 @@ namespace pEp {
                 ::pEp_identity *ident = ::identity_dup(il->ident);
                 if (!ident) {
                     free_identity_list(private_keys);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
                 result.append(Identity(ident));
             }

@@ -20,13 +20,12 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
         using namespace boost::python;
 
         Message::Blob::Blob(bloblist_t *bl, bool chained) : _bl(bl), part_of_chain(chained)
         {
             if (!_bl) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
         }
 
@@ -35,7 +34,7 @@ namespace pEp {
             part_of_chain(false)
         {
             if (!_bl) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             Py_buffer src;
@@ -47,7 +46,7 @@ namespace pEp {
             char *mem = (char *)malloc(src.len);
             if (!mem) {
                 PyBuffer_Release(&src);
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             memcpy(mem, src.buf, src.len);
@@ -73,7 +72,7 @@ namespace pEp {
 
         string Message::Blob::_repr()
         {
-            stringstream build;
+            std::stringstream build;
             build << "Blob(";
             if (!_bl) {
                 build << "b'', '', ''";
@@ -99,7 +98,7 @@ namespace pEp {
             try {
                 Message::Blob &blob = extract<Message::Blob &>(self);
                 bl = blob._bl;
-            } catch (exception &e) {
+            } catch (std::exception &e) {
                 PyErr_SetString(PyExc_RuntimeError, "extract not possible");
                 view->obj = NULL;
                 return -1;
@@ -139,13 +138,13 @@ namespace pEp {
             _msg(new_message((PEP_msg_direction)dir), &free_message)
         {
             if (!_msg) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             if (from) {
                 _msg->from = ::identity_dup(*from);
                 if (!_msg->from) {
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
                 _msg->dir = (PEP_msg_direction)dir;
             }
@@ -164,7 +163,7 @@ namespace pEp {
                     }
 
                     if (!_cpy) {
-                        throw bad_alloc();
+                        throw std::bad_alloc();
                     }
 
                     _msg = shared_ptr<message>(_cpy);
@@ -177,10 +176,10 @@ namespace pEp {
                     throw runtime_error("mime_decode_message: cannot create temp file");
 
                 case PEP_OUT_OF_MEMORY:
-                    throw bad_alloc();
+                    throw std::bad_alloc();
 
                 default:
-                    stringstream build;
+                    std::stringstream build;
                     build << "mime_decode_message: unknown error (" << (int)status << ")";
                     throw runtime_error(build.str());
             }
@@ -189,7 +188,7 @@ namespace pEp {
         Message::Message(const Message &second) : _msg(second._msg)
         {
             if (!_msg.get()) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
         }
 
@@ -210,7 +209,7 @@ namespace pEp {
         string Message::_str()
         {
             if (!(_msg->from && _msg->from->address && _msg->from->address[0])) {
-                throw out_of_range(".from_.address missing");
+                throw std::out_of_range(".from_.address missing");
             }
 
             char *mimetext;
@@ -230,10 +229,10 @@ namespace pEp {
                     throw runtime_error("mime_encode_message: cannot create temp file");
 
                 case PEP_OUT_OF_MEMORY:
-                    throw bad_alloc();
+                    throw std::bad_alloc();
 
                 default:
-                    stringstream build;
+                    std::stringstream build;
                     build << "mime_encode_message: unknown error (" << (int)status << ")";
                     throw runtime_error(build.str());
             }
@@ -243,7 +242,7 @@ namespace pEp {
 
         string Message::_repr()
         {
-            stringstream build;
+            std::stringstream build;
             build << "Message(" << repr(_str()) << ")";
             return build.str();
         }
@@ -263,7 +262,7 @@ namespace pEp {
         {
             bloblist_t *bl = new_bloblist(NULL, 0, NULL, NULL);
             if (!bl) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             bloblist_t *_l = bl;
@@ -283,7 +282,7 @@ namespace pEp {
                         _l = _l->next;
                         free(_ll);
                     }
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
             }
 
@@ -356,7 +355,7 @@ namespace pEp {
         {
             message *dup = message_dup(*this);
             if (!dup) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
             return Message(dup);
         }
@@ -402,12 +401,12 @@ namespace pEp {
 
             try {
                 m.from(update(m.from()));
-            } catch (out_of_range &) {
+            } catch (std::out_of_range &) {
             }
 
             try {
                 m.recv_by(update(m.recv_by()));
-            } catch (out_of_range &) {
+            } catch (std::out_of_range &) {
             }
 
             m.to(update(m.to()));

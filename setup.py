@@ -204,7 +204,6 @@ module_pEp = Extension(
         'src/pEp/_pEp/message.cc',
         'src/pEp/_pEp/message_api.cc',
         'src/pEp/_pEp/str_attr.cc',
-        # 'src/pEp/_pEp/user_interface.cc',
     ],
 )
 

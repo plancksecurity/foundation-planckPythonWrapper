@@ -31,6 +31,7 @@ namespace pEp {
 
         void set_own_key(Identity &ident, string fpr);
 
+        void set_comm_partner_key(Identity &ident, string fpr);
     } /* namespace PythonAdapter */
 } /* namespace pEp */
 

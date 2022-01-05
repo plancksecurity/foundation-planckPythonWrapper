@@ -18,7 +18,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
         using namespace boost::python;
 
         Identity::Identity(
@@ -34,7 +33,7 @@ namespace pEp {
                 &::free_identity)
         {
             if (!_ident) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
             _ident->comm_type = (PEP_comm_type)comm_type;
             _ident->flags = (identity_flags_t)flags;
@@ -59,7 +58,7 @@ namespace pEp {
 
         string Identity::_repr()
         {
-            stringstream build;
+            std::stringstream build;
             build << "Identity(";
             string address;
             if (_ident->address)
@@ -97,7 +96,7 @@ namespace pEp {
         void Identity::username(string value)
         {
             if (value.length() && value.length() < 5) {
-                throw length_error("username must be at least 5 characters");
+                throw std::length_error("username must be at least 5 characters");
             }
 
             str_attr(_ident->username, value);
@@ -108,7 +107,7 @@ namespace pEp {
             if (value == "") {
                 memset(_ident->lang, 0, 3);
             } else if (value.length() != 2) {
-                throw length_error("length of lang must be 2");
+                throw std::length_error("length of lang must be 2");
             } else {
                 memcpy(_ident->lang, value.c_str(), 3);
             }
@@ -141,7 +140,7 @@ namespace pEp {
         {
             pEp_identity *dup = ::identity_dup(*this);
             if (!dup) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             return Identity(dup);
@@ -195,12 +194,12 @@ namespace pEp {
         Identity identity_attr(pEp_identity *&ident)
         {
             if (!ident) {
-                throw out_of_range("no identity assigned");
+                throw std::out_of_range("no identity assigned");
             }
 
             pEp_identity *_dup = ::identity_dup(ident);
             if (!_dup) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             Identity _ident(_dup);
@@ -212,7 +211,7 @@ namespace pEp {
             Identity &_ident = extract<Identity &>(value);
             pEp_identity *_dup = ::identity_dup(_ident);
             if (!_dup) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
             PEP_STATUS status = ::update_identity(Adapter::session(), _dup);
             _throw_status(status);
@@ -227,7 +226,7 @@ namespace pEp {
             for (identity_list *_il = il; _il && _il->ident; _il = _il->next) {
                 pEp_identity *ident = ::identity_dup(_il->ident);
                 if (!ident) {
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
                 result.append(object(Identity(ident)));
             }
@@ -239,7 +238,7 @@ namespace pEp {
         {
             identity_list *_il = ::new_identity_list(NULL);
             if (!_il) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             identity_list *_i = _il;
@@ -252,7 +251,7 @@ namespace pEp {
                 pEp_identity *_dup = ::identity_dup(_ident);
                 if (!_dup) {
                     ::free_identity_list(_il);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
                 PEP_STATUS status = ::update_identity(Adapter::session(), _dup);
                 if (status != PEP_STATUS_OK) {
@@ -262,7 +261,7 @@ namespace pEp {
                 _i = ::identity_list_add(_i, _dup);
                 if (!_i) {
                     ::free_identity_list(_il);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
             }
 

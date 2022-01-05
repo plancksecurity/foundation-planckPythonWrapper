@@ -11,7 +11,6 @@
 
 namespace pEp {
     namespace PythonAdapter {
-        using namespace std;
         using namespace boost::python;
         using namespace boost::locale;
 
@@ -42,7 +41,7 @@ namespace pEp {
             free(str);
             str = strdup(normalized.c_str());
             if (!str) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
         }
 
@@ -77,7 +76,7 @@ namespace pEp {
         {
             stringlist_t *_sl = new_stringlist(NULL);
             if (!_sl) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             stringlist_t *_s = _sl;
@@ -91,7 +90,7 @@ namespace pEp {
                 _s = stringlist_add(_s, s.c_str());
                 if (!_s) {
                     free_stringlist(_sl);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
             }
 
@@ -120,7 +119,7 @@ namespace pEp {
         {
             stringpair_list_t *_spl = new_stringpair_list(NULL);
             if (!_spl) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             stringpair_list_t *_s = _spl;
@@ -139,12 +138,12 @@ namespace pEp {
                 stringpair_t *pair = new_stringpair(key.c_str(), _value.c_str());
                 if (!pair) {
                     free_stringpair_list(_spl);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
                 _s = stringpair_list_add(_s, pair);
                 if (!_s) {
                     free_stringpair_list(_spl);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
             }
 
@@ -156,7 +155,7 @@ namespace pEp {
         {
             stringlist_t *result = new_stringlist(NULL);
             if (!result) {
-                throw bad_alloc();
+                throw std::bad_alloc();
             }
 
             stringlist_t *_s = result;
@@ -169,7 +168,7 @@ namespace pEp {
                 _s = stringlist_add(_s, s.c_str());
                 if (!_s) {
                     free_stringlist(result);
-                    throw bad_alloc();
+                    throw std::bad_alloc();
                 }
             }
 
