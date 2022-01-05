@@ -55,15 +55,21 @@ def shutdown_sync() -> None:
     # set_sync_mode(SyncModes.Off)
 
 
-# def set_sync_mode(mode):
-    # _pEp._set_sync_mode(mode)
-    # if mode == SyncModes.Sync:
-    #     Sync.shutdown_sync()
-    # if mode == SyncModes.Async:
-    #     Sync.start_sync()
-    # if mode == SyncModes.Off:
-    #     Sync.shutdown_sync()
+class SyncModes(Enum):
+    OFF: int = 0
+    SYNC: int = 1
+    ASYNC: int = 2
 
+
+def set_sync_mode(mode):
+    if mode == SyncModes.SYNC:
+        Sync.shutdown_sync()
+        _pEp._init_session(False)
+    if mode == SyncModes.ASYNC:
+        _pEp._init_session(True)
+        Sync.start_sync()
+    if mode == SyncModes.OFF:
+        Sync.shutdown_sync()
 
 
 def is_sync_active() -> bool:

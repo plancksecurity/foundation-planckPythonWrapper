@@ -23,7 +23,7 @@ pEp.myself(alice)
 print(alice.fpr)
 
 while True:
-    pEp.set_sync_mode(pEp.SyncModes.Async)
+    pEp.set_sync_mode(pEp.SyncModes.ASYNC)
     print("start_sync()")
     pEp.start_sync()
     print("Running...")
@@ -34,7 +34,7 @@ while True:
     print("END")
     time.sleep(3)
 
-    pEp.set_sync_mode(pEp.SyncModes.Sync)
+    pEp.set_sync_mode(pEp.SyncModes.SYNC)
     print("start_sync()")
     pEp.start_sync()
     print("Running...")
@@ -45,7 +45,7 @@ while True:
     print("END")
     time.sleep(3)
 
-    pEp.set_sync_mode(pEp.SyncModes.Off)
+    pEp.set_sync_mode(pEp.SyncModes.OFF)
     print("start_sync()")
     pEp.start_sync()
     print("Running...")

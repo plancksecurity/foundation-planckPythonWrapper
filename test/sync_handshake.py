@@ -192,10 +192,10 @@ def run(name, color=None, imap=False, own_ident=1, leave=False):
 
     if multithreaded:
         print("Sync Start multi-threaded")
-        pEp.set_sync_mode(pEp.SyncModes.Async)
+        pEp.set_sync_mode(pEp.SyncModes.ASYNC)
     else:
         print("Sync Start single-threaded")
-        pEp.set_sync_mode(pEp.SyncModes.Sync);
+        pEp.set_sync_mode(pEp.SyncModes.SYNC);
 
     try:
         if leave:
