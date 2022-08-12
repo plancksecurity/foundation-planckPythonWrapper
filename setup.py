@@ -97,7 +97,7 @@ class BuildExtCommand(build_ext):
         libs = [
             'pEpEngine',
             'pEpAdapter',
-            'boost_python38-mt',
+            'boost_python3-mt',
             'boost_locale-mt'
         ]
         compile_flags = ['-std=c++14', '-fpermissive']
