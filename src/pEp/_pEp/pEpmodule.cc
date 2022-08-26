@@ -652,7 +652,8 @@ namespace pEp {
                 .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", SYNC_NOTIFY_ACCEPTED_GROUP_CREATED)
                 .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED", SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED)
                 .value("SYNC_NOTIFY_SOLE", SYNC_NOTIFY_SOLE)
-                .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP);
+                .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP)
+                .value("SYNC_NOTIFY_OUTGOING_RATING_CHANGE", SYNC_NOTIFY_OUTGOING_RATING_CHANGE);
 
                 def("deliver_handshake_result", &deliverHandshakeResult, boost::python::arg("identities")=object(),
                 "deliverHandshakeResult(self, result, identities=None)\n"
