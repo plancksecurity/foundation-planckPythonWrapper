@@ -66,6 +66,10 @@ namespace pEp {
             ::config_enable_echo_protocol(Adapter::session(), enable);
         }
 
+        void config_enable_echo_in_outgoing_message_rating_preview(bool enable) {
+            ::config_enable_echo_in_outgoing_message_rating_preview(Adapter::session(), enable);
+        }
+
         void key_reset_user(string user_id, string fpr) {
             if (user_id == "")
                 throw invalid_argument("user_id required");
@@ -275,6 +279,9 @@ namespace pEp {
 
                 def("config_enable_echo_protocol", config_enable_echo_protocol,
                 "enable or disable the Distribution.Echo");
+
+                def("config_enable_echo_in_outgoing_message_rating_preview", config_enable_echo_in_outgoing_message_rating_preview,
+                "enable or disable Distribution.Echo.Ping");
 
                 def("key_reset", key_reset_user,
                 "reset the default database status for the user / keypair provided\n"
