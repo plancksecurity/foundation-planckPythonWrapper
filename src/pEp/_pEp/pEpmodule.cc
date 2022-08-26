@@ -14,6 +14,7 @@
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 #include <pEp/status_to_string.h>
+#include <pEp/media_key.h>
 
 // libpEpAdapter
 #include <pEp/Adapter.hh>
@@ -195,6 +196,14 @@ namespace pEp {
 
         void sync_reinit() {
             PEP_STATUS status = ::sync_reinit(Adapter::session());
+            _throw_status(status);
+        }
+
+        void config_media_keys(dict value) {
+            ::stringpair_list_t *_spl = nullptr;
+            strdict_attr(_spl, value);
+
+            PEP_STATUS status = ::config_media_keys(Adapter::session(), _spl);
             _throw_status(status);
         }
 
@@ -701,6 +710,10 @@ namespace pEp {
                 def("sync_reinit", &sync_reinit,
                 "Explicitly reinitialize Sync.  This is meant to be explicitly called\n"
                 "from the application upon user request\n"
+                );
+
+                def("config_media_keys", &config_media_keys,
+                "Replace the session map with the given map"
                 );
 
                 // codecs
