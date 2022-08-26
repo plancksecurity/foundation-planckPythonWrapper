@@ -62,6 +62,10 @@ namespace pEp {
             ::config_unencrypted_subject(Adapter::session(), enable);
         }
 
+        void config_enable_echo_protocol(bool enable) {
+            ::config_enable_echo_protocol(Adapter::session(), enable);
+        }
+
         void key_reset_user(string user_id, string fpr) {
             if (user_id == "")
                 throw invalid_argument("user_id required");
@@ -268,6 +272,9 @@ namespace pEp {
 
                 def("unencrypted_subject", config_unencrypted_subject,
                 "do not encrypt the subject of messages");
+
+                def("config_enable_echo_protocol", config_enable_echo_protocol,
+                "enable or disable the Distribution.Echo");
 
                 def("key_reset", key_reset_user,
                 "reset the default database status for the user / keypair provided\n"
