@@ -193,6 +193,11 @@ namespace pEp {
             ::disable_all_sync_channels(Adapter::session());
         }
 
+        void sync_reinit() {
+            PEP_STATUS status = ::sync_reinit(Adapter::session());
+            _throw_status(status);
+        }
+
         void testfunc() {
             _messageToSend(NULL);
         }
@@ -691,6 +696,11 @@ namespace pEp {
                 "disable_all_sync_channels()\n"
                 "\n"
                 "Disable sync for all identities\n"
+                );
+
+                def("sync_reinit", &sync_reinit,
+                "Explicitly reinitialize Sync.  This is meant to be explicitly called\n"
+                "from the application upon user request\n"
                 );
 
                 // codecs
