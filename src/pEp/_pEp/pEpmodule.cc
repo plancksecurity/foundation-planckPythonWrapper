@@ -14,6 +14,7 @@
 #include <pEp/message_api.h>
 #include <pEp/sync_api.h>
 #include <pEp/status_to_string.h>
+#include <pEp/media_key.h>
 
 // libpEpAdapter
 #include <pEp/Adapter.hh>
@@ -60,6 +61,14 @@ namespace pEp {
 
         void config_unencrypted_subject(bool enable) {
             ::config_unencrypted_subject(Adapter::session(), enable);
+        }
+
+        void config_enable_echo_protocol(bool enable) {
+            ::config_enable_echo_protocol(Adapter::session(), enable);
+        }
+
+        void config_enable_echo_in_outgoing_message_rating_preview(bool enable) {
+            ::config_enable_echo_in_outgoing_message_rating_preview(Adapter::session(), enable);
         }
 
         void key_reset_user(string user_id, string fpr) {
@@ -185,6 +194,19 @@ namespace pEp {
             ::disable_all_sync_channels(Adapter::session());
         }
 
+        void sync_reinit() {
+            PEP_STATUS status = ::sync_reinit(Adapter::session());
+            _throw_status(status);
+        }
+
+        void config_media_keys(dict value) {
+            ::stringpair_list_t *_spl = nullptr;
+            strdict_attr(_spl, value);
+
+            PEP_STATUS status = ::config_media_keys(Adapter::session(), _spl);
+            _throw_status(status);
+        }
+
         void testfunc() {
             _messageToSend(NULL);
         }
@@ -268,6 +290,12 @@ namespace pEp {
 
                 def("unencrypted_subject", config_unencrypted_subject,
                 "do not encrypt the subject of messages");
+
+                def("config_enable_echo_protocol", config_enable_echo_protocol,
+                "enable or disable the Distribution.Echo");
+
+                def("config_enable_echo_in_outgoing_message_rating_preview", config_enable_echo_in_outgoing_message_rating_preview,
+                "enable or disable Distribution.Echo.Ping");
 
                 def("key_reset", key_reset_user,
                 "reset the default database status for the user / keypair provided\n"
@@ -652,7 +680,8 @@ namespace pEp {
                 .value("SYNC_NOTIFY_ACCEPTED_GROUP_CREATED", SYNC_NOTIFY_ACCEPTED_GROUP_CREATED)
                 .value("SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED", SYNC_NOTIFY_ACCEPTED_DEVICE_ACCEPTED)
                 .value("SYNC_NOTIFY_SOLE", SYNC_NOTIFY_SOLE)
-                .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP);
+                .value("SYNC_NOTIFY_IN_GROUP", SYNC_NOTIFY_IN_GROUP)
+                .value("SYNC_NOTIFY_OUTGOING_RATING_CHANGE", SYNC_NOTIFY_OUTGOING_RATING_CHANGE);
 
                 def("deliver_handshake_result", &deliverHandshakeResult, boost::python::arg("identities")=object(),
                 "deliverHandshakeResult(self, result, identities=None)\n"
@@ -676,6 +705,15 @@ namespace pEp {
                 "disable_all_sync_channels()\n"
                 "\n"
                 "Disable sync for all identities\n"
+                );
+
+                def("sync_reinit", &sync_reinit,
+                "Explicitly reinitialize Sync.  This is meant to be explicitly called\n"
+                "from the application upon user request\n"
+                );
+
+                def("config_media_keys", &config_media_keys,
+                "Replace the session map with the given map"
                 );
 
                 // codecs
