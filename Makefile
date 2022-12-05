@@ -52,7 +52,7 @@ venv:
 
 # Tests if the current environment is able to load the pEp module
 envtest:
-	python3 -c 'import pEp'
+	HOME=. python3 -c 'import pEp'
 
 # Test
 # ====
