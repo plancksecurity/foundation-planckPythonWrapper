@@ -97,6 +97,7 @@ class BuildExtCommand(build_ext):
         libs = [
             'pEpEngine',
             'pEpAdapter',
+            'pEpCxx11',
             'boost_python3-mt',
             'boost_locale-mt'
         ]
@@ -122,6 +123,7 @@ class BuildExtCommand(build_ext):
         libs = [
             'pEpEngine',
             'pEpAdapter',
+            'pEpCxx11',
             'boost_python3',
             'boost_locale'
         ]
