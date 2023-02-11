@@ -147,7 +147,7 @@ namespace pEp {
             pEpLog("called");
             SYNC_EVENT event = Adapter::_retrieve_next_sync_event(nullptr, 0);
             if (event != NULL) {
-                ::do_sync_protocol_step(Adapter::session(), (void *)&callback_dispatcher, event);
+                ::do_sync_protocol_step(Adapter::session(), event);
                 return true;
             } else {
                 pEpLog("null event, signaling sync shutdown");
