@@ -145,7 +145,7 @@ namespace pEp {
         bool _do_protocol_step()
         {
             pEpLog("called");
-            SYNC_EVENT event = Adapter::_retrieve_next_sync_event(nullptr, 0);
+            SYNC_EVENT event = Adapter::_cb_retrieve_next_sync_event_dequeue_next_sync_event(nullptr, 0);
             if (event != NULL) {
                 ::do_sync_protocol_step(Adapter::session(), event);
                 return true;
