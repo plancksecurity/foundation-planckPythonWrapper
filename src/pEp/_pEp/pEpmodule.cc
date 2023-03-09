@@ -106,46 +106,30 @@ namespace pEp {
             }
         }
 
-        // TODO: GIL handling isnt really required here, i think
         PEP_STATUS _messageToSend(::message *msg)
         {
             pEpLog("called");
-            try {
-                PyGILState_STATE gil = PyGILState_Ensure();
-                pEpLog("GIL Aquired");
-                object modref = import("pEp");
-                object funcref = modref.attr("message_to_send");
-                call<void>(funcref.ptr(), Message(msg));
-                PyGILState_Release(gil);
-                pEpLog("GIL released");
-            } catch (std::exception &e) {
-            }
-
+            object modref = import("pEp");
+            object funcref = modref.attr("message_to_send");
+            call<void>(funcref.ptr(), Message(msg));
             return PEP_STATUS_OK;
         }
 
-        // TODO: GIL handling isnt really required here, i think
         PEP_STATUS _notifyHandshake(pEp_identity *me, pEp_identity *partner, sync_handshake_signal signal)
         {
             pEpLog("called");
-            try {
-                PyGILState_STATE gil = PyGILState_Ensure();
-                pEpLog("GIL Aquired");
-                object modref = import("pEp");
-                object funcref = modref.attr("notify_handshake");
-                call<void>(funcref.ptr(), Identity(me), Identity(partner), signal);
-                PyGILState_Release(gil);
-                pEpLog("GIL released");
-            } catch (std::exception &e) {
-            }
-
+            object modref = import("pEp");
+            object funcref = modref.attr("notify_handshake");
+            call<void>(funcref.ptr(), Identity(me), Identity(partner), signal);
             return PEP_STATUS_OK;
         }
 
-        bool _do_protocol_step()
+        bool _do_protocol_step_from_queue()
         {
             pEpLog("called");
-            SYNC_EVENT event = Adapter::_cb_retrieve_next_sync_event_dequeue_next_sync_event(nullptr, 0);
+            SYNC_EVENT event = Adapter::_cb_retrieve_next_sync_event_dequeue_next_sync_event(
+                nullptr,
+                0);
             if (event != NULL) {
                 ::do_sync_protocol_step(Adapter::session(), event);
                 return true;
@@ -204,8 +188,9 @@ namespace pEp {
                     for (int i = 0; i < boost::python::len(identities); ++i) {
                         Identity ident = extract<Identity>(identities[i]);
                         si = identity_list_add(si, ident);
-                        if (!si)
+                        if (!si) {
                             throw std::bad_alloc();
+                        }
                     }
                 } catch (std::exception &ex) {
                     free_identity_list(shared_identities);
@@ -219,6 +204,10 @@ namespace pEp {
                 shared_identities);
             free_identity_list(shared_identities);
             _throw_status(status);
+        }
+
+        void _log(const std::string& msg) {
+            pEpLog(msg);
         }
 
         BOOST_PYTHON_MODULE(_pEp)
@@ -236,11 +225,11 @@ namespace pEp {
             scope().attr("protocol_version") = get_protocol_version();
 
             def("set_debug_log_enabled", &Adapter::pEpLog::set_enabled, "Switch debug logging on/off");
-
+            def("_log", _log);
 
             def("_init_session", _init_session);
             def("_free_session", _free_session);
-            def("_do_protocol_step", _do_protocol_step);
+            def("_do_protocol_step_from_queue", _do_protocol_step_from_queue);
             def("_inject_sync_shutdown", Adapter::inject_sync_shutdown);
             def("_notifyHandshake_sync_start", _notifyHandshake_sync_start);
             def("_notifyHandshake_sync_stop", _notifyHandshake_sync_stop);
