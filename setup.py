@@ -125,7 +125,8 @@ class BuildExtCommand(build_ext):
             'pEpAdapter',
             'pEpCxx11',
             'boost_python3',
-            'boost_locale'
+            'boost_locale',
+            'z'
         ]
         compile_flags = ['-std=c++14', '-fpermissive']
         if self.debug:
