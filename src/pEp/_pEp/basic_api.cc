@@ -110,29 +110,44 @@ namespace pEp {
         }
 
 
-        boost::python::list import_key(string key_data)
+        boost::python::tuple import_key(string key_data)
         {
             ::identity_list *private_keys = NULL;
-            PEP_STATUS status = ::import_key(
+            ::stringlist_t *imported_keys = NULL;
+            PEP_STATUS status = ::import_key_with_fpr_return(
                 Adapter::session(),
                 key_data.c_str(),
                 key_data.size(),
-                &private_keys);
+                &private_keys,
+                &imported_keys,
+                NULL);
             if (status && status != PEP_KEY_IMPORTED)
                 _throw_status(status);
 
-            auto result = boost::python::list();
+            auto keys = boost::python::list();
+            for (::stringlist_t *sl = imported_keys; sl && sl->value; sl = sl->next) {
+                string fpr = sl->value;
+                keys.append(fpr);
+            }
+
+            free_stringlist(imported_keys);
+
+            auto identities = boost::python::list();
             for (::identity_list *il = private_keys; il && il->ident; il = il->next) {
                 ::pEp_identity *ident = ::identity_dup(il->ident);
                 if (!ident) {
                     free_identity_list(private_keys);
                     throw std::bad_alloc();
                 }
-                result.append(Identity(ident));
+                identities.append(Identity(ident));
             }
 
             free_identity_list(private_keys);
-            return result;
+
+            auto result = boost::python::list();
+            result.append(keys);
+            result.append(identities);
+            return boost::python::tuple(result);
         }
 
         string export_key(Identity ident)
