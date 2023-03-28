@@ -310,6 +310,11 @@ namespace pEp {
 
             PEP_color outgoing_color();
 
+            Message onionize(boost::python::list relays);
+            Message onionize(boost::python::list relays, int enc_format);
+            Message onionize(boost::python::list relays, int enc_format, int flags);
+            //Message onionize(boost::python::list relays, int enc_format = 0, int flags = 0);
+
             Message deepcopy(dict &memo);
 
             Message copy();

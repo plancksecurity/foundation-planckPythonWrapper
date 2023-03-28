@@ -12,6 +12,7 @@
 // Engine
 #include <pEp/key_reset.h>
 #include <pEp/message_api.h>
+#include <pEp/mixnet.h>
 #include <pEp/sync_api.h>
 #include <pEp/status_to_string.h>
 
@@ -569,6 +570,26 @@ namespace pEp {
                                          "   keys            a list of keys being used\n"
                                          "   rating          the rating of the message as integer\n"
                                          "   flags           flags set while decryption\n")
+                                     .def(
+                                         "onionize",
+                                         (Message(Message::*)(boost::python::list)) &
+                                             Message::onionize)
+                                     .def(
+                                         "onionize",
+                                         (Message(Message::*)(boost::python::list, int)) &
+                                             Message::onionize)
+                                     .def(
+                                         "onionize",
+                                         (Message(Message::*)(boost::python::list, int, int)) &
+                                             Message::onionize,
+                                         "msg2 = msg1.onionize(relays, enc_format = 4, flags = 0)\n"
+                                         "\n"
+                                         "returns a copy of the message onionized with the given relay identities\n"
+                                         "   relays          a list of identities to use as relays\n"
+                                         "   enc_format      the encryption format, as in encrypt.  Only\n"
+                                         "                   recent formats are supported.\n"
+                                         "   flags           flags, as in encrypt.  Do not use onionisation flag\n"
+                                         "   msg2            the resulting onionized message\n")
                                      .add_property(
                                          "outgoing_rating",
                                          &Message::outgoing_rating,
@@ -671,6 +692,16 @@ namespace pEp {
                 "\n"
                 "ident      partner identity this key is used for\n"
                 "fpr        fingerprint of the key to set as the identity default\n");
+
+            def("get_onion_identities",
+                &get_onion_identities,
+                "get_onion_identities(trusted_no, total_no)\n"
+                "\n"
+                "Return a list of total_no known identities suitable to use as\n"
+                "onion-routing relays, of which at least trusted_no are trusted.\n"
+                "The returned identities are all distinct and in random order.\n"
+                "\n"
+                "identities = get_onion_identities(2, 5)\n");
 
             // message API
 

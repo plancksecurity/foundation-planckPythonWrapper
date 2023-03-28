@@ -2,6 +2,7 @@
 // see LICENSE.txt
 
 // System
+#include <iostream> /////////////////////////////////////////////////
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
@@ -13,6 +14,7 @@
 #include <pEp/mime.h>
 #include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
+#include <pEp/mixnet.h>
 
 // local
 #include "message.hh"
@@ -349,6 +351,63 @@ namespace pEp {
         PEP_color Message::outgoing_color()
         {
             return _color(outgoing_rating());
+        }
+
+        Message Message::onionize(boost::python::list relays)
+        {
+            return onionize(relays, (int) PEP_enc_PEP_message_v2, (int) PEP_encrypt_flag_default);
+        }
+        Message Message::onionize(boost::python::list relays, int enc_format)
+        {
+            return onionize(relays, enc_format, (int) PEP_encrypt_flag_default);
+        }
+        Message Message::onionize(boost::python::list relays, int enc_format, int flags)
+        {
+/*
+            std::cerr << "FIRST: enc_format: " << enc_format << "  flags: " << flags << "\n";
+            // Actually compute default parameters.  This is very error-prone.
+            // Here I am being pedantic and manually setting a default for flags
+            // even if it is zero, just to prevent future mistakes in case we
+            // change the default.
+            if (enc_format == 0) {
+                enc_format = (int) PEP_enc_PEP_message_v2;
+                flags = 0;
+            }
+            if (flags == 0) {
+                flags = 0;
+            }
+            std::cerr << "THEN:  enc_format: " << enc_format << "  flags: " << flags << "\n";
+*/
+            ::identity_list *identities_c = NULL;
+            PEP_STATUS status = PEP_STATUS_OK;
+
+            // In case of any error, be it memory allocation or type conversion,
+            // free our temporary data before re-throwing to the caller.
+            ::pEp_identity *identity_c = NULL;
+            try {
+                // Turn the Python list into a C identity list.
+                for (int i = len(relays) - 1; i >= 0; i--) {
+                    Identity &identity = boost::python::extract<Identity &>(relays [i]);
+                    ::identity_list *new_identities_c = identity_list_cons_copy(identity, identities_c);
+                    if (new_identities_c == NULL)
+                        throw std::bad_alloc();
+                    identities_c = new_identities_c;
+                }
+
+                // Call the C function to do the actual work.
+                ::message *in_message_c = * this;
+                ::message *out_message_c = NULL;
+                status = ::onionize(Adapter::session(), in_message_c, &out_message_c, (::PEP_enc_format) enc_format, (::PEP_encrypt_flags_t) flags, identities_c);
+                _throw_status(status);
+
+                // Success.
+                free_identity_list(identities_c);
+                return out_message_c;
+            } catch (const std::exception &e) {
+                free_identity(identity_c);
+                free_identity_list(identities_c);
+                throw e;
+            }
         }
 
         Message Message::copy()

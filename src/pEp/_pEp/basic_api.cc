@@ -7,6 +7,7 @@
 // Engine
 #include <pEp/keymanagement.h>
 #include <pEp/message_api.h>
+#include <pEp/mixnet.h>
 #include <pEp/Adapter.hh>
 
 // local
@@ -219,6 +220,24 @@ namespace pEp {
             const char *fpr_c = fpr.c_str();
             PEP_STATUS status = ::set_comm_partner_key(Adapter::session(), ident, fpr_c);
             _throw_status(status);
+        }
+
+        boost::python::list get_onion_identities(unsigned trusted_no, unsigned total_no)
+        {
+            ::identity_list *identities = NULL;
+            PEP_STATUS status = ::get_onion_identities(Adapter::session(), trusted_no, total_no, &identities);
+            _throw_status(status);
+            boost::python::list result;
+            for (::identity_list *il = identities; il && il->ident; il = il->next) {
+                ::pEp_identity *ident = ::identity_dup(il->ident);
+                if (!ident) {
+                    free_identity_list(identities);
+                    throw std::bad_alloc();
+                }
+                result.append(Identity(ident));
+            }
+            free_identity_list(identities);
+            return result;
         }
 
     } // namespace PythonAdapter
