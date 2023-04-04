@@ -110,7 +110,7 @@ namespace pEp {
         }
 
 
-        boost::python::tuple import_key(string key_data)
+        boost::python::tuple import_key_with_fpr_return(string key_data)
         {
             ::identity_list *private_keys = NULL;
             ::stringlist_t *imported_keys = NULL;

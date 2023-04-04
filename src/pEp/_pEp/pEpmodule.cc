@@ -624,9 +624,9 @@ namespace pEp {
                 "reset trust bit or explicitly mistrusted status for an identity and "
                 "its accompanying key/user_id pair\n");
 
-            def("import_key",
-                &import_key,
-                "imported_keys, affected_own_identities = import_key(key_data)\n"
+            def("import_key_with_fpr_return",
+                &import_key_with_fpr_return,
+                "imported_keys, affected_own_identities = import_key_with_fpr_return(key_data)\n"
                 "\n"
                 "import key(s) from key_data\n");
 
