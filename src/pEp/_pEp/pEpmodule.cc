@@ -576,16 +576,21 @@ namespace pEp {
                                              Message::onionize)
                                      .def(
                                          "onionize",
-                                         (Message(Message::*)(boost::python::list, int)) &
+                                         (Message(Message::*)(boost::python::list, boost::python::list)) &
                                              Message::onionize)
                                      .def(
                                          "onionize",
-                                         (Message(Message::*)(boost::python::list, int, int)) &
+                                         (Message(Message::*)(boost::python::list, boost::python::list, int)) &
+                                             Message::onionize)
+                                     .def(
+                                         "onionize",
+                                         (Message(Message::*)(boost::python::list, boost::python::list, int, int)) &
                                              Message::onionize,
-                                         "msg2 = msg1.onionize(relays, enc_format = 4, flags = 0)\n"
+                                         "msg2 = msg1.onionize(relays, extra_keys = [], enc_format = 4, flags = 0)\n"
                                          "\n"
                                          "returns a copy of the message onionized with the given relay identities\n"
                                          "   relays          a list of identities to use as relays\n"
+                                         "   extra_keys      a list of additional FPRs to encrypt the innermost message with"
                                          "   enc_format      the encryption format, as in encrypt.  Only\n"
                                          "                   recent formats are supported.\n"
                                          "   flags           flags, as in encrypt.  Do not use onionisation flag\n"
