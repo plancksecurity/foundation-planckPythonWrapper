@@ -61,7 +61,7 @@ install-test: compile
 	pip3 install .[test]
 
 test:
-	pytest
+	pytest tests
 
 
 # Development
