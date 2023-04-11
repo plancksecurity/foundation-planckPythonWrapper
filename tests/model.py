@@ -47,7 +47,7 @@ identities = \
 
 class Identity:
     """
-    An Identity class that is:
+    An Identity class that:
     - can represent pEp.Identity
     - is read-only (const)
     """
