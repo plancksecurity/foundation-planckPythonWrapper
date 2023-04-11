@@ -222,10 +222,10 @@ namespace pEp {
             _throw_status(status);
         }
 
-        boost::python::list get_onion_identities(unsigned trusted_no, unsigned total_no)
+        boost::python::list onion_identities(unsigned trusted_no, unsigned total_no)
         {
             ::identity_list *identities = NULL;
-            PEP_STATUS status = ::get_onion_identities(Adapter::session(), trusted_no, total_no, &identities);
+            PEP_STATUS status = ::onion_identities(Adapter::session(), trusted_no, total_no, &identities);
             _throw_status(status);
             boost::python::list result;
             for (::identity_list *il = identities; il && il->ident; il = il->next) {

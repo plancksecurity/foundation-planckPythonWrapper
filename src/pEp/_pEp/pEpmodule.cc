@@ -406,7 +406,7 @@ namespace pEp {
                                       (void(Message::Blob::*)(string)) & Message::Blob::filename,
                                       "filename of object in Blob");
 
-            ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
+            //((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
             auto message_class = class_<Message>(
                                      "Message",
@@ -698,15 +698,15 @@ namespace pEp {
                 "ident      partner identity this key is used for\n"
                 "fpr        fingerprint of the key to set as the identity default\n");
 
-            def("get_onion_identities",
-                &get_onion_identities,
-                "get_onion_identities(trusted_no, total_no)\n"
+            def("onion_identities",
+                &onion_identities,
+                "onion_identities(trusted_no, total_no)\n"
                 "\n"
                 "Return a list of total_no known identities suitable to use as\n"
                 "onion-routing relays, of which at least trusted_no are trusted.\n"
                 "The returned identities are all distinct and in random order.\n"
                 "\n"
-                "identities = get_onion_identities(2, 5)\n");
+                "identities = onion_identities(2, 5)\n");
 
             // message API
 
