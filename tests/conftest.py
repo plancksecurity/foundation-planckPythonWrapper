@@ -55,10 +55,11 @@ def import_ident_alice_as_own_ident(pEp, model, alice_imported):
 
 @pytest.fixture()
 def import_ident_bob(pEp, model):
-    pEp.import_key(model.bob.key_pub)
+    keys, own_idents = pEp.import_key_with_fpr_return(model.bob.key_pub)
     bob = pEp.Identity(
         model.bob.addr,
         model.bob.name,
     )
+    pEp.set_comm_partner_key(bob, keys[0])
     bob.update()
     return bob
