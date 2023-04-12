@@ -406,7 +406,7 @@ namespace pEp {
                                       (void(Message::Blob::*)(string)) & Message::Blob::filename,
                                       "filename of object in Blob");
 
-            //((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
+            ((PyTypeObject *)(void *)blob_class.ptr())->tp_as_buffer = &Message::Blob::bp;
 
             auto message_class = class_<Message>(
                                      "Message",
@@ -571,6 +571,17 @@ namespace pEp {
                                          "   rating          the rating of the message as integer\n"
                                          "   flags           flags set while decryption\n")
                                      .def(
+                                         "serialize",
+                                         &Message::serialize,
+                                         "b = msg.serialize()\n"
+                                         "\n"
+                                         "serialises a p≡p message into a blob (which can be converted into\n"
+                                         "a bytes object).  The blob can be deserialised back into a message\n"
+                                         "through pEp.deserialize\n"
+                                         "\n"
+                                         "   msg             a message, encrypted or not\n"
+                                         "   b               the resultint blob\n")
+                                     .def(
                                          "onionize",
                                          (Message(Message::*)(boost::python::list)) &
                                              Message::onionize)
@@ -707,6 +718,16 @@ namespace pEp {
                 "The returned identities are all distinct and in random order.\n"
                 "\n"
                 "identities = onion_identities(2, 5)\n");
+            def("deserialize",
+                &deserialize,
+                "msg = deserialize(blob)\n"
+                "\n"
+                "Return the message obtained by the deserialisation of the given blob.\n"
+                "The blob must be obtained from Message.serialize.\n"
+                "\n"
+                "msg        the returned message\n"
+                "blob       a blob returned by Message.serialize\n"
+                "\n");
 
             // message API
 

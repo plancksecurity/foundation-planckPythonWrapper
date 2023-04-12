@@ -73,6 +73,15 @@ namespace pEp {
                     return _bl->size;
                 }
 
+                // Return an initial to the internal data, without copying the
+                // buffer.
+                // This method is of course unsafe, as the resulting pointer
+                // must not be dereferenced past the bloblist's destruction.
+                const char* c_data()
+                {
+                    return _bl->value;
+                }
+
                 string decode(string encoding);
 
                 string decode()
@@ -318,7 +327,11 @@ namespace pEp {
             Message deepcopy(dict &memo);
 
             Message copy();
+
+            Message::Blob serialize();
         };
+
+        Message deserialize(const Message::Blob &blob);
 
         Message outgoing_message(Identity me);
 

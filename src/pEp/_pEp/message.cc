@@ -29,6 +29,8 @@ namespace pEp {
             if (!_bl) {
                 throw std::bad_alloc();
             }
+            std::cerr << "Built a blob at " << this << " from a C bloblist (chained? " << chained << ")\n";
+            std::cerr << "  its _bl is at " << _bl << "\n";
         }
 
         Message::Blob::Blob(object data, string mime_type, string filename) :
@@ -52,23 +54,51 @@ namespace pEp {
             }
 
             memcpy(mem, src.buf, src.len);
+            std::cerr << "  copied old cd " << src.buf << " ...\n";
+            std::cerr << "  ... to        " << mem << " ...\n";
             free(_bl->value);
+            std::cerr << "  keeping _bl   " << _bl << "\n";
+            std::cerr << "  freed value   " << (void*) _bl->value << "\n";
             _bl->size = src.len;
             _bl->value = mem;
+            std::cerr << "  replaced with " << (void*) _bl->value << "\n";
 
             PyBuffer_Release(&src);
 
             this->mime_type(mime_type);
             this->filename(filename);
+            std::cerr << "Built a blob at " << this << " from a C++ data object\n";
+            std::cerr << "  its _bl is at " << _bl << "\n";
         }
 
-        Message::Blob::Blob(const Message::Blob &second) : _bl(second._bl), part_of_chain(true) {}
+        Message::Blob::Blob(const Message::Blob &second) : _bl(second._bl), part_of_chain(second.part_of_chain) {
+            std::cerr << "Built a blob at " << this << " as a copy of " << & second << " which " << (second.part_of_chain ? "WAS" : "was NOT") << " part of a chain\n";
+            if (! part_of_chain) {
+                // Replace _bc with a copy.
+                char *data_c = NULL;
+                data_c = malloc(_bl->size);
+                if (data_c == NULL)
+                    throw std::bad_alloc();
+                memcpy(data_c, _bl->value, _bl->size);
+                bloblist_t *_new_bl = new_bloblist(data_c, _bl->size, _bl->mime_type, NULL);
+                if (_new_bl == NULL) {
+                    free(data_c);
+                    throw std::bad_alloc();
+                }
+                _bl = _new_bl;
+            }
+            std::cerr << "  its _bl is at " << _bl << "\n";
+        }
 
         Message::Blob::~Blob()
         {
+            std::cerr << "Destroy blob at " << this << "\n";
+            std::cerr << "  its _bl was at" << _bl << (part_of_chain ? " (NOT destroying it)" : "(DESTROYING it)") << "\n";
             if (!part_of_chain) {
                 free(_bl->value);
+                std::cerr << "  freed c_data  " << (void*) _bl->value << "\n";
                 free(_bl);
+                std::cerr << "  freed _bl     " << (void*) _bl << "\n";
             }
         }
 
@@ -79,6 +109,9 @@ namespace pEp {
             if (!_bl) {
                 build << "b'', '', ''";
             } else {
+build << "@ " << this << " _bl " << (void*) _bl << "  c_data " << (void*) _bl->value << " " ;
+//build << "\"" << (char *)_bl->value << "\""; // only for debugging, of course: dangerous unless '\0'-terminated
+build << " ";
                 build << "bytes(" << _bl->size << "), ";
                 string mime_type;
                 if (_bl->mime_type)
@@ -415,6 +448,50 @@ namespace pEp {
         Message Message::deepcopy(dict &)
         {
             return copy();
+        }
+
+        Message::Blob Message::serialize()
+        {
+            std::cerr << "Message::serialize this is   " << this << "\n";
+            size_t length_in_bytes_c;
+            char *data_c = NULL;
+            ::bloblist_t *blob_c;
+
+            /* Serialise the message into a memory buffer. */
+            PEP_STATUS status = onion_serialize_message(Adapter::session(), *this, &data_c, &length_in_bytes_c);
+            _throw_status(status);
+
+            /* Turn the memory buffer into a blob. */
+            blob_c = new_bloblist(data_c, length_in_bytes_c, PEP_ONION_MESSAGE_MIME_TYPE, NULL);
+            if (blob_c == NULL) {
+                ::free(data_c);
+                throw std::bad_alloc();
+            }
+            return Message::Blob(blob_c, false);
+            /*
+            char *data_c = strdup("foo!");
+            size_t length_in_bytes_c = strlen(data_c);
+            ::bloblist_t *blob_c = NULL;
+            blob_c = ::new_bloblist(data_c, length_in_bytes_c, PEP_ONION_MESSAGE_MIME_TYPE, NULL);
+            if (blob_c == NULL) {
+                ::free(data_c);
+                throw std::bad_alloc();
+            }
+            std::cerr << "Message::serialize data_c is " << (void*) data_c << "\n";
+            std::cerr << "Message::serialize blob_c is " << blob_c << "\n";
+            return Message::Blob(blob_c, false);
+            */
+        }
+
+        Message deserialize(const Message::Blob &blob)
+        {
+            const char *data_c = blob.c_data();
+            size_t length_in_bytes_c = blob.size();
+            message *msg = NULL;
+            PEP_STATUS status = onion_deserialize_message(Adapter::session(), data_c, length_in_bytes_c, &msg);
+            _throw_status(status);
+
+            return Message(msg);
         }
 
         Message outgoing_message(Identity me)
