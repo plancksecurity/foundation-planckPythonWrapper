@@ -663,13 +663,7 @@ namespace pEp {
 
             def("import_key",
                 &import_key,
-                "private_key_list = import_key(key_data)\n"
-                "\n"
-                "import key(s) from key_data\n");
-
-            def("import_key_with_fpr_return",
-                &import_key_with_fpr_return,
-                "imported_keys, affected_own_identities = import_key_with_fpr_return(key_data)\n"
+                "imported_keys, affected_own_identities = import_key(key_data)\n"
                 "\n"
                 "import key(s) from key_data\n");
 
