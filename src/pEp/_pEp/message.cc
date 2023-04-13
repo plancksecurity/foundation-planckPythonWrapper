@@ -76,7 +76,7 @@ namespace pEp {
             if (! part_of_chain) {
                 // Replace _bc with a copy.
                 char *data_c = NULL;
-                data_c = malloc(_bl->size);
+                data_c = (char*) malloc(_bl->size);
                 if (data_c == NULL)
                     throw std::bad_alloc();
                 memcpy(data_c, _bl->value, _bl->size);
