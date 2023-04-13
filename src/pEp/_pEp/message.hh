@@ -68,7 +68,7 @@ namespace pEp {
                     str_attr(_bl->filename, value);
                 }
 
-                size_t size()
+                size_t size() const
                 {
                     return _bl->size;
                 }
@@ -77,7 +77,7 @@ namespace pEp {
                 // buffer.
                 // This method is of course unsafe, as the resulting pointer
                 // must not be dereferenced past the bloblist's destruction.
-                const char* c_data()
+                const char* c_data() const
                 {
                     return _bl->value;
                 }
