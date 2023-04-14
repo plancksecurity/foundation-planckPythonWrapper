@@ -74,13 +74,14 @@ namespace pEp {
         Message::Blob::Blob(const Message::Blob &second) : _bl(second._bl), part_of_chain(second.part_of_chain) {
             std::cerr << "Built a blob at " << this << " as a copy of " << & second << " which " << (second.part_of_chain ? "WAS" : "was NOT") << " part of a chain\n";
             if (! part_of_chain) {
+                assert(second._bl->next == NULL);
                 // Replace _bc with a copy.
                 char *data_c = NULL;
                 data_c = (char*) malloc(_bl->size);
                 if (data_c == NULL)
                     throw std::bad_alloc();
                 memcpy(data_c, _bl->value, _bl->size);
-                bloblist_t *_new_bl = new_bloblist(data_c, _bl->size, _bl->mime_type, NULL);
+                ::bloblist_t *_new_bl = ::new_bloblist(data_c, _bl->size, _bl->mime_type, NULL);
                 if (_new_bl == NULL) {
                     free(data_c);
                     throw std::bad_alloc();
