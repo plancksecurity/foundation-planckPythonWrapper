@@ -663,9 +663,18 @@ namespace pEp {
 
             def("import_key",
                 &import_key,
-                "imported_keys, affected_own_identities = import_key(key_data)\n"
+                "private_key_list = import_key(key_data)\n"
                 "\n"
                 "import key(s) from key_data\n");
+
+            def("import_key_with_fpr_return",
+                &import_key_with_fpr_return,
+                "imported_keys, affected_own_identities = import_key_with_fpr_return(key_data)\n"
+                "\n"
+                "import key(s) from key_data\n"
+                "\n"
+                "imported_keys            a list of FPRs\n"
+                "affected_own_identities  the list of modified own identities\n");
 
             def("export_key",
                 &export_key,

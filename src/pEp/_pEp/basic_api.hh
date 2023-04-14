@@ -23,7 +23,9 @@ namespace pEp {
 
         void key_reset_trust(Identity ident);
 
-        boost::python::tuple import_key(string key_data);
+        boost::python::list import_key(string key_data);
+
+        boost::python::tuple import_key_with_fpr_return(string key_data);
 
         string export_key(Identity ident);
 

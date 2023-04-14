@@ -110,7 +110,32 @@ namespace pEp {
             _throw_status(status);
         }
 
-        boost::python::tuple import_key(string key_data)
+        boost::python::list import_key(string key_data)
+        {
+            ::identity_list *private_keys = NULL;
+            PEP_STATUS status = ::import_key(
+                Adapter::session(),
+                key_data.c_str(),
+                key_data.size(),
+                &private_keys);
+            if (status && status != PEP_KEY_IMPORTED)
+                _throw_status(status);
+
+            auto result = boost::python::list();
+            for (::identity_list *il = private_keys; il && il->ident; il = il->next) {
+                ::pEp_identity *ident = ::identity_dup(il->ident);
+                if (!ident) {
+                    free_identity_list(private_keys);
+                    throw std::bad_alloc();
+                }
+                result.append(Identity(ident));
+            }
+
+            free_identity_list(private_keys);
+            return result;
+        }
+
+        boost::python::tuple import_key_with_fpr_return(string key_data)
         {
             ::identity_list *private_keys = NULL;
             ::stringlist_t *imported_keys = NULL;
