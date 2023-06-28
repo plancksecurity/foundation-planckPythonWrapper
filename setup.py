@@ -60,7 +60,7 @@ class BuildExtCommand(build_ext):
         return ret
 
     def windowsGetBoostDirs(self):
-        for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', 'packages')) if f.is_dir()]:
+        for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', '..', '..', 'packages')) if f.is_dir()]:
             if 'boost.' in dir or 'boost_python' in dir or 'boost_locale' in dir:
                 yield join(dir, 'lib', 'native'), join(dir, 'lib', 'native', 'include')
 
@@ -73,6 +73,7 @@ class BuildExtCommand(build_ext):
         sys_libdirs = [ join(inst_prefix, 'Debug')] if self.debug else [ join(inst_prefix, 'Release')]
         sys_libdirs += [d[0] for d in self.windowsGetBoostDirs()]
         libs = [
+            'libpEpCxx11',
             'pEpEngine',
             'libpEpAdapter',
             'boost_python38-vc142-mt-x32-1_72',
