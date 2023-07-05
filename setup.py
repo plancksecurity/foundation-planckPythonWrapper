@@ -7,135 +7,24 @@
 from __future__ import print_function
 
 import sys
-
-import os
-from os import environ
 from os.path import join
-import platform
-
 from setuptools import setup, Extension
-from glob import glob
-
 from setuptools.command.build_ext import build_ext
-
-
-def pEpLog(*msg):
-    import inspect
-    msgstr = ''
-    separator = ' '
-    for m in msg:
-        msgstr += str(m)
-        msgstr += separator
-    func = inspect.currentframe().f_back.f_code
-    print(func.co_filename + " : " + func.co_name + " : " + msgstr)
-
+from wheel.bdist_wheel import bdist_wheel
+from setup_ext import *
 
 class BuildExtCommand(build_ext):
     user_options = build_ext.user_options + [
         ('prefix=', None, 'Use pEp-base installation in prefix (libs/includes)'),
+        ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
     ]
 
     def initialize_options(self):
+        super().initialize_options()
         build_ext.initialize_options(self)
         self.prefix = getattr(self, "prefix=", None)
-
-    def windowsGetInstallLocation(self):
-        reg_path = "SOFTWARE\\Classes\\TypeLib\\{564A4350-419E-47F1-B0DF-6FCCF0CD0BBC}\\1.0\\0\\win32"
-        KeyName = None
-        regKey = None
-        pEpLog("Registry Lookup:", reg_path, KeyName)
-        try:
-            regKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path, 0, winreg.KEY_READ)
-            # Keys: Description, FileName, FriendlyName, LoadBehavior
-            com_server, _ = winreg.QueryValueEx(regKey, KeyName)
-        except WindowsError as error:
-            pEpLog("Error ocurred: " + error)
-            com_server = None
-        finally:
-            if winreg:
-                winreg.CloseKey(regKey)
-        dirname = os.path.dirname
-        ret = dirname(dirname(com_server))
-        pEpLog("Value:", ret)
-        return ret
-
-    def windowsGetBoostDirs(self):
-        for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', '..', '..', 'packages')) if f.is_dir()]:
-            if 'boost.' in dir or 'boost_python' in dir or 'boost_locale' in dir:
-                yield join(dir, 'lib', 'native'), join(dir, 'lib', 'native', 'include')
-
-    def get_build_info_win32(self):
-        home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
-        inst_prefix = self.windowsGetInstallLocation()
-        sys_includes = [
-            join(inst_prefix),
-        ] + [d[1] for d in self.windowsGetBoostDirs()]
-        sys_libdirs = [ join(inst_prefix, 'Debug')] if self.debug else [ join(inst_prefix, 'Release')]
-        sys_libdirs += [d[0] for d in self.windowsGetBoostDirs()]
-        libs = [
-            'libpEpCxx11',
-            'pEpEngine',
-            'libpEpAdapter',
-            'boost_python38-vc142-mt-x32-1_72',
-            'boost_locale-vc142-mt-x32-1_72'
-        ]
-        compile_flags = ['/std:c++14', '/permissive']
-        if self.debug:
-            pEpLog("debug mode")
-            compile_flags += ['/Od', '/Zi', '/DEBUG']
-
-        return (home, sys_includes, sys_libdirs, libs, compile_flags)
-
-
-    def get_build_info_darwin(self):
-        home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
-        sys_includes = [
-            '/opt/local/include',
-        ]
-        sys_libdirs = [
-            '/opt/local/lib',
-        ]
-        libs = [
-            'pEpEngine',
-            'pEpAdapter',
-            'pEpCxx11',
-            'boost_python3-mt',
-            'boost_locale-mt'
-        ]
-        compile_flags = ['-std=c++14', '-fpermissive']
-        if self.debug:
-            pEpLog("debug mode")
-            compile_flags += ['-O0', '-g', '-UNDEBUG']
-
-        return (home, sys_includes, sys_libdirs, libs, compile_flags)
-
-
-    def get_build_info_linux(self):
-        home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
-        sys_includes = [
-            '/usr/local/include',
-            '/usr/include',
-        ]
-        sys_libdirs = [
-            '/usr/local/lib',
-            '/usr/lib',
-            '/usr/lib/{}-linux-gnu'.format(platform.machine())
-        ]
-        libs = [
-            'pEpEngine',
-            'pEpAdapter',
-            'pEpCxx11',
-            'boost_python3',
-            'boost_locale',
-            'z'
-        ]
-        compile_flags = ['-std=c++14', '-fpermissive']
-        if self.debug:
-            pEpLog("debug mode")
-            compile_flags += ['-O0', '-g', '-UNDEBUG']
-
-        return (home, sys_includes, sys_libdirs, libs, compile_flags)
-
+        if not hasattr(self, "OutDir") or self.OutDir is None:
+            self.OutDir = getattr(self, "OutDir=", None)
 
     def finalize_options(self):
         build_ext.finalize_options(self)
@@ -143,16 +32,9 @@ class BuildExtCommand(build_ext):
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
 
-
-        # get build information for platform
-        if sys.platform == 'win32':
-            build_info = self.get_build_info_win32()
-        elif sys.platform == 'darwin':
-            build_info = self.get_build_info_darwin()
-        elif sys.platform == 'linux':
-            build_info = self.get_build_info_linux()
-        else:
-            pEpLog("Platform not supported:" + sys.platform)
+        # Get build information for platform
+        build_info = get_build_info(self.debug, self.OutDir)
+        if build_info is None:
             exit()
 
         (home, sys_includes, sys_libdirs, libs, compile_flags) = build_info
@@ -161,7 +43,6 @@ class BuildExtCommand(build_ext):
         # Start empty
         includes = []
         libdirs = []
-
 
         # Append prefix-dir
         if self.prefix:
@@ -189,12 +70,32 @@ class BuildExtCommand(build_ext):
     def run(self):
         build_ext.run(self)
 
+class CustomBdistWheel(bdist_wheel):
+    user_options = bdist_wheel.user_options + [
+        ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
+    ]
 
-if sys.platform == 'win32':
-    if sys.version_info[0] >= 3:
-        import winreg
-    else:
-        import _winreg as winreg
+    def initialize_options(self):
+        super().initialize_options()
+        bdist_wheel.initialize_options(self)
+        self.debug = getattr(self, "debug=", False)
+        self.OutDir = getattr(self, "OutDir=", None)
+
+    def finalize_options(self):
+        bdist_wheel.finalize_options(self)
+
+        pEpLog("sys.platform: ", sys.platform)
+
+        # Get build information for platform
+        build_info = get_build_info(self.debug, self.OutDir)
+        if build_info is None:
+            exit()
+
+    def run(self):
+        # Pass the value of OutDir to the build_ext command
+        self.distribution.get_command_obj('build_ext').OutDir = self.OutDir
+        self.run_command('build_ext')
+        super().run()
 
 if sys.version_info[0] < 3:
     FileNotFoundError = EnvironmentError
@@ -218,6 +119,7 @@ setup(
     ext_modules=[module_pEp],
     cmdclass={
         'build_ext': BuildExtCommand,
+        'bdist_wheel': CustomBdistWheel,
     },
     # While not using a pyproject.toml, support setuptools_scm setup.cfg usage,
     # see https://github.com/pypa/setuptools_scm/#setupcfg-usage

@@ -63,7 +63,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
@@ -76,7 +76,7 @@
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
@@ -93,12 +93,10 @@
   <ItemGroup>
     <None Include="..\make.mak" />
     <None Include="..\setup.py" />
+    <None Include="..\setup_ext.py" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libPlanckCxx11\build-windows\libpEpCxx11.vcxproj">
-      <Project>{f3eb02dc-2daa-4b6f-a494-5ec4fbca4446}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\planckCoreV3\build-windows\pEpEngine.vcxproj">
       <Project>{146e69f8-e1da-456a-b048-6dd29d9acf6b}</Project>
     </ProjectReference>
