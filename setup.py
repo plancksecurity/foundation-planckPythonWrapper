@@ -18,6 +18,8 @@ from glob import glob
 
 from setuptools.command.build_ext import build_ext
 
+import distutils
+
 
 def pEpLog(*msg):
     import inspect
@@ -109,6 +111,14 @@ class BuildExtCommand(build_ext):
         return (home, sys_includes, sys_libdirs, libs, compile_flags)
 
 
+    def find_boost_python(self, lib_dirs):
+        boost_python_names = ["boost_python" + suffix for suffix in ["3", "38", "39", "310", "311"]]
+        ccompiler = distutils.ccompiler.new_compiler()
+        for boost in boost_python_names:
+            found = ccompiler.find_library_file(lib_dirs, boost)
+            if found is not None:
+                return boost
+
     def get_build_info_linux(self):
         home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
         sys_includes = [
@@ -120,13 +130,14 @@ class BuildExtCommand(build_ext):
             '/usr/lib',
             '/usr/lib/{}-linux-gnu'.format(platform.machine())
         ]
+        boost = self.find_boost_python(sys_libdirs)
         libs = [
             'pEpEngine',
             'pEpAdapter',
             'pEpCxx11',
-            'boost_python3',
             'boost_locale',
-            'z'
+            'z',
+            boost
         ]
         compile_flags = ['-std=c++14', '-fpermissive']
         if self.debug:
