@@ -37,8 +37,8 @@ def get_build_info_win32(debug, outDir):
         'libpEpCxx11',
         'pEpEngine',
         'libpEpAdapter',
-        'boost_python38-vc142-mt-x32-1_72',
-        'boost_locale-vc142-mt-x32-1_72'
+        'boost_python39-vc142-mt-x32-1_77',
+        'boost_locale-vc142-mt-x32-1_77'
     ]
     compile_flags = ['/std:c++14', '/permissive']
     if debug:
