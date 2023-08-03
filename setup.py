@@ -7,17 +7,11 @@
 from __future__ import print_function
 
 import sys
-
-import os
-from os import environ
 from os.path import join
-import platform
-
 from setuptools import setup, Extension
-from glob import glob
-
 from setuptools.command.build_ext import build_ext
-
+from wheel.bdist_wheel import bdist_wheel
+from setup_ext import *
 import distutils
 
 
@@ -31,15 +25,18 @@ def pEpLog(*msg):
     func = inspect.currentframe().f_back.f_code
     print(func.co_filename + " : " + func.co_name + " : " + msgstr)
 
-
 class BuildExtCommand(build_ext):
     user_options = build_ext.user_options + [
         ('prefix=', None, 'Use pEp-base installation in prefix (libs/includes)'),
+        ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
     ]
 
     def initialize_options(self):
+        super().initialize_options()
         build_ext.initialize_options(self)
         self.prefix = getattr(self, "prefix=", None)
+        if not hasattr(self, "OutDir") or self.OutDir is None:
+            self.OutDir = getattr(self, "OutDir=", None)
 
     def windowsGetInstallLocation(self):
         reg_path = "SOFTWARE\\Classes\\TypeLib\\{564A4350-419E-47F1-B0DF-6FCCF0CD0BBC}\\1.0\\0\\win32"
@@ -146,23 +143,15 @@ class BuildExtCommand(build_ext):
 
         return (home, sys_includes, sys_libdirs, libs, compile_flags)
 
-
     def finalize_options(self):
         build_ext.finalize_options(self)
 
         pEpLog("prefix: ", self.prefix)
         pEpLog("sys.platform: ", sys.platform)
 
-
-        # get build information for platform
-        if sys.platform == 'win32':
-            build_info = self.get_build_info_win32()
-        elif sys.platform == 'darwin':
-            build_info = self.get_build_info_darwin()
-        elif sys.platform == 'linux':
-            build_info = self.get_build_info_linux()
-        else:
-            pEpLog("Platform not supported:" + sys.platform)
+        # Get build information for platform
+        build_info = get_build_info(self.debug, self.OutDir)
+        if build_info is None:
             exit()
 
         (home, sys_includes, sys_libdirs, libs, compile_flags) = build_info
@@ -171,7 +160,6 @@ class BuildExtCommand(build_ext):
         # Start empty
         includes = []
         libdirs = []
-
 
         # Append prefix-dir
         if self.prefix:
@@ -199,12 +187,32 @@ class BuildExtCommand(build_ext):
     def run(self):
         build_ext.run(self)
 
+class CustomBdistWheel(bdist_wheel):
+    user_options = bdist_wheel.user_options + [
+        ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
+    ]
 
-if sys.platform == 'win32':
-    if sys.version_info[0] >= 3:
-        import winreg
-    else:
-        import _winreg as winreg
+    def initialize_options(self):
+        super().initialize_options()
+        bdist_wheel.initialize_options(self)
+        self.debug = getattr(self, "debug=", False)
+        self.OutDir = getattr(self, "OutDir=", None)
+
+    def finalize_options(self):
+        bdist_wheel.finalize_options(self)
+
+        pEpLog("sys.platform: ", sys.platform)
+
+        # Get build information for platform
+        build_info = get_build_info(self.debug, self.OutDir)
+        if build_info is None:
+            exit()
+
+    def run(self):
+        # Pass the value of OutDir to the build_ext command
+        self.distribution.get_command_obj('build_ext').OutDir = self.OutDir
+        self.run_command('build_ext')
+        super().run()
 
 if sys.version_info[0] < 3:
     FileNotFoundError = EnvironmentError
@@ -228,6 +236,7 @@ setup(
     ext_modules=[module_pEp],
     cmdclass={
         'build_ext': BuildExtCommand,
+        'bdist_wheel': CustomBdistWheel,
     },
     # While not using a pyproject.toml, support setuptools_scm setup.cfg usage,
     # see https://github.com/pypa/setuptools_scm/#setupcfg-usage
