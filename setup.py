@@ -12,6 +12,18 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from wheel.bdist_wheel import bdist_wheel
 from setup_ext import *
+import distutils
+
+
+def pEpLog(*msg):
+    import inspect
+    msgstr = ''
+    separator = ' '
+    for m in msg:
+        msgstr += str(m)
+        msgstr += separator
+    func = inspect.currentframe().f_back.f_code
+    print(func.co_filename + " : " + func.co_name + " : " + msgstr)
 
 class BuildExtCommand(build_ext):
     user_options = build_ext.user_options + [
@@ -25,6 +37,111 @@ class BuildExtCommand(build_ext):
         self.prefix = getattr(self, "prefix=", None)
         if not hasattr(self, "OutDir") or self.OutDir is None:
             self.OutDir = getattr(self, "OutDir=", None)
+
+    def windowsGetInstallLocation(self):
+        reg_path = "SOFTWARE\\Classes\\TypeLib\\{564A4350-419E-47F1-B0DF-6FCCF0CD0BBC}\\1.0\\0\\win32"
+        KeyName = None
+        regKey = None
+        pEpLog("Registry Lookup:", reg_path, KeyName)
+        try:
+            regKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, reg_path, 0, winreg.KEY_READ)
+            # Keys: Description, FileName, FriendlyName, LoadBehavior
+            com_server, _ = winreg.QueryValueEx(regKey, KeyName)
+        except WindowsError as error:
+            pEpLog("Error ocurred: " + error)
+            com_server = None
+        finally:
+            if winreg:
+                winreg.CloseKey(regKey)
+        dirname = os.path.dirname
+        ret = dirname(dirname(com_server))
+        pEpLog("Value:", ret)
+        return ret
+
+    def windowsGetBoostDirs(self):
+        for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', 'packages')) if f.is_dir()]:
+            if 'boost.' in dir or 'boost_python' in dir or 'boost_locale' in dir:
+                yield join(dir, 'lib', 'native'), join(dir, 'lib', 'native', 'include')
+
+    def get_build_info_win32(self):
+        home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
+        inst_prefix = self.windowsGetInstallLocation()
+        sys_includes = [
+            join(inst_prefix),
+        ] + [d[1] for d in self.windowsGetBoostDirs()]
+        sys_libdirs = [ join(inst_prefix, 'Debug')] if self.debug else [ join(inst_prefix, 'Release')]
+        sys_libdirs += [d[0] for d in self.windowsGetBoostDirs()]
+        libs = [
+            'pEpEngine',
+            'libpEpAdapter',
+            'boost_python38-vc142-mt-x32-1_72',
+            'boost_locale-vc142-mt-x32-1_72'
+        ]
+        compile_flags = ['/std:c++14', '/permissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['/Od', '/Zi', '/DEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
+
+
+    def get_build_info_darwin(self):
+        home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
+        sys_includes = [
+            '/opt/local/include',
+        ]
+        sys_libdirs = [
+            '/opt/local/lib',
+        ]
+        libs = [
+            'pEpEngine',
+            'pEpAdapter',
+            'pEpCxx11',
+            'boost_python3-mt',
+            'boost_locale-mt'
+        ]
+        compile_flags = ['-std=c++14', '-fpermissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['-O0', '-g', '-UNDEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
+
+
+    def find_boost_python(self, lib_dirs):
+        boost_python_names = ["boost_python" + suffix for suffix in ["3", "38", "39", "310", "311"]]
+        ccompiler = distutils.ccompiler.new_compiler()
+        for boost in boost_python_names:
+            found = ccompiler.find_library_file(lib_dirs, boost)
+            if found is not None:
+                return boost
+
+    def get_build_info_linux(self):
+        home = environ.get('PER_USER_DIRECTORY') or environ.get('HOME')
+        sys_includes = [
+            '/usr/local/include',
+            '/usr/include',
+        ]
+        sys_libdirs = [
+            '/usr/local/lib',
+            '/usr/lib',
+            '/usr/lib/{}-linux-gnu'.format(platform.machine())
+        ]
+        boost = self.find_boost_python(sys_libdirs)
+        libs = [
+            'pEpEngine',
+            'pEpAdapter',
+            'pEpCxx11',
+            'boost_locale',
+            'z',
+            boost
+        ]
+        compile_flags = ['-std=c++14', '-fpermissive']
+        if self.debug:
+            pEpLog("debug mode")
+            compile_flags += ['-O0', '-g', '-UNDEBUG']
+
+        return (home, sys_includes, sys_libdirs, libs, compile_flags)
 
     def finalize_options(self):
         build_ext.finalize_options(self)
