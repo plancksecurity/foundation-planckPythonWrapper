@@ -241,6 +241,7 @@ setup(
     # While not using a pyproject.toml, support setuptools_scm setup.cfg usage,
     # see https://github.com/pypa/setuptools_scm/#setupcfg-usage
     use_scm_version={
+        'tag_regex': r'^(?P<prefix>planck_v)?(?P<version>[vV]?\d+\.\d+\.\d+[^+]*)\+?(?P<dirty>.*)?$',
         'write_to': 'src/pEp/__version__.py',
         #TODO: fallback_version does not seem to work in case os missing tag
         'fallback_version' : '0.0.0-RC0'
