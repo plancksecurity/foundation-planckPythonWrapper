@@ -138,11 +138,13 @@ namespace pEp {
         boost::python::tuple import_key_with_fpr_return(string key_data)
         {
             ::identity_list *private_keys = NULL;
+            ::identity_list *imported_identities = NULL;
             ::stringlist_t *imported_keys = NULL;
             PEP_STATUS status = ::import_key_with_fpr_return(
                 Adapter::session(),
                 key_data.c_str(),
                 key_data.size(),
+                &imported_identities,
                 &private_keys,
                 &imported_keys,
                 NULL);
