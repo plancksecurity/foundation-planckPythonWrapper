@@ -1,22 +1,25 @@
 # build dirs
 BUILD_DIR = $(ProjectDir)..\build
 DIST_DIR = $(ProjectDir)..\dist
+PYTHON_PROC = $(PREFIX)\vcpkg\installed\x64-windows\tools\python3\python.exe
 
 # create wheel and egg package in dist
 dist: dist-whl dist-egg
 
 # create wheel package in dist
 dist-whl: compile
-    PY -3.9-32 setup.py bdist_wheel
+    CD ..
+    $(PYTHON_PROC) setup.py bdist_wheel
 
 # create egg package in dist
 dist-egg: compile
-    PY -3.9-32 setup.py bdist_egg
+    CD ..
+    $(PYTHON_PROC) setup.py bdist_egg
 
 # build the module into build
 compile:
-    CD..
-    PY -3.9-32 setup.py build_ext --debug
+    CD ..
+    $(PYTHON_PROC) setup.py build_ext --debug --prefix=$(PREFIX)
 
 # delete output directories
 clean:
@@ -28,12 +31,14 @@ all: clean dist
 
 # release build
 release: clean
-    CD..
-    PY -3.9-32 setup.py build_ext --OutDir=$(OUTDIR)
-    PY -3.9-32 setup.py bdist_wheel --OutDir=$(OUTDIR)
+    CD ..
+    CP $(PREFIX)\vcpkg\installed\x64-windows-static-md\debug\lib\python311_d.lib  python311.lib
+    $(PYTHON_PROC) setup.py build_ext --OutDir=$(OUTDIR) --prefix=$(PREFIX)
+    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
 
 #debug build
 debug: clean
-    CD..
-    PY -3.9-32 setup.py build_ext --debug --OutDir=$(OUTDIR)
-    PY -3.9-32 setup.py bdist_wheel --OutDir=$(OUTDIR)
+    CD ..
+    CP $(PREFIX)\vcpkg\installed\x64-windows-static-md\lib\python311.lib python311.lib
+    $(PYTHON_PROC) setup.py build_ext --debug --OutDir=$(OUTDIR) --prefix=$(PREFIX)
+    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
