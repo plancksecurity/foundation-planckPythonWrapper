@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -21,39 +13,23 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{F7D4314B-C7BA-4117-9AE7-AC5C1492153D}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
+    <Keyword>x64Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -62,35 +38,24 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir)</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
-    <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>make.cmd</NMakeBuildCommandLine>
-    <NMakeOutput>pEpPythonAdapter.exe</NMakeOutput>
-    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir)</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeOutput></NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;BOOST_PYTHON_STATIC_LIB;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
-    <ExecutablePath>$(VC_ExecutablePath_x86);$(ExecutablePath)</ExecutablePath>
-    <ReferencePath>$(VC_ReferencesPath_x86);$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(LibraryPath)</LibraryPath>
-    <ExcludePath>$(VC_ExecutablePath_x86);$(VC_LibraryPath_x86);$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>make.cmd</NMakeBuildCommandLine>
-    <NMakeOutput>pEpPythonAdapter.exe</NMakeOutput>
-    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeOutput></NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;BOOST_PYTHON_STATIC_LIB;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
+    <ExecutablePath>$(VC_ExecutablePath_x64);$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>$(VC_ReferencesPath_x64);$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
+    <ExcludePath>$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64);$(ExcludePath)</ExcludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
@@ -98,25 +63,6 @@
     <None Include="..\make.mak" />
     <None Include="..\setup.py" />
     <None Include="..\setup_ext.py" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\planckCoreV3\build-windows\pEpEngine.vcxproj">
-      <Project>{146e69f8-e1da-456a-b048-6dd29d9acf6b}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\boost.1.77.0.0\build\boost.targets" Condition="Exists('..\..\packages\boost.1.77.0.0\build\boost.targets')" />
-    <Import Project="..\..\packages\boost_python39-vc142.1.77.0.0\build\boost_python39-vc142.targets" Condition="Exists('..\..\packages\boost_python39-vc142.1.77.0.0\build\boost_python39-vc142.targets')" />
-    <Import Project="..\..\packages\boost_locale-vc142.1.77.0.0\build\boost_locale-vc142.targets" Condition="Exists('..\..\packages\boost_locale-vc142.1.77.0.0\build\boost_locale-vc142.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\boost.1.77.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\boost.1.77.0.0\build\boost.targets'))" />
-    <Error Condition="!Exists('..\..\packages\boost_python39-vc142.1.77.0.0\build\boost_python39-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\boost_python39-vc142.1.77.0.0\build\boost_python39-vc142.targets'))" />
-    <Error Condition="!Exists('..\..\packages\boost_locale-vc142.1.77.0.0\build\boost_locale-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\boost_locale-vc142.1.77.0.0\build\boost_locale-vc142.targets'))" />
-  </Target>
 </Project>
