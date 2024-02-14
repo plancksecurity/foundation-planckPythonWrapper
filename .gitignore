@@ -24,6 +24,10 @@ build-windows/Release/
 build-windows/packages/
 build-windows/.vs/
 build-windows/pEpPythonAdapter.vcxproj.*
+build-windows/x64/
+python311.lib
+vc140.pdb
+
 launch.json
 settings.json
 # Default ignored files
