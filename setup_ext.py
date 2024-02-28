@@ -158,8 +158,7 @@ def get_build_info_win32(debug, outDir):
         libs=libs+ndebug_libs
         sys_libdirs.append(join(inst_prefix, "..", "vcpkg", "installed", "x64-windows","lib"))
 
-    #compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/INCREMENTAL:YES']
-    compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/DBOOST_PYTHON_STATIC_LIB','/INCREMENTAL:YES']
+    compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/INCREMENTAL:YES']
     if debug:
         pEpLog("debug mode")
         compile_flags += ['/Od', '/Zi', '/DEBUG']

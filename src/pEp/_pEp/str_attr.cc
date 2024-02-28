@@ -51,6 +51,20 @@ namespace pEp {
             }
         }
 
+#if defined(_WIN32_WINNT)
+        time_t timestamp_attr(struct tm * &ts)
+        {
+            if (!ts) {
+                return 0;
+            }
+            return mktime(ts);
+        }
+
+        void timestamp_attr(struct tm *&ts, time_t value)
+        {
+            ts = localtime(&value);
+        }
+#else
         time_t timestamp_attr(timestamp *&ts)
         {
             if (!ts) {
@@ -65,6 +79,7 @@ namespace pEp {
             free_timestamp(ts);
             ts = new_timestamp(value);
         }
+#endif
 
         boost::python::list strlist_attr(stringlist_t *&sl)
         {
