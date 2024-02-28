@@ -41,14 +41,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
     <NMakeOutput></NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;BOOST_PYTHON_STATIC_LIB;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
     <NMakeOutput></NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;BOOST_PYTHON_STATIC_LIB;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
     <ExecutablePath>$(VC_ExecutablePath_x64);$(ExecutablePath)</ExecutablePath>

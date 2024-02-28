@@ -24,17 +24,17 @@ def get_build_info_win32(debug, outDir):
     home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
     inst_prefix = windowsGetInstallLocation(outDir)
     sys_includes = [
-        join(inst_prefix, "..", "vcpkg", "installed", "x64-windows-static-md","include")
+        join(inst_prefix, "..", "vcpkg", "installed", "x64-windows","include")
     ]
     sys_libdirs = [ join(inst_prefix, 'Debug')] if debug else [ join(inst_prefix, 'Release')]
     libs = [
-        'libpEpCxx11',
-        'pEpEngine',
-        'libpEpAdapter',
         'user32',
         'shell32',
         'kernel32',
         'Advapi32',
+        'libpEpAdapter',
+        'libpEpCxx11',
+        'pEpEngine',
     ]
 
     debug_libs = [
@@ -84,7 +84,7 @@ def get_build_info_win32(debug, outDir):
         'cryptopp',
         'iconv',
         'libcrypto',
-        'libexpatdMD',
+        'libexpatd',
         'libssl',
         'libxml2',
         'lz4d',
@@ -141,7 +141,7 @@ def get_build_info_win32(debug, outDir):
         'cryptopp',
         'iconv',
         'libcrypto',
-        'libexpatMD',
+        'libexpat',
         'libssl',
         'libxml2',
         'lz4',
@@ -153,11 +153,12 @@ def get_build_info_win32(debug, outDir):
 
     if debug:
         libs=libs+debug_libs
-        sys_libdirs.append(join(inst_prefix, "..", "vcpkg", "installed", "x64-windows-static-md","debug","lib"))
+        sys_libdirs.append(join(inst_prefix, "..", "vcpkg", "installed", "x64-windows","debug","lib"))
     else:
         libs=libs+ndebug_libs
-        sys_libdirs.append(join(inst_prefix, "..", "vcpkg", "installed", "x64-windows-static-md","lib"))
+        sys_libdirs.append(join(inst_prefix, "..", "vcpkg", "installed", "x64-windows","lib"))
 
+    #compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/INCREMENTAL:YES']
     compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/DBOOST_PYTHON_STATIC_LIB','/INCREMENTAL:YES']
     if debug:
         pEpLog("debug mode")

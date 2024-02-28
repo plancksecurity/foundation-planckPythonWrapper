@@ -32,13 +32,13 @@ all: clean dist
 # release build
 release: clean
     CD ..
-    CP $(PREFIX)\vcpkg\installed\x64-windows-static-md\debug\lib\python311_d.lib  python311.lib
+    COPY $(PREFIX)\vcpkg\installed\x64-windows\debug\lib\python311_d.lib  python311.lib /y
     $(PYTHON_PROC) setup.py build_ext --OutDir=$(OUTDIR) --prefix=$(PREFIX)
     $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
 
 #debug build
 debug: clean
     CD ..
-    CP $(PREFIX)\vcpkg\installed\x64-windows-static-md\lib\python311.lib python311.lib
+    COPY $(PREFIX)\vcpkg\installed\x64-windows\lib\python311.lib python311.lib /y
     $(PYTHON_PROC) setup.py build_ext --debug --OutDir=$(OUTDIR) --prefix=$(PREFIX)
     $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
