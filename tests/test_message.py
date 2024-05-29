@@ -31,8 +31,8 @@ def test_msg_enc_dec_roundtrip(pEp, model, import_ident_alice_as_own_ident, impo
     assert enc_msg.enc_format == 3
     assert str(enc_msg.from_) == str(model.alice)
     assert str(enc_msg.to[0]) == str(model.bob)
-    assert enc_msg.shortmsg == "p≡p"
-    assert enc_msg.longmsg == "this message was encrypted with p≡p https://pEp-project.org"
+    assert enc_msg.shortmsg == "planck"
+    assert enc_msg.longmsg == "this message was encrypted with planck https://www.planck.security"
 
     # Decrypt message.
     dec_msg, key_list, rating, r = enc_msg.decrypt()
