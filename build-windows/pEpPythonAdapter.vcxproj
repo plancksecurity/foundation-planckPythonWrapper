@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -14,6 +30,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{F7D4314B-C7BA-4117-9AE7-AC5C1492153D}</ProjectGuid>
     <Keyword>x64Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -24,6 +41,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -40,14 +69,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeOutput></NMakeOutput>
+    <NMakeOutput>
+    </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeOutput></NMakeOutput>
+    <NMakeOutput>
+    </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
@@ -56,6 +87,12 @@
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
     <ExcludePath>$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64);$(ExcludePath)</ExcludePath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
