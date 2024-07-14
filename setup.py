@@ -18,6 +18,7 @@ import distutils
 class BuildExtCommand(build_ext):
     user_options = build_ext.user_options + [
         ('prefix=', None, 'Use pEp-base installation in prefix (libs/includes)'),
+        ('target=', None, 'Target CPU architecture'),
         ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
     ]
 
@@ -25,6 +26,7 @@ class BuildExtCommand(build_ext):
         super().initialize_options()
         build_ext.initialize_options(self)
         self.prefix = getattr(self, "prefix=", None)
+        self.target = getattr(self, "target=", None)
         if not hasattr(self, "OutDir") or self.OutDir is None:
             self.OutDir = getattr(self, "OutDir=", None)
 
@@ -43,7 +45,7 @@ class BuildExtCommand(build_ext):
         pEpLog("sys.platform: ", sys.platform)
 
         # Get build information for platform
-        build_info = get_build_info(self.debug, self.OutDir)
+        build_info = get_build_info(self.debug, self.target, self.OutDir)
         if build_info is None:
             exit()
 
@@ -90,6 +92,7 @@ class CustomBdistWheel(bdist_wheel):
         bdist_wheel.initialize_options(self)
         self.debug = getattr(self, "debug=", False)
         self.OutDir = getattr(self, "OutDir=", None)
+        self.target = getattr(self, "target=", None)
 
     def finalize_options(self):
         bdist_wheel.finalize_options(self)
@@ -97,7 +100,7 @@ class CustomBdistWheel(bdist_wheel):
         pEpLog("sys.platform: ", sys.platform)
 
         # Get build information for platform
-        build_info = get_build_info(self.debug, self.OutDir)
+        build_info = get_build_info(self.debug, self.target, self.OutDir)
         if build_info is None:
             exit()
 

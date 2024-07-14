@@ -82,7 +82,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64</NMakeBuildCommandLine>
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
@@ -90,7 +98,20 @@
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64</NMakeBuildCommandLine>
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions) TARGET=x64</NMakePreprocessorDefinitions>
+    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean</NMakeCleanCommandLine>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
+    <ExecutablePath>$(VC_ExecutablePath_x64);$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>$(VC_ReferencesPath_x64);$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
+    <ExcludePath>$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64);$(ExcludePath)</ExcludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
