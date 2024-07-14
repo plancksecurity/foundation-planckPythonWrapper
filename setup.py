@@ -26,9 +26,11 @@ class BuildExtCommand(build_ext):
         super().initialize_options()
         build_ext.initialize_options(self)
         self.prefix = getattr(self, "prefix=", None)
-        self.target = getattr(self, "target=", None)
+        if not hasattr(self, "target") or self.target is None:
+            self.target = getattr(self, "target=", None)
         if not hasattr(self, "OutDir") or self.OutDir is None:
             self.OutDir = getattr(self, "OutDir=", None)
+        print("ExtComm: Getting target: ", self.target)
 
     def find_boost_python(self, lib_dirs):
         boost_python_names = ["boost_python" + suffix for suffix in ["3", "38", "39", "310", "311"]]
@@ -85,14 +87,18 @@ class BuildExtCommand(build_ext):
 class CustomBdistWheel(bdist_wheel):
     user_options = bdist_wheel.user_options + [
         ('OutDir=', None, 'Specifies a path to the output wrapper solution directory.'),
+        ('target=', None, 'Target CPU architecture'),
     ]
 
     def initialize_options(self):
         super().initialize_options()
         bdist_wheel.initialize_options(self)
         self.debug = getattr(self, "debug=", False)
-        self.OutDir = getattr(self, "OutDir=", None)
-        self.target = getattr(self, "target=", None)
+        if not hasattr(self, "target") or self.target is None:
+            self.target = getattr(self, "target=", None)
+        if not hasattr(self, "OutDir") or self.OutDir is None:
+            self.OutDir = getattr(self, "OutDir=", None)
+        print("Wheel: Getting target: ", self.target)
 
     def finalize_options(self):
         bdist_wheel.finalize_options(self)
@@ -107,6 +113,7 @@ class CustomBdistWheel(bdist_wheel):
     def run(self):
         # Pass the value of OutDir to the build_ext command
         self.distribution.get_command_obj('build_ext').OutDir = self.OutDir
+        self.distribution.get_command_obj('build_ext').target = self.target
         self.run_command('build_ext')
         super().run()
 

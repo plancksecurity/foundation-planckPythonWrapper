@@ -9,16 +9,19 @@ dist: dist-whl dist-egg
 # create wheel package in dist
 dist-whl: compile
     CD ..
-    $(PYTHON_PROC) setup.py bdist_wheel
+    ECHO Target: $(TARGET)
+    $(PYTHON_PROC) setup.py bdist_wheel --target=$(TARGET)
 
 # create egg package in dist
 dist-egg: compile
     CD ..
-    $(PYTHON_PROC) setup.py bdist_egg
+    ECHO Target: $(TARGET)
+    $(PYTHON_PROC) setup.py bdist_egg --target=$(TARGET)
 
 # build the module into build
 compile:
     CD ..
+    ECHO Target: $(TARGET)
     $(PYTHON_PROC) setup.py build_ext --debug --prefix=$(PREFIX) --target=$(TARGET)
 
 # delete output directories
@@ -29,16 +32,20 @@ clean:
 # create directories and build application
 all: clean dist
 
+#COPY $(PREFIX)\vcpkg\installed\$(TARGET)-windows\debug\lib\python311_d.lib  python311.lib /y
+#COPY $(PREFIX)\vcpkg\installed\$(TARGET)-windows\lib\python311.lib python311.lib /y
+
 # release build
 release: clean
     CD ..
-    COPY $(PREFIX)\vcpkg\installed\$(TARGET)-windows\debug\lib\python311_d.lib  python311.lib /y
+    ECHO Target: $(TARGET)
     $(PYTHON_PROC) setup.py build_ext --OutDir=$(OUTDIR) --prefix=$(PREFIX) --target=$(TARGET)
-    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
+    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR) --target=$(TARGET)
 
 #debug build
 debug: clean
     CD ..
-    COPY $(PREFIX)\vcpkg\installed\$(TARGET)-windows\lib\python311.lib python311.lib /y
+    ECHO Target: $(TARGET)
     $(PYTHON_PROC) setup.py build_ext --debug --OutDir=$(OUTDIR) --prefix=$(PREFIX) --target=$(TARGET)
-    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR)
+    $(PYTHON_PROC) setup.py bdist_wheel --OutDir=$(OUTDIR) --target=$(TARGET)
+
