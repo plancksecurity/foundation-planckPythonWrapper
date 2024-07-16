@@ -86,3 +86,6 @@ ws
 /src/pEp/_pEp/message_api.o
 /src/pEp/_pEp/pEpmodule.o
 /src/pEp/_pEp/str_attr.o
+
+# Visual studio debug symbols
+*.pdb
