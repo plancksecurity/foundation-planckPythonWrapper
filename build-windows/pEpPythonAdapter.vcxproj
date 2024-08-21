@@ -81,24 +81,29 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <PY Condition=" '$(PY)' == '' ">
+      PY.exe
+    </PY>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64 PY=$(PY)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean TARGET=x64</NMakeCleanCommandLine>
+    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean TARGET=x64 PY=$(PY)</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" debug OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86 PY=$(PY)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean TARGET=x86 </NMakeCleanCommandLine>
+    <NMakeCleanCommandLine>nmake /F "$(ProjectDir)..\make.mak" clean TARGET=x86 PY=$(PY)</NMakeCleanCommandLine>
     <SourcePath>$(VC_SourcePath);$(ProjectDir)..</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x64 PY=$(PY)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
@@ -111,7 +116,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>nmake /F "$(ProjectDir)..\make.mak" release OUTDIR=$(OutDir) PREFIX=$(SolutionDir) TARGET=x86 PY=$(PY)</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_DLL;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>

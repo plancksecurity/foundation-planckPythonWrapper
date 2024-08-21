@@ -24,7 +24,7 @@ def get_build_info_win32(debug, target, outDir):
     home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
     inst_prefix = windowsGetInstallLocation(outDir)
     sys_includes = [
-        join(inst_prefix, "..", "vcpkg", "installed", target+"-windows","include")
+        join(home, "vcpkg", "installed", target+"-windows","include")
     ]
     sys_libdirs = [ join(inst_prefix, 'Debug')] if debug else [ join(inst_prefix, 'Release')]
     libs = [
@@ -65,11 +65,11 @@ def get_build_info_win32(debug, target, outDir):
 
     if debug:
         libs=libs+debug_libs
-        vcpk_libs=join(inst_prefix, "..", "vcpkg", "installed", target+"-windows","debug","lib")
+        vcpk_libs=join(home, "vcpkg", "installed", target+"-windows","debug","lib")
         sys_libdirs.append(vcpk_libs)
     else:
         libs=libs+ndebug_libs
-        vcpk_libs=join(inst_prefix, "..", "vcpkg", "installed", target+"-windows","lib")
+        vcpk_libs=join(home, "vcpkg", "installed", target+"-windows","lib")
         sys_libdirs.append(vcpk_libs)
 
     for fn in os.listdir(vcpk_libs):
