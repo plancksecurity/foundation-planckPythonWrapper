@@ -25,6 +25,7 @@ build-windows/packages/
 build-windows/.vs/
 build-windows/pEpPythonAdapter.vcxproj.*
 build-windows/x64/
+build-windows/ARM64/
 python311.lib
 vc140.pdb
 
