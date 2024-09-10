@@ -1,6 +1,33 @@
 # build dirs
 BUILD_DIR = $(ProjectDir)..\build
 DIST_DIR = $(ProjectDir)..\dist
+vcpkg_platform=x86-windows
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "AMD64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "IA64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "IA64"
+vcpkg_platform=arm64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "AMD64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "IA64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "IA64"
+vcpkg_platform=arm64-windows
+!endif
+
+PY=$(USERPROFILE)\vcpkg\installed\$(vcpkg_platform)\tools\python3\python.exe
 
 # create wheel and egg package in dist
 dist: dist-whl dist-egg
