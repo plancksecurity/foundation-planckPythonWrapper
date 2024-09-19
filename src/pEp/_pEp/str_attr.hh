@@ -26,8 +26,13 @@ namespace pEp {
         string str_attr(char *&str);
         void str_attr(char *&str, string value);
 
+#if defined(_WIN32_WINNT)
+        time_t timestamp_attr(struct tm *&ts);
+        void timestamp_attr(struct tm *&ts, time_t value);
+#else
         time_t timestamp_attr(timestamp *&ts);
         void timestamp_attr(timestamp *&ts, time_t value);
+#endif
 
         boost::python::list strlist_attr(stringlist_t *&sl);
         void strlist_attr(stringlist_t *&sl, boost::python::list value);

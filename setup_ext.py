@@ -20,27 +20,64 @@ def windowsGetInstallLocation(outDir):
     pEpLog("Value:", ret)
     return ret
 
-def windowsGetBoostDirs():
-    for dir in [f.path for f in os.scandir(join(os.getcwd(), 'build-windows', '..', '..', 'packages')) if f.is_dir()]:
-        if 'boost.' in dir or 'boost_python' in dir or 'boost_locale' in dir:
-            yield join(dir, 'lib', 'native'), join(dir, 'lib', 'native', 'include')
-
-def get_build_info_win32(debug, outDir):
+def get_build_info_win32(debug, target, outDir):
     home = environ.get('PER_USER_DIRECTORY') or environ.get('USERPROFILE')
     inst_prefix = windowsGetInstallLocation(outDir)
     sys_includes = [
-        join(inst_prefix),
-    ] + [d[1] for d in windowsGetBoostDirs()]
+        join(home, "vcpkg", "installed", target+"-windows","include")
+    ]
     sys_libdirs = [ join(inst_prefix, 'Debug')] if debug else [ join(inst_prefix, 'Release')]
-    sys_libdirs += [d[0] for d in windowsGetBoostDirs()]
     libs = [
+        'user32',
+        'shell32',
+        'kernel32',
+        'Advapi32',
+        'libpEpAdapter',
         'libpEpCxx11',
         'pEpEngine',
-        'libpEpAdapter',
-        'boost_python39-vc142-mt-x32-1_77',
-        'boost_locale-vc142-mt-x32-1_77'
+        'archive',
+        'charset',
+        'cryptopp',
+        'iconv',
+        'libcrypto',
+        'libssl',
+        'libxml2',
+        'lzma',
     ]
-    compile_flags = ['/std:c++14', '/permissive']
+
+    debug_libs = [
+        'bz2d',
+        'libexpatd',
+        'lz4d',
+        'zlibd',
+        'zstd',
+        'python311_d',
+    ]
+
+    ndebug_libs = [
+        'bz2',
+        'libexpat',
+        'lz4',
+        'zlib',
+        'zstd',
+        'python311',
+    ]
+
+    if debug:
+        libs=libs+debug_libs
+        vcpk_libs=join(home, "vcpkg", "installed", target+"-windows","debug","lib")
+        sys_libdirs.append(vcpk_libs)
+    else:
+        libs=libs+ndebug_libs
+        vcpk_libs=join(home, "vcpkg", "installed", target+"-windows","lib")
+        sys_libdirs.append(vcpk_libs)
+
+    for fn in os.listdir(vcpk_libs):
+        if "boost_" in fn:
+            l=fn.replace(".lib","")
+            libs.append(l)
+
+    compile_flags = ['/std:c++14', '/permissive','/D_WIN32_WINNT=0x0A00', '/INCREMENTAL:YES']
     if debug:
         pEpLog("debug mode")
         compile_flags += ['/Od', '/Zi', '/DEBUG']
@@ -95,11 +132,11 @@ def get_build_info_linux(debug):
 
     return (home, sys_includes, sys_libdirs, libs, compile_flags)
 
-def get_build_info(debug, outDir):
+def get_build_info(debug, target, outDir):
     """ get build information for platform"""
     build_info = None
     if sys.platform == 'win32':
-        build_info = get_build_info_win32(debug, outDir)
+        build_info = get_build_info_win32(debug, target, outDir)
     elif sys.platform == 'darwin':
         build_info = get_build_info_darwin(debug)
     elif sys.platform == 'linux':

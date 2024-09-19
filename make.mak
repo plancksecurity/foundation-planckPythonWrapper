@@ -1,22 +1,54 @@
 # build dirs
 BUILD_DIR = $(ProjectDir)..\build
 DIST_DIR = $(ProjectDir)..\dist
+vcpkg_platform=x86-windows
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "AMD64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "IA64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(PROCESSOR_ARCHITECTURE)" == "IA64"
+vcpkg_platform=arm64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "AMD64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "IA64"
+vcpkg_platform=x64-windows
+!endif
+
+!if "$(ROCESSOR_ARCHITEW6432)" == "IA64"
+vcpkg_platform=arm64-windows
+!endif
+
+PY=$(USERPROFILE)\vcpkg\installed\$(vcpkg_platform)\tools\python3\python.exe
 
 # create wheel and egg package in dist
 dist: dist-whl dist-egg
 
 # create wheel package in dist
 dist-whl: compile
-    PY -3.9-32 setup.py bdist_wheel
+    CD ..
+    ECHO Target: $(TARGET)
+    $(PY) setup.py bdist_wheel --target=$(TARGET)
 
 # create egg package in dist
 dist-egg: compile
-    PY -3.9-32 setup.py bdist_egg
+    CD ..
+    ECHO Target: $(TARGET)
+    $(PY) setup.py bdist_egg --target=$(TARGET)
 
 # build the module into build
 compile:
-    CD..
-    PY -3.9-32 setup.py build_ext --debug
+    CD ..
+    ECHO Target: $(TARGET)
+    $(PY) setup.py build_ext --debug --prefix=$(PREFIX) --target=$(TARGET)
 
 # delete output directories
 clean:
@@ -28,12 +60,15 @@ all: clean dist
 
 # release build
 release: clean
-    CD..
-    PY -3.9-32 setup.py build_ext --OutDir=$(OUTDIR)
-    PY -3.9-32 setup.py bdist_wheel --OutDir=$(OUTDIR)
+    CD ..
+    ECHO Target: $(TARGET)
+    $(PY) setup.py build_ext --OutDir=$(OUTDIR) --prefix=$(PREFIX) --target=$(TARGET)
+    $(PY) setup.py bdist_wheel --OutDir=$(OUTDIR) --target=$(TARGET)
 
 #debug build
 debug: clean
-    CD..
-    PY -3.9-32 setup.py build_ext --debug --OutDir=$(OUTDIR)
-    PY -3.9-32 setup.py bdist_wheel --OutDir=$(OUTDIR)
+    CD ..
+    ECHO Target: $(TARGET)
+    $(PY) setup.py build_ext --debug --OutDir=$(OUTDIR) --prefix=$(PREFIX) --target=$(TARGET)
+    $(PY) setup.py bdist_wheel --OutDir=$(OUTDIR) --target=$(TARGET)
+
